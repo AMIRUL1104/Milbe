@@ -1,4 +1,3 @@
-// src/components/auth/RegisterForm.tsx
 "use client";
 
 import { useState } from "react";
@@ -13,15 +12,6 @@ import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import { createUserProfile } from "@/services/server/action";
 
-
-/**
- * Zod Validation Schema for Registration
- * ১. Full Name: আবশ্যিক ফিল্ড।
- * ২. Email: সঠিক ফরম্যাটের ইমেইল হতে হবে।
- * ৩. Password: সিকিউরিটির জন্য মিনিমাম ৮ ক্যারেক্টার হতে হবে।
- * ৪. Confirm Password: পাসওয়ার্ডের সাথে হুবহু মিলতে হবে (refine দিয়ে চেক করা হয়েছে)।
- * ৫. Terms: সাইন-আপ করার আগে এটি অবশ্যই ট্রু (checked) হতে হবে।
- */
 const registerSchema = z.object({
   fullName: z.string().min(1, "Full Name is required"),
   email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
@@ -32,7 +22,7 @@ const registerSchema = z.object({
   }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
-  path: ["confirmPassword"], // এরর মেসেজটি যেন confirmPassword ফিল্ডের নিচে দেখায়
+  path: ["confirmPassword"],
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
@@ -43,7 +33,7 @@ export default function RegisterForm() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || "/"; // ডিফল্ট রিডাইরেক্ট হোম পেজে
+  const redirectUrl = searchParams.get("redirect") || "/";
 
   const {
     register,
@@ -62,164 +52,150 @@ export default function RegisterForm() {
 
   const onSubmit = async (userData: RegisterFormValues) => {
     setIsLoading(true);
-    // console.log("[RegisterForm] Form Data is Valid. Submitting to Better Auth:", userData);
 
     try {
-      // Better Auth ক্লায়েন্ট কল
       const { data, error } = await authClient.signUp.email({
         name: userData.fullName,
         email: userData.email,
         password: userData.password,
       });
 
-      // যদি Better Auth কোনো এরর রিটার্ন করে (যেমন: Email already exists)
       if (error) {
         console.error("[RegisterForm] Better Auth error:", error.message);
         toast.error(error.message || "Something went wrong during registration.");
         setIsLoading(false);
-        return; // এখানেই ফাংশন থামিয়ে দেওয়া হলো
+        return;
       }
 
-      // সফলভাবে রেজিস্ট্রেশন সম্পন্ন হলে
       if (data?.user) {
-        // console.log("[RegisterForm] User registered successfully:", data.user);
         await createUserProfile();
-        // console.log(res);
         toast.success("Registration successful! Welcome to BookBridge.");
-
-        // স্টেট ক্লিয়ার করে হোম পেজে রিডাইরেক্ট
         setIsLoading(false);
         router.push(redirectUrl);
-        router.refresh(); // রিডাইরেক্টের পর নতুন সেশন ডেটা লোড করার জন্য
+        router.refresh();
       }
     } catch (err) {
-      // নেটওয়ার্ক বা অন্য কোনো আনএক্সপেক্টেড এরর হ্যান্ডেল করার জন্য
       console.error("[RegisterForm] Unexpected network error:", err);
       toast.error("Network error. Please check your connection and try again.");
       setIsLoading(false);
     }
   };
 
+  const inputBase =
+    "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
+  const labelBase = "text-xs font-bold text-text-secondary uppercase tracking-wider";
+  const errorText = "text-xs font-medium text-danger mt-0.5";
+
   return (
     <div className="w-full flex flex-col gap-5">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
-        {/* Full Name Field */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="fullName" className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+          <label htmlFor="fullName" className={labelBase}>
             Full Name
           </label>
           <div className="relative">
-            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               id="fullName"
               type="text"
               placeholder="Amirul Islam"
               {...register("fullName")}
-              className={`w-full bg-white border ${errors.fullName ? "border-red-500 focus:border-red-500" : "border-[#DDE5E7] focus:border-[#35858E]"
-                } rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-hidden transition-all`}
+              className={`${inputBase} ${errors.fullName ? "border-danger focus:border-danger focus-visible:outline-danger" : "border-border focus:border-border-focus focus-visible:outline-primary-focus"}`}
             />
           </div>
           {errors.fullName && (
-            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.fullName.message}</p>
+            <p className={errorText}>{errors.fullName.message}</p>
           )}
         </div>
 
-        {/* Email Address Field */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+          <label htmlFor="email" className={labelBase}>
             Email Address
           </label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               id="email"
               type="email"
               placeholder="amirul@student.com"
               {...register("email")}
-              className={`w-full bg-white border ${errors.email ? "border-red-500 focus:border-red-500" : "border-[#DDE5E7] focus:border-[#35858E]"
-                } rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-hidden transition-all`}
+              className={`${inputBase} ${errors.email ? "border-danger focus:border-danger focus-visible:outline-danger" : "border-border focus:border-border-focus focus-visible:outline-primary-focus"}`}
             />
           </div>
           {errors.email && (
-            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.email.message}</p>
+            <p className={errorText}>{errors.email.message}</p>
           )}
         </div>
 
-        {/* Password Field */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="password" className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+          <label htmlFor="password" className={labelBase}>
             Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               {...register("password")}
-              className={`w-full bg-white border ${errors.password ? "border-red-500 focus:border-red-500" : "border-[#DDE5E7] focus:border-[#35858E]"
-                } rounded-xl pl-10 pr-10 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-hidden transition-all`}
+              className={`${inputBase} pr-10 ${errors.password ? "border-danger focus:border-danger focus-visible:outline-danger" : "border-border focus:border-border-focus focus-visible:outline-primary-focus"}`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 rounded-md cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-text-muted hover:text-text-secondary rounded-md cursor-pointer"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
           {errors.password && (
-            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.password.message}</p>
+            <p className={errorText}>{errors.password.message}</p>
           )}
         </div>
 
-        {/* Confirm Password Field */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="confirmPassword" className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+          <label htmlFor="confirmPassword" className={labelBase}>
             Confirm Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               id="confirmPassword"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               {...register("confirmPassword")}
-              className={`w-full bg-white border ${errors.confirmPassword ? "border-red-500 focus:border-red-500" : "border-[#DDE5E7] focus:border-[#35858E]"
-                } rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-hidden transition-all`}
+              className={`${inputBase} ${errors.confirmPassword ? "border-danger focus:border-danger focus-visible:outline-danger" : "border-border focus:border-border-focus focus-visible:outline-primary-focus"}`}
             />
           </div>
           {errors.confirmPassword && (
-            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.confirmPassword.message}</p>
+            <p className={errorText}>{errors.confirmPassword.message}</p>
           )}
         </div>
 
-        {/* Terms and Conditions Checkbox */}
         <div className="flex flex-col gap-1 mt-1">
-          <label className="flex items-start gap-2.5 cursor-pointer text-sm text-gray-600 select-none">
+          <label className="flex items-start gap-2.5 cursor-pointer text-sm text-text-secondary select-none">
             <input
               type="checkbox"
               {...register("terms")}
-              className="w-4 h-4 rounded-sm border-[#DDE5E7] text-[#35858E] focus:ring-[#35858E] mt-0.5"
+              className="w-4 h-4 rounded-sm border-border text-primary focus:ring-primary mt-0.5"
             />
             <span className="text-xs sm:text-sm leading-tight">
               I agree to the{" "}
-              <span className="text-[#35858E] font-semibold hover:underline">Terms of Service</span>{" "}
+              <span className="text-primary font-semibold hover:underline">Terms of Service</span>{" "}
               and{" "}
-              <span className="text-[#35858E] font-semibold hover:underline">Privacy Policy</span>.
+              <span className="text-primary font-semibold hover:underline">Privacy Policy</span>.
             </span>
           </label>
           {errors.terms && (
-            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.terms.message}</p>
+            <p className={errorText}>{errors.terms.message}</p>
           )}
         </div>
 
-        {/* Submit Register Button */}
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full inline-flex items-center justify-center bg-[#35858E] hover:bg-[#35858E]/90 text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed mt-2 focus-visible:outline-2 focus-visible:outline-[#F6CE71]"
+          className="w-full inline-flex items-center justify-center bg-primary hover:bg-primary-hover text-text-inverse font-bold py-2.5 px-4 rounded-btn transition-base shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed mt-2 focus-visible:outline-2 focus-visible:outline-primary-focus"
         >
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -229,14 +205,12 @@ export default function RegisterForm() {
         </button>
       </form>
 
-      {/* Divider */}
       <div className="flex items-center my-1">
-        <div className="flex-1 border-t border-[#DDE5E7]"></div>
-        <span className="px-3 text-xs font-bold text-gray-400 uppercase tracking-wider">OR</span>
-        <div className="flex-1 border-t border-[#DDE5E7]"></div>
+        <div className="flex-1 border-t border-border"></div>
+        <span className="px-3 text-xs font-bold text-text-muted uppercase tracking-wider">OR</span>
+        <div className="flex-1 border-t border-border"></div>
       </div>
 
-      {/* Google Provider Button */}
       <SocialAuth />
     </div>
   );

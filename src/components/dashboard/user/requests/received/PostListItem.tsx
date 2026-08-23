@@ -12,12 +12,12 @@ export function PostListItem({ post, isActive, onSelect }: PostListItemProps) {
     <button
       type="button"
       onClick={() => onSelect(post.id)}
-      className={`flex w-full items-center gap-3 rounded-xl border p-2.5 text-left transition-all ${isActive
-          ? "border-[#000c0e] bg-[#35858E]/10 shadow-sm"
-          : "border-[#EDF1F2] bg-white hover:border-[#35858E]/40 hover:bg-[#F5F7F8]"
+      className={`flex w-full items-center gap-3 rounded-xl border p-2.5 text-left transition-base ${isActive
+          ? "border-primary bg-primary-light shadow-sm"
+          : "border-border-light bg-surface hover:border-primary/40 hover:bg-background"
         }`}
     >
-      <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded-md bg-[#F5F7F8]">
+      <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded-md bg-background">
         <Image
           src={post.bookCoverUrl}
           alt={post.title}
@@ -28,7 +28,7 @@ export function PostListItem({ post, isActive, onSelect }: PostListItemProps) {
       </div>
 
       <span
-        className={`line-clamp-2 flex-1 text-sm font-semibold ${isActive ? "text-[#35858E]" : "text-gray-700"
+        className={`line-clamp-2 flex-1 text-sm font-semibold ${isActive ? "text-primary" : "text-text-secondary"
           }`}
       >
         {post.title}
@@ -36,8 +36,8 @@ export function PostListItem({ post, isActive, onSelect }: PostListItemProps) {
 
       <span
         className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${post.pendingCount > 0
-            ? "bg-[#FCDE70] text-[#6b5810]"
-            : "bg-[#F5F7F8] text-gray-400"
+            ? "bg-accent text-accent-text"
+            : "bg-background text-text-muted"
           }`}
       >
         {post.pendingCount}

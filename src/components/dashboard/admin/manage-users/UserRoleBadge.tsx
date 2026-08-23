@@ -5,8 +5,8 @@ interface UserRoleBadgeProps {
 }
 
 const ROLE_STYLES: Record<UserRole, string> = {
-  admin: "bg-[#1e3a5f]/10 text-[#1e3a5f] border border-[#1e3a5f]/20",
-  user: "bg-gray-100 text-gray-600 border border-gray-200",
+  admin: "bg-primary-light text-primary border border-primary/20",
+  user: "bg-background text-text-secondary border border-border",
 };
 
 const ROLE_LABELS: Record<UserRole, string> = {

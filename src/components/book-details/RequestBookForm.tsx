@@ -102,58 +102,58 @@ export default function RequestBookForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="px-6 py-4  space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="px-6 py-4 space-y-4">
       <div>
-        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
           Requester Name
         </label>
         <input
           type="text"
           {...register("requesterName")}
-          className={`w-full text-gray-800 mt-1 border rounded-xl pl-4 pr-4 py-2.5 text-sm outline-none transition-colors ${errors.requesterName
-            ? "border-red-500"
-            : "border-[#DDE5E7] focus:border-[#35858E]"
+          className={`w-full text-text-primary mt-1 border rounded-input pl-4 pr-4 py-2.5 text-sm outline-none transition-base ${errors.requesterName
+            ? "border-danger focus-visible:outline-danger"
+            : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
             }`}
           placeholder="Your full name"
         />
         {errors.requesterName && (
-          <p className="text-xs font-medium text-red-500 mt-0.5">
+          <p className="text-xs font-medium text-danger mt-0.5">
             {errors.requesterName.message}
           </p>
         )}
       </div>
 
       <div>
-        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
           Phone Number
         </label>
         <input
           type="tel"
           {...register("phoneNumber")}
-          className={`w-full text-gray-700 mt-1 border rounded-xl pl-4 pr-4 py-2.5 text-sm outline-none transition-colors ${errors.phoneNumber
-            ? "border-red-500"
-            : "border-[#DDE5E7] focus:border-[#35858E]"
+          className={`w-full text-text-primary mt-1 border rounded-input pl-4 pr-4 py-2.5 text-sm outline-none transition-base ${errors.phoneNumber
+            ? "border-danger focus-visible:outline-danger"
+            : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
             }`}
           placeholder="e.g. 017XXXXXXXX"
         />
         {errors.phoneNumber && (
-          <p className="text-xs font-medium text-red-500 mt-0.5">
+          <p className="text-xs font-medium text-danger mt-0.5">
             {errors.phoneNumber.message}
           </p>
         )}
       </div>
 
       <div>
-        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
           Message{" "}
-          <span className="normal-case font-medium text-gray-400">
+          <span className="normal-case font-medium text-text-muted">
             (optional)
           </span>
         </label>
         <textarea
           {...register("message")}
           rows={3}
-          className="w-full text-gray-800 mt-1 border border-[#DDE5E7] focus:border-[#35858E] rounded-xl pl-4 pr-4 py-2.5 text-sm outline-none transition-colors resize-none"
+          className="w-full text-text-primary mt-1 border border-border focus:border-border-focus rounded-input pl-4 pr-4 py-2.5 text-sm outline-none transition-base resize-none"
           placeholder="Add a note to the seller (optional)"
         />
       </div>
@@ -163,14 +163,14 @@ export default function RequestBookForm({
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="py-2.5 px-4 rounded-xl font-bold text-sm text-gray-600 border border-[#DDE5E7] hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50"
+          className="py-2.5 px-4 rounded-btn font-bold text-sm text-text-secondary border border-border hover:bg-background transition-colors cursor-pointer disabled:opacity-50"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center gap-2 py-2.5 px-4 rounded-xl font-bold text-sm text-white bg-[#35858E] hover:bg-[#35858E]/90 transition-colors cursor-pointer disabled:opacity-60"
+          className="inline-flex items-center gap-2 py-2.5 px-4 rounded-btn font-bold text-sm text-text-inverse bg-primary hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-60"
         >
           {isSubmitting ? (
             <Loader2 className="w-4 h-4 animate-spin" />

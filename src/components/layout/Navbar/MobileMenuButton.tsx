@@ -1,4 +1,3 @@
-// src/components/layout/navbar/MobileMenuButton.tsx
 "use client";
 
 import { Menu, X } from "lucide-react";
@@ -12,8 +11,7 @@ export default function MobileMenuButton({ isOpen, onClick }: MobileMenuButtonPr
   return (
     <button
       onClick={onClick}
-      // আইকন কালার হোয়াইট (text-white) এ কনভার্ট করা হয়েছে
-      className="p-2 text-white hover:text-[#F6CE71] focus:outline focus:outline-2 focus:outline-[#F6CE71] rounded-md md:hidden block transition-colors"
+      className="p-2 text-text-inverse hover:text-accent focus-visible:outline-2 focus-visible:outline-primary-focus rounded-md md:hidden block transition-colors"
       aria-label={isOpen ? "Close main menu" : "Open main menu"}
       aria-expanded={isOpen}
     >

@@ -13,8 +13,8 @@ export function PostListPanel({
   onSelectPost,
 }: PostListPanelProps) {
   return (
-    <div className="rounded-2xl border border-[#EDF1F2] bg-white p-4 shadow-sm">
-      <h3 className="mb-3 px-1 text-xs font-bold uppercase tracking-wider text-gray-500">
+    <div className="rounded-card border border-border-light bg-surface p-4 shadow-sm">
+      <h3 className="mb-3 px-1 text-xs font-bold uppercase tracking-wider text-text-muted">
         Your Posts
       </h3>
       <div className="flex flex-col gap-2">

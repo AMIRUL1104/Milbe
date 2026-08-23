@@ -17,7 +17,7 @@ export default function SubmitButton({
     <button
       type="submit"
       disabled={disabled}
-      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#35858E] hover:bg-[#35858E]/90 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-[#F6CE71]"
+      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-text-inverse font-bold py-2.5 px-6 rounded-btn transition-base shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-primary-focus"
     >
       {isSubmitting ? (
         <Loader2 className="w-5 h-5 animate-spin" />

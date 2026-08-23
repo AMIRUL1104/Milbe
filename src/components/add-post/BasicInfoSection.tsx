@@ -5,11 +5,10 @@ import { Tag } from "lucide-react";
 import { AddPostFormValues } from "@/lib/validaions/add-post-schema";
 import { BOOK_CATEGORIES } from "./post";
 
-
 const inputBase =
-  "w-full bg-white border rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-hidden transition-all";
-const labelBase = "text-xs font-bold text-gray-700 uppercase tracking-wider";
-const errorText = "text-xs font-medium text-red-500 mt-0.5";
+  "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
+const labelBase = "text-xs font-bold text-text-secondary uppercase tracking-wider";
+const errorText = "text-xs font-medium text-danger mt-0.5";
 
 export default function BasicInfoSection() {
   const {
@@ -20,14 +19,13 @@ export default function BasicInfoSection() {
 
   return (
     <section className="space-y-4">
-      <h2 className="text-base font-semibold text-gray-700">Basic Info</h2>
+      <h2 className="text-base font-semibold text-text-secondary">Basic Info</h2>
 
-      {/* Post Title */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="title" className={labelBase}>
           Post Title
         </label>
-        <p className="text-xs text-gray-400 -mt-0.5">
+        <p className="text-xs text-text-muted -mt-0.5">
           Auto-generated from your books — edit anytime.
         </p>
         <input
@@ -37,29 +35,28 @@ export default function BasicInfoSection() {
           {...register("title")}
           className={`${inputBase} pl-4 ${
             errors.title
-              ? "border-red-500 focus:border-red-500"
-              : "border-[#DDE5E7] focus:border-[#35858E]"
+              ? "border-danger focus:border-danger focus-visible:outline-danger"
+              : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
           }`}
         />
         {errors.title && <p className={errorText}>{errors.title.message}</p>}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* Category */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="category" className={labelBase}>
             Category
           </label>
           <div className="relative">
-            <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <select
               id="category"
               {...register("category")}
               defaultValue=""
               className={`${inputBase} appearance-none cursor-pointer ${
                 errors.category
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-[#DDE5E7] focus:border-[#35858E]"
+                  ? "border-danger focus:border-danger focus-visible:outline-danger"
+                  : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
               }`}
             >
               <option value="" disabled>
@@ -77,7 +74,6 @@ export default function BasicInfoSection() {
           )}
         </div>
 
-        {/* Listing Type */}
         <div className="flex flex-col gap-1.5">
           <label className={labelBase}>Listing Type</label>
           <Controller
@@ -85,23 +81,23 @@ export default function BasicInfoSection() {
             name="type"
             render={({ field }) => (
               <div className="flex items-center gap-4 h-10.5">
-                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
                   <input
                     type="radio"
                     value="sell"
                     checked={field.value === "sell"}
                     onChange={() => field.onChange("sell")}
-                    className="w-4 h-4 text-[#35858E] focus:ring-[#35858E]"
+                    className="w-4 h-4 text-primary focus:ring-primary"
                   />
                   Sell
                 </label>
-                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
                   <input
                     type="radio"
                     value="donate"
                     checked={field.value === "donate"}
                     onChange={() => field.onChange("donate")}
-                    className="w-4 h-4 text-[#35858E] focus:ring-[#35858E]"
+                    className="w-4 h-4 text-primary focus:ring-primary"
                   />
                   Donate
                 </label>

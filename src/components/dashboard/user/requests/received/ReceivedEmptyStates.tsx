@@ -3,20 +3,20 @@ import { FileQuestion, Inbox, PlusCircle } from "lucide-react";
 
 export function NoPostsEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-[#DDE5E7] bg-white px-6 py-16 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#7DA78C]/15">
-        <PlusCircle className="h-7 w-7 text-[#7DA78C]" />
+    <div className="flex flex-col items-center justify-center gap-3 rounded-card border border-dashed border-border bg-surface px-6 py-16 text-center">
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-secondary-light">
+        <PlusCircle className="h-7 w-7 text-secondary" />
       </div>
-      <h3 className="text-lg font-bold text-gray-800">
+      <h3 className="text-lg font-bold text-text-primary">
         You haven&apos;t posted any books yet
       </h3>
-      <p className="max-w-sm text-sm text-gray-500">
+      <p className="max-w-sm text-sm text-text-muted">
         Create your first post to start receiving requests from other
         students.
       </p>
       <Link
         href="/posts/add"
-        className="mt-2 rounded-xl bg-[#35858E] px-5 py-2.5 text-sm font-bold text-white shadow-md transition-colors hover:bg-[#35858E]/90"
+        className="mt-2 rounded-btn bg-primary px-5 py-2.5 text-sm font-bold text-text-inverse shadow-md transition-colors hover:bg-primary-hover"
       >
         Create a Post
       </Link>
@@ -26,12 +26,12 @@ export function NoPostsEmptyState() {
 
 export function NoRequestsForPostEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-[#DDE5E7] bg-white px-6 py-16 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#35858E]/10">
-        <Inbox className="h-7 w-7 text-[#35858E]" />
+    <div className="flex flex-col items-center justify-center gap-3 rounded-card border border-dashed border-border bg-surface px-6 py-16 text-center">
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light">
+        <Inbox className="h-7 w-7 text-primary" />
       </div>
-      <h3 className="text-lg font-bold text-gray-800">No requests yet</h3>
-      <p className="max-w-sm text-sm text-gray-500">
+      <h3 className="text-lg font-bold text-text-primary">No requests yet</h3>
+      <p className="max-w-sm text-sm text-text-muted">
         This post hasn&apos;t received any requests yet. Check back later!
       </p>
     </div>
@@ -40,12 +40,12 @@ export function NoRequestsForPostEmptyState() {
 
 export function NoMatchingRequestsEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-[#DDE5E7] bg-white px-6 py-16 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
-        <FileQuestion className="h-7 w-7 text-gray-400" />
+    <div className="flex flex-col items-center justify-center gap-3 rounded-card border border-dashed border-border bg-surface px-6 py-16 text-center">
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-background">
+        <FileQuestion className="h-7 w-7 text-text-muted" />
       </div>
-      <h3 className="text-lg font-bold text-gray-800">No matching requests</h3>
-      <p className="max-w-sm text-sm text-gray-500">
+      <h3 className="text-lg font-bold text-text-primary">No matching requests</h3>
+      <p className="max-w-sm text-sm text-text-muted">
         Try adjusting your search or filter to find what you&apos;re looking
         for.
       </p>

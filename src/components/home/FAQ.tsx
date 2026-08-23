@@ -1,21 +1,17 @@
-// src/components/home/FAQ.tsx
 "use client";
 
 import { Accordion } from "@heroui/react";
-import { 
-  ChevronDown, 
-  HelpCircle, 
-  Truck, 
-  BookMarked, 
-  ShieldCheck, 
-  UserCheck 
+import {
+  ChevronDown,
+  HelpCircle,
+  Truck,
+  BookMarked,
+  ShieldCheck,
+  UserCheck,
 } from "lucide-react";
 import SectionHeading from "../shared/SectionHeading";
 
 export default function FAQ() {
-  // console.log("[FAQ] Client Component Hydrated with Sub-component Pattern");
-
-  // তোমার দেওয়া প্যাটার্ন অনুযায়ী আইকন, টাইটেল এবং কন্টেন্ট ম্যাপিং
   const items = [
     {
       content:
@@ -50,39 +46,40 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="py-16 lg:py-24 bg-[#F5F7F8]">
+    <section className="py-16 lg:py-24 bg-background">
       <div className="max-w-3xl mx-auto px-6">
-        <SectionHeading 
-          title="Frequently Asked Questions" 
-          subtitle="Got questions? We have answers to the most common queries." 
+        <SectionHeading
+          title="Frequently Asked Questions"
+          subtitle="Got questions? We have answers to the most common queries."
         />
 
-        {/* সাব-কম্পোনেন্ট আর্কিটেকচার অনুসরণ করে তৈরি Accordion */}
         <Accordion className="w-full flex flex-col gap-3">
           {items.map((item, index) => (
-            <Accordion.Item 
-              key={index} 
-              className="bg-white border border-[#DDE5E7] rounded-xl overflow-hidden px-4 py-2"
+            <Accordion.Item
+              key={index}
+              className="bg-surface border border-border rounded-card overflow-hidden px-4 py-2"
             >
               <Accordion.Heading>
-                <Accordion.Trigger className="w-full flex items-center justify-between text-left font-semibold text-gray-800 py-3 transition-colors hover:text-[#35858E] group">
+                <Accordion.Trigger
+                  className="w-full flex items-center justify-between text-left font-semibold text-text-primary py-3 transition-colors hover:text-primary group"
+                >
                   <div className="flex items-center">
                     {item.icon ? (
-                      <span className="mr-3 shrink-0 text-gray-400 group-hover:text-[#35858E] transition-colors">
+                      <span className="mr-3 shrink-0 text-text-muted group-hover:text-primary transition-colors">
                         {item.icon}
                       </span>
                     ) : null}
                     <span>{item.title}</span>
                   </div>
-                  
-                  <Accordion.Indicator className="text-gray-400 group-hover:text-[#35858E] transition-transform duration-200">
+
+                  <Accordion.Indicator className="text-text-muted group-hover:text-primary transition-transform duration-200">
                     <ChevronDown className="w-4 h-4" />
                   </Accordion.Indicator>
                 </Accordion.Trigger>
               </Accordion.Heading>
-              
+
               <Accordion.Panel>
-                <Accordion.Body className="text-sm font-normal text-gray-500 leading-relaxed pt-1 pb-4">
+                <Accordion.Body className="text-sm font-normal text-text-secondary leading-relaxed pt-1 pb-4">
                   {item.content}
                 </Accordion.Body>
               </Accordion.Panel>

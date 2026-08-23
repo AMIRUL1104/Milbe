@@ -20,7 +20,7 @@ export function UserAvatar({ name, image, size = "md" }: UserAvatarProps) {
 
   return (
     <div
-      className={`relative shrink-0 overflow-hidden rounded-full bg-[#7DA78C]/20 ${dim}`}
+      className={`relative shrink-0 overflow-hidden rounded-full bg-secondary-light ${dim}`}
     >
       {image ? (
         <Image
@@ -31,7 +31,7 @@ export function UserAvatar({ name, image, size = "md" }: UserAvatarProps) {
           className="object-cover"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center font-bold text-[#3f6650]">
+        <div className="flex h-full w-full items-center justify-center font-bold text-success-text">
           {getInitials(name)}
         </div>
       )}

@@ -62,37 +62,37 @@ export default function RequestBookModal({
       aria-modal="true"
     >
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-overlay-dark backdrop-blur-sm"
         onClick={onClose}
       />
 
-      <div className="relative my-4 w-full max-w-md bg-white rounded-2xl shadow-lg border border-[#EDF1F2] max-h-[80vh] overflow-y-auto">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#EDF1F2]">
-          <h2 className="text-base font-bold text-gray-800">
+      <div className="relative my-4 w-full max-w-md bg-surface rounded-card shadow-lg border border-border-light max-h-[80vh] overflow-y-auto">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border-light">
+          <h2 className="text-base font-bold text-text-primary">
             Request This Book
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
+            className="p-1 rounded-lg text-text-muted hover:text-text-secondary hover:bg-background transition-colors cursor-pointer"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="px-6 pt-4 pb-3 space-y-3 border-b border-[#EDF1F2]">
+        <div className="px-6 pt-4 pb-3 space-y-3 border-b border-border-light">
           <div>
-            <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+            <p className="text-xs font-bold text-text-secondary uppercase tracking-wider">
               Post Title
             </p>
-            <p className="text-sm text-gray-800 mt-0.5">{postTitle}</p>
+            <p className="text-sm text-text-primary mt-0.5">{postTitle}</p>
           </div>
           <div>
-            <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+            <p className="text-xs font-bold text-text-secondary uppercase tracking-wider">
               Seller Name
             </p>
-            <p className="text-sm text-gray-800 mt-0.5">{sellerName}</p>
+            <p className="text-sm text-text-primary mt-0.5">{sellerName}</p>
           </div>
         </div>
 

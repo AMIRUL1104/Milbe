@@ -17,15 +17,15 @@ const COLUMNS = [
 
 export function UsersTable({ users }: UsersTableProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#EDF1F2] bg-white shadow-sm">
+    <div className="overflow-hidden rounded-card border border-border-light bg-surface shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full min-w-160 border-collapse">
           <thead>
-            <tr className="border-b border-[#EDF1F2] bg-[#F5F7F8]">
+            <tr className="border-b border-border-light bg-background">
               {COLUMNS.map((col, i) => (
                 <th
                   key={col.key}
-                  className={`py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-400 ${i === 0
+                  className={`py-3 text-left text-xs font-bold uppercase tracking-wider text-text-muted ${i === 0
                     ? "pl-5 pr-3"
                     : i === COLUMNS.length - 1
                       ? "pl-3 pr-5"

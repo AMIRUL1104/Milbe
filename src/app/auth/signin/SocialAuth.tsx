@@ -1,4 +1,3 @@
-// src/components/auth/SocialAuth.tsx
 "use client";
 
 export default function SocialAuth() {
@@ -12,9 +11,8 @@ export default function SocialAuth() {
     <button
       type="button"
       onClick={handleGoogleLogin}
-      className="w-full flex items-center justify-center gap-3 bg-white border border-[#DDE5E7] hover:bg-gray-50 text-gray-700 font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-[#35858E]"
+      className="w-full flex items-center justify-center gap-3 bg-surface border border-border hover:bg-background text-text-secondary font-semibold py-2.5 px-4 rounded-xl transition-base shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-primary-focus"
     >
-      {/* Google Flat SVG Icon */}
       <svg className="w-5 h-5" viewBox="0 0 24 24">
         <path
           fill="#EA4335"

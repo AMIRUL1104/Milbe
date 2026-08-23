@@ -13,7 +13,7 @@ export function ProfileActions({ onCancel, isSubmitting }: ProfileActionsProps) 
                 type="button"
                 onClick={onCancel}
                 disabled={isSubmitting}
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-gray-600 bg-white border border-[#DDE5E7] rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-text-secondary bg-surface border border-border rounded-btn hover:bg-background transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 <X size={15} />
                 Cancel
@@ -22,7 +22,7 @@ export function ProfileActions({ onCancel, isSubmitting }: ProfileActionsProps) 
             <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-[#35858E] hover:bg-[#35858E]/90 rounded-xl shadow-md transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-text-inverse bg-primary hover:bg-primary-hover rounded-btn shadow-md transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
                 {isSubmitting ? (
                     <>

@@ -5,11 +5,10 @@ import { Trash2, BookOpen, Building2, ShieldCheck, Tag } from "lucide-react";
 import { AddPostFormValues } from "@/lib/validaions/add-post-schema";
 import { BOOK_CONDITIONS } from "./post";
 
-
 const inputBase =
-  "w-full bg-white border rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-hidden transition-all";
-const labelBase = "text-xs font-bold text-gray-700 uppercase tracking-wider";
-const errorText = "text-xs font-medium text-red-500 mt-0.5";
+  "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
+const labelBase = "text-xs font-bold text-text-secondary uppercase tracking-wider";
+const errorText = "text-xs font-medium text-danger mt-0.5";
 
 interface BookItemCardProps {
   index: number;
@@ -33,19 +32,19 @@ export default function BookItemCard({
 
   const borderClass = (hasError?: boolean) =>
     hasError
-      ? "border-red-500 focus:border-red-500"
-      : "border-[#DDE5E7] focus:border-[#35858E]";
+      ? "border-danger focus:border-danger focus-visible:outline-danger"
+      : "border-border focus:border-border-focus focus-visible:outline-primary-focus";
 
   return (
-    <div className="rounded-xl border border-[#DDE5E7] p-4 space-y-4 bg-white">
+    <div className="rounded-card border border-border p-4 space-y-4 bg-surface">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-bold text-gray-700">Book {index + 1}</p>
+        <p className="text-sm font-bold text-text-secondary">Book {index + 1}</p>
         {canRemove && (
           <button
             type="button"
             onClick={onRemove}
             aria-label={`Remove book ${index + 1}`}
-            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-all cursor-pointer"
+            className="p-1.5 text-text-muted hover:text-danger hover:bg-danger-light rounded-md transition-base cursor-pointer"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -53,11 +52,10 @@ export default function BookItemCard({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* Book Name */}
         <div className="flex flex-col gap-1.5">
           <label className={labelBase}>Book Name</label>
           <div className="relative">
-            <BookOpen className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <BookOpen className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               type="text"
               placeholder="e.g. Higher Math 1st Paper"
@@ -70,18 +68,15 @@ export default function BookItemCard({
           )}
         </div>
 
-        {/* Publisher Name */}
         <div className="flex flex-col gap-1.5">
           <label className={labelBase}>Publisher Name</label>
           <div className="relative">
-            <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               type="text"
               placeholder="e.g. Panjeree"
               {...register(`books.${index}.publisherName`)}
-              className={`${inputBase} ${borderClass(
-                !!bookErrors?.publisherName
-              )}`}
+              className={`${inputBase} ${borderClass(!!bookErrors?.publisherName)}`}
             />
           </div>
           {bookErrors?.publisherName && (
@@ -89,17 +84,14 @@ export default function BookItemCard({
           )}
         </div>
 
-        {/* Condition */}
         <div className="flex flex-col gap-1.5">
           <label className={labelBase}>Condition</label>
           <div className="relative">
-            <ShieldCheck className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <ShieldCheck className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <select
               {...register(`books.${index}.condition`)}
               defaultValue=""
-              className={`${inputBase} appearance-none cursor-pointer ${borderClass(
-                !!bookErrors?.condition
-              )}`}
+              className={`${inputBase} appearance-none cursor-pointer ${borderClass(!!bookErrors?.condition)}`}
             >
               <option value="" disabled>
                 Select condition
@@ -116,12 +108,11 @@ export default function BookItemCard({
           )}
         </div>
 
-        {/* Price (Sell only) */}
         {postType === "sell" && (
           <div className="flex flex-col gap-1.5">
             <label className={labelBase}>Price (BDT)</label>
             <div className="relative">
-              <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
               <input
                 type="number"
                 min={0}

@@ -1,4 +1,3 @@
-// src/components/home/Categories.tsx
 "use client";
 
 import { Atom, Wrench, Stethoscope, Briefcase, Palette, GraduationCap } from "lucide-react";
@@ -16,18 +15,16 @@ export default function Categories() {
     { name: "Admission", icon: GraduationCap, count: "210+ Books" },
   ];
 
-  // প্যারেন্ট গ্রিডের জন্য Staggered ডিলিং (যাতে কার্ডগুলো সিরিয়ালি আসে)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1, // ০.১ সেকেন্ড পরপর এক একটা কার্ড অ্যানিমেট হবে
+        staggerChildren: 0.1,
       },
     },
   };
 
-  // প্রতিটি সিঙ্গেল ক্যাটাগরি কার্ডের জন্য Scale & Fade অ্যানিমেশন
   const itemVariants = {
     hidden: { opacity: 0, scale: 0.9, y: 15 },
     visible: {
@@ -36,21 +33,20 @@ export default function Categories() {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: [0.16, 1, 0.3, 1] as const, // টাইপসেফ Cubic Bezier কার্ভ
+        ease: [0.16, 1, 0.3, 1] as const,
       },
     },
   };
 
   return (
-    <section className="py-16 lg:py-24 bg-white overflow-hidden">
+    <section className="py-16 lg:py-24 bg-surface overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <SectionHeading 
-          title="Popular Categories" 
-          subtitle="Find exactly what you need by browsing through academic disciplines." 
+        <SectionHeading
+          title="Popular Categories"
+          subtitle="Find exactly what you need by browsing through academic disciplines."
         />
 
-        {/* Framer Motion Wrapper Container */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
           variants={containerVariants}
           initial="hidden"
@@ -63,30 +59,27 @@ export default function Categories() {
               <Link
                 key={idx}
                 href={`/books?category=${cat.name.toLowerCase()}`}
-                className="block focus-visible:outline-2 focus-visible:outline-[#35858E] rounded-2xl"
+                className="block focus-visible:outline-2 focus-visible:outline-primary rounded-card"
               >
                 <motion.div
                   variants={itemVariants}
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.03,
                     y: -4,
-                    transition: { duration: 0.2 } 
+                    transition: { duration: 0.2 }
                   }}
-                  whileTap={{ scale: 0.98 }} // মোবাইলে বা ক্লিকে হালকা ডাববে (Premium Feedback)
-                  className="border border-[#DDE5E7] hover:border-[#35858E] p-6 rounded-2xl flex flex-col items-center text-center gap-3 transition-colors duration-300 hover:shadow-xs group h-full cursor-pointer bg-white"
+                  whileTap={{ scale: 0.98 }}
+                  className="border border-border hover:border-primary p-6 rounded-card flex flex-col items-center text-center gap-3 transition-colors duration-300 hover:shadow-xs group h-full cursor-pointer bg-surface"
                 >
-                  {/* আইকন বক্স */}
-                  <div className="w-12 h-12 rounded-xl bg-gray-50 group-hover:bg-[#35858E]/10 text-gray-600 group-hover:text-[#35858E] flex items-center justify-center transition-colors duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-background group-hover:bg-primary-light text-text-muted group-hover:text-primary flex items-center justify-center transition-colors duration-300">
                     <Icon className="w-6 h-6" />
                   </div>
-                  
-                  {/* টাইটেল */}
-                  <h3 className="font-bold text-sm text-gray-800 group-hover:text-[#35858E] transition-colors duration-300">
+
+                  <h3 className="font-bold text-sm text-text-primary group-hover:text-primary transition-colors duration-300">
                     {cat.name}
                   </h3>
-                  
-                  {/* বুক কাউন্ট ব্যাজ */}
-                  <span className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">
+
+                  <span className="text-xs text-text-muted group-hover:text-text-secondary transition-colors">
                     {cat.count}
                   </span>
                 </motion.div>

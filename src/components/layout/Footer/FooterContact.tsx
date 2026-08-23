@@ -1,40 +1,36 @@
-// src/components/layout/footer/FooterContact.tsx
 import { Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 
 export default function FooterContact() {
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="text-white font-semibold text-lg tracking-wide">
+      <h3 className="text-text-inverse font-semibold text-lg tracking-wide">
         Contact
       </h3>
-      
-      {/* লোকেশন ও ইমেইল */}
-      <ul className="flex flex-col gap-3 text-[#C2D099] text-sm">
+
+      <ul className="flex flex-col gap-3 text-accent-muted text-sm">
         <li className="flex items-center gap-2.5">
-          <MapPin className="w-4 h-4 text-[#F6CE71] shrink-0" />
+          <MapPin className="w-4 h-4 text-accent shrink-0" />
           <span>Bangladesh</span>
         </li>
         <li className="flex items-center gap-2.5">
-          <Mail className="w-4 h-4 text-[#F6CE71] shrink-0" />
-          <a 
-            href="mailto:info@bookbridge.com" 
-            className="hover:text-[#F6CE71] transition-colors focus-visible:outline-2 focus-visible:outline-[#35858E] rounded"
+          <Mail className="w-4 h-4 text-accent shrink-0" />
+          <a
+            href="mailto:info@bookbridge.com"
+            className="hover:text-accent transition-base focus-visible:outline-2 focus-visible:outline-primary-focus rounded"
           >
             info@bookbridge.com
           </a>
         </li>
       </ul>
 
-      {/* সোশাল মিডিয়া লিঙ্কস (Facebook SVG সহ) */}
       <div className="flex items-center gap-3 mt-2">
-        
-        {/* Facebook Official SVG */}
+
         <Link
           href="https://facebook.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-[#C2D099] hover:text-[#F6CE71] transition-all focus-visible:outline-2 focus-visible:outline-[#35858E]"
+          className="p-2 rounded-full bg-white-5 hover:bg-white-10 text-accent-muted hover:text-accent transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
           aria-label="BookBridge Facebook"
         >
           <svg
@@ -46,14 +42,11 @@ export default function FooterContact() {
           </svg>
         </Link>
 
-
-
-        {/* LinkedIn Official SVG */}
         <Link
           href="https://linkedin.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-[#C2D099] hover:text-[#F6CE71] transition-all focus-visible:outline-2 focus-visible:outline-[#35858E]"
+          className="p-2 rounded-full bg-white-5 hover:bg-white-10 text-accent-muted hover:text-accent transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
           aria-label="BookBridge LinkedIn"
         >
           <svg

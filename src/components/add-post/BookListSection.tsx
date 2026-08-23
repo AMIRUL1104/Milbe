@@ -29,7 +29,6 @@ export default function BookListSection() {
   const books = watch("books");
   const titleTouched = useRef(false);
 
-  // Track manual edits so auto-generation stops once the user types a title.
   const titleFieldState = getFieldState("title", formState);
   useEffect(() => {
     if (titleFieldState.isDirty) {
@@ -55,11 +54,11 @@ export default function BookListSection() {
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-gray-700">Books</h2>
+        <h2 className="text-base font-semibold text-text-secondary">Books</h2>
         <button
           type="button"
           onClick={() => append({ ...emptyBook })}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#35858E] bg-[#35858E]/10 hover:bg-[#35858E]/20 rounded-lg px-3 py-1.5 transition-all cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary bg-primary-light hover:bg-primary/20 rounded-btn px-3 py-1.5 transition-base cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Add Book

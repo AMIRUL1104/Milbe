@@ -1,7 +1,6 @@
 import { UserProfile } from "@/interface/user/userProfile";
 import React from "react";
 
-
 interface ProfileHeaderProps {
     user: UserProfile;
     avatarSlot: React.ReactNode;
@@ -13,8 +12,8 @@ const ROLE_LABELS: Record<UserProfile["role"], string> = {
 };
 
 const ROLE_STYLES: Record<UserProfile["role"], string> = {
-    user: "bg-[#35858E]/10 text-[#35858E]",
-    admin: "bg-[#FCDE70]/30 text-amber-700",
+    user: "bg-primary-light text-primary",
+    admin: "bg-accent-light text-accent-text",
 };
 
 function formatMemberSince(iso: string): string {
@@ -26,26 +25,24 @@ function formatMemberSince(iso: string): string {
 
 export function ProfileHeader({ user, avatarSlot }: ProfileHeaderProps) {
     return (
-        <div className="relative rounded-2xl overflow-hidden border border-[#EDF1F2] shadow-sm bg-white">
-            {/* Banner */}
+        <div className="relative rounded-card overflow-hidden border border-border-light shadow-sm bg-surface">
             <div
                 className="h-28 w-full"
                 style={{
                     background:
-                        "linear-gradient(135deg, #35858E 0%, #7DA78C 60%, #FCDE70 100%)",
+                        "linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 60%, var(--color-accent) 100%)",
                 }}
             />
 
-            {/* Avatar + name row */}
             <div className="px-6 pb-6">
                 <div className="flex items-end gap-4 -mt-14">
                     {avatarSlot}
 
                     <div className="mb-1 min-w-0">
-                        <h1 className="text-xl font-bold text-gray-900 leading-tight truncate">
+                        <h1 className="text-xl font-bold text-text-primary leading-tight truncate">
                             {user.fullName}
                         </h1>
-                        <p className="text-sm text-gray-500 truncate">{user.email}</p>
+                        <p className="text-sm text-text-muted truncate">{user.email}</p>
                     </div>
 
                     <div className="ml-auto mb-1 shrink-0 flex flex-col items-end gap-1">
@@ -54,7 +51,7 @@ export function ProfileHeader({ user, avatarSlot }: ProfileHeaderProps) {
                         >
                             {ROLE_LABELS[user.role]}
                         </span>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-text-muted">
                             Member since {formatMemberSince(user.memberSince)}
                         </span>
                     </div>

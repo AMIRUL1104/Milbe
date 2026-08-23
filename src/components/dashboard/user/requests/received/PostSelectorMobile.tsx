@@ -21,10 +21,10 @@ export function PostSelectorMobile({
             key={post.id}
             type="button"
             onClick={() => onSelectPost(post.id)}
-            className={`flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 transition-all ${
+            className={`flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 transition-base ${
               isActive
-                ? "border-[#35858E] bg-[#35858E] text-white shadow-md"
-                : "border-[#EDF1F2] bg-white text-gray-600"
+                ? "border-primary bg-primary text-text-inverse shadow-md"
+                : "border-border-light bg-surface text-text-secondary"
             }`}
           >
             <div className="relative h-6 w-5 shrink-0 overflow-hidden rounded">
@@ -43,8 +43,8 @@ export function PostSelectorMobile({
               <span
                 className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${
                   isActive
-                    ? "bg-white/25 text-white"
-                    : "bg-[#FCDE70] text-[#6b5810]"
+                    ? "bg-white/25 text-text-inverse"
+                    : "bg-accent text-accent-text"
                 }`}
               >
                 {post.pendingCount}

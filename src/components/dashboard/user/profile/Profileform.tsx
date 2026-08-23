@@ -4,7 +4,6 @@ import { UseFormReturn } from "react-hook-form";
 import { Mail } from "lucide-react";
 import { ProfileFormValues } from "@/lib/validaions/profile-schema";
 
-
 interface ProfileFormProps {
     form: UseFormReturn<ProfileFormValues>;
     email: string;
@@ -29,13 +28,13 @@ const DISTRICTS = [
 ];
 
 const inputBase =
-    "w-full rounded-xl border border-[#DDE5E7] focus:border-[#35858E] focus:ring-2 focus:ring-[#35858E]/20 outline-none px-4 py-2.5 text-sm text-gray-800 bg-white transition-colors placeholder:text-gray-400";
+    "w-full rounded-input border border-border focus:border-border-focus focus:ring-2 focus:ring-primary/20 outline-none px-4 py-2.5 text-sm text-text-primary bg-surface transition-base placeholder:text-text-placeholder";
 
-const inputError = "border-red-500 focus:border-red-500 focus:ring-red-200";
+const inputError = "border-danger focus:border-danger focus:ring-danger/20";
 
-const labelClass = "text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block";
+const labelClass = "text-xs font-bold text-text-secondary uppercase tracking-wider mb-1.5 block";
 
-const errorClass = "text-xs font-medium text-red-500 mt-1";
+const errorClass = "text-xs font-medium text-danger mt-1";
 
 export function ProfileForm({ form, email }: ProfileFormProps) {
     const {
@@ -44,13 +43,12 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
     } = form;
 
     return (
-        <div className="rounded-2xl border border-[#EDF1F2] shadow-sm bg-white p-6">
-            <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-5">
+        <div className="rounded-card border border-border-light shadow-sm bg-surface p-6">
+            <h2 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-5">
                 Edit Details
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {/* Full Name */}
                 <div className="sm:col-span-2">
                     <label className={labelClass} htmlFor="fullName">
                         Full Name
@@ -67,16 +65,15 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
                     )}
                 </div>
 
-                {/* Email — read-only */}
                 <div className="sm:col-span-2">
                     <label className={labelClass} htmlFor="email">
                         Email Address
-                        <span className="ml-1.5 text-[10px] font-semibold text-gray-300 normal-case tracking-normal">
+                        <span className="ml-1.5 text-[10px] font-semibold text-text-muted normal-case tracking-normal">
                             (locked)
                         </span>
                     </label>
                     <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">
                             <Mail size={15} />
                         </span>
                         <input
@@ -84,12 +81,11 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
                             type="email"
                             value={email}
                             readOnly
-                            className="w-full rounded-xl border border-[#DDE5E7] bg-gray-50 pl-9 pr-4 py-2.5 text-sm text-gray-400 cursor-not-allowed outline-none"
+                            className="w-full rounded-input border border-border bg-background pl-9 pr-4 py-2.5 text-sm text-text-muted cursor-not-allowed outline-none"
                         />
                     </div>
                 </div>
 
-                {/* Phone Number */}
                 <div>
                     <label className={labelClass} htmlFor="phoneNumber">
                         Phone Number
@@ -106,14 +102,13 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
                     )}
                 </div>
 
-                {/* District */}
                 <div>
                     <label className={labelClass} htmlFor="district">
                         District
                     </label>
                     <select
                         id="district"
-                        className={`${inputBase} ${errors.district ? inputError : ""} cursor-pointer`}
+                        className={`${inputBase} ${errors.district ? inputError : ""} cursor-pointer bg-surface`}
                         {...register("district")}
                     >
                         <option value="">Select district</option>
@@ -128,7 +123,6 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
                     )}
                 </div>
 
-                {/* Area */}
                 <div className="sm:col-span-2">
                     <label className={labelClass} htmlFor="area">
                         Area

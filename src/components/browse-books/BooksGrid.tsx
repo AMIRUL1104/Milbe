@@ -1,4 +1,3 @@
-// src/components/browse-books/BooksGrid.tsx
 import BookCard from "@/components/shared/BookCard";
 import { BookItem } from "@/interface/post related/postDetails";
 import { getPosts } from "@/services/server/api";
@@ -14,26 +13,22 @@ interface BooksGridProps {
 }
 
 export default async function BooksGrid({ searchParams }: BooksGridProps) {
-  // ১. searchParams resolve করা হচ্ছে
   const resolvedParams = (await searchParams) || {};
 
-  // ২. এপিআই রিকোয়েস্টের জন্য প্যারামিটার প্রিপেয়ার
   const apiParams = {
     search: resolvedParams.search || "",
     category: resolvedParams.category || "",
     condition: resolvedParams.condition || "",
-    listingType: (resolvedParams.listingType || "") as "sell" | "donate" | "", 
+    listingType: (resolvedParams.listingType || "") as "sell" | "donate" | "",
     page: Number(resolvedParams.page) || 1,
     limit: 8,
   };
-  
-  // ৩. জেনেরিক টাইপ <BookItem> পাস করে ডাটা ফেচ
+
   const postData = await getPosts<BookItem>(apiParams);
 
-  // এপিআই ফেইল করলে এরর মেসেজ
   if (!postData.success) {
     return (
-      <div className="text-center text-red-500 py-10 font-medium">
+      <div className="text-center text-danger py-10 font-medium">
         Failed to load books. Please try again later.
       </div>
     );
@@ -41,10 +36,9 @@ export default async function BooksGrid({ searchParams }: BooksGridProps) {
 
   const bookItems: BookItem[] = postData.books;
 
-  // যদি সার্চ বা ফিল্টারিং এ কোনো বই না পাওয়া যায়
   if (bookItems.length === 0) {
     return (
-      <div className="text-center text-gray-500 py-16 text-lg bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+      <div className="text-center text-text-muted py-16 text-lg bg-background rounded-card border border-dashed border-border">
         No books found matching your criteria.
       </div>
     );

@@ -13,17 +13,13 @@ export default async function Navbar() {
 
   
   return (
-    // ব্যাকগ্রাউন্ড পরিবর্তন করে #35858E এবং বর্ডার rgba(255,255,255,0.1) করা হলো
-    <header className="sticky top-0 z-60 w-full bg-[#35858E] border-b border-white/10 shadow-md">
+    <header className="sticky top-0 z-60 w-full bg-primary border-b border-white-10 shadow-md">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
         
-        {/* লোগো (লেফট সাইড) */}
         <Logo />
 
-        {/* ডেক্সটপ নেভিগেশন (মিডল এবং রাইট সাইড) */}
         <DesktopNavigation isLoggedIn={isLoggedIn} role={role} />
 
-        {/* মোবাইল ড্রয়ার ও হামবার্গার (মোবাইল ভিউ) */}
         <MobileNavigation isLoggedIn={isLoggedIn} role={role} />
 
       </div>

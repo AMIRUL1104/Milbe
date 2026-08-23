@@ -7,22 +7,22 @@ const STATUS_CONFIG: Record<
 > = {
   pending: {
     label: "Pending",
-    className: "bg-[#FCDE70]/20 text-[#8a7213] border-[#FCDE70]/40",
+    className: "bg-warning-light text-warning-text border-warning-border",
     icon: Clock,
   },
   accepted: {
     label: "Accepted",
-    className: "bg-[#7DA78C]/15 text-[#3f6650] border-[#7DA78C]/30",
+    className: "bg-success-light text-success-text border-success-border",
     icon: CheckCircle2,
   },
   rejected: {
     label: "Rejected",
-    className: "bg-red-50 text-red-600 border-red-200",
+    className: "bg-danger-light text-danger-text border-danger-border",
     icon: XCircle,
   },
   cancelled: {
     label: "Cancelled",
-    className: "bg-gray-50 text-gray-600 border-gray-200",
+    className: "bg-background text-text-secondary border-border",
     icon: XCircle,
   },
 };

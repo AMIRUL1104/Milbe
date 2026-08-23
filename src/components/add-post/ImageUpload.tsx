@@ -7,8 +7,6 @@ import { toast } from "react-toastify";
 import { AddPostFormValues } from "@/lib/validaions/add-post-schema";
 import { ImgBBUploadError, uploadImageToImgBB } from "./imgbb";
 
-
-
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE_MB = 5;
 
@@ -83,23 +81,22 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
 
   return (
     <section className="space-y-3">
-      <h2 className="text-base font-semibold text-gray-700">Post Image</h2>
-      <p className="text-sm text-gray-500">
+      <h2 className="text-base font-semibold text-text-secondary">Post Image</h2>
+      <p className="text-sm text-text-muted">
         One image is allowed for the whole post (JPG, PNG, or WEBP).
       </p>
 
       {displayUrl ? (
         <div className="relative w-full max-w-xs">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={displayUrl}
             alt="Post image preview"
-            className="w-full h-48 object-cover rounded-xl border border-[#DDE5E7]"
+            className="w-full h-48 object-cover rounded-xl border border-border"
           />
 
           {isUploading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-xl">
-              <Loader2 className="w-6 h-6 text-white animate-spin" />
+            <div className="absolute inset-0 flex items-center justify-center bg-overlay-dark rounded-xl">
+              <Loader2 className="w-6 h-6 text-text-inverse animate-spin" />
             </div>
           )}
 
@@ -108,7 +105,7 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
               type="button"
               onClick={handleRemove}
               aria-label="Remove image"
-              className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full transition-all cursor-pointer"
+              className="absolute top-2 right-2 p-1.5 bg-danger hover:bg-danger-hover text-text-inverse rounded-full transition-base cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -118,7 +115,7 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="inline-flex items-center gap-2 border border-[#DDE5E7] hover:border-[#35858E] text-sm font-semibold text-gray-700 rounded-xl px-4 py-2.5 transition-all cursor-pointer"
+          className="inline-flex items-center gap-2 border border-border hover:border-primary text-sm font-semibold text-text-secondary rounded-xl px-4 py-2.5 transition-base cursor-pointer"
         >
           <Upload className="w-4 h-4" />
           Upload Image
@@ -134,7 +131,7 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
       />
 
       {errors.image && (
-        <p className="text-xs font-medium text-red-500">
+        <p className="text-xs font-medium text-danger">
           {errors.image.message}
         </p>
       )}

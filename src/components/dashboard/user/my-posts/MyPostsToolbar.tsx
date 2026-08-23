@@ -30,7 +30,7 @@ const SORT_OPTIONS: { label: string; value: MyPostsSort }[] = [
 ];
 
 const controlBase =
-  "w-full appearance-none bg-white border border-[#DDE5E7] focus:border-[#35858E] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-800 outline-hidden transition-all cursor-pointer";
+  "w-full appearance-none bg-surface border border-border focus:border-border-focus rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary outline-none transition-base cursor-pointer";
 
 export default function MyPostsToolbar({
   search,
@@ -42,23 +42,21 @@ export default function MyPostsToolbar({
   resultCount,
 }: MyPostsToolbarProps) {
   return (
-    <div className="bg-white rounded-2xl border border-[#EDF1F2] shadow-sm p-4 space-y-3">
+    <div className="bg-surface rounded-card border border-border-light shadow-sm p-4 space-y-3">
       <div className="flex flex-col lg:flex-row lg:items-center gap-3">
-        {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
           <input
             type="text"
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Search by title, category, or book name..."
-            className="w-full bg-white border border-[#DDE5E7] focus:border-[#35858E] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-hidden transition-all"
+            className="w-full bg-surface border border-border focus:border-border-focus rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base"
           />
         </div>
 
-        {/* Filter */}
         <div className="relative w-full lg:w-48">
-          <SlidersHorizontal className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <SlidersHorizontal className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
           <select
             value={filter}
             onChange={(event) =>
@@ -74,9 +72,8 @@ export default function MyPostsToolbar({
           </select>
         </div>
 
-        {/* Sort */}
         <div className="relative w-full lg:w-48">
-          <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
           <select
             value={sort}
             onChange={(event) => onSortChange(event.target.value as MyPostsSort)}
@@ -91,7 +88,7 @@ export default function MyPostsToolbar({
         </div>
       </div>
 
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-text-muted">
         {resultCount} {resultCount === 1 ? "post" : "posts"} found
       </p>
     </div>

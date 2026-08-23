@@ -1,4 +1,3 @@
-// src/components/auth/LoginForm.tsx
 "use client";
 
 import { useState } from "react";
@@ -12,7 +11,7 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-// Zod Validation Schema Definition
+
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
   password: z.string().min(1, "Password is required"),
@@ -26,7 +25,6 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-
 
   const {
     register,
@@ -43,121 +41,110 @@ export default function LoginForm() {
 
   const onSubmit = async (userData: LoginFormValues) => {
     setIsLoading(true);
-    // console.log("[LoginForm] Validated Credentials Submitted:", data);
 
     try {
-      // Better Auth ক্লায়েন্ট কল
       const { data, error } = await authClient.signIn.email({
-        email: userData.email, // required
-        password: userData.password, // required
+        email: userData.email,
+        password: userData.password,
         rememberMe: userData.rememberMe,
-
       });
 
-      // যদি Better Auth কোনো এরর রিটার্ন করে (যেমন: Email already exists)
       if (error) {
-        console.error("[RegisterForm] Better Auth error:", error.message);
+        console.error("[LoginForm] Better Auth error:", error.message);
         toast.error(error.message || "Something went wrong during sign in.");
         setIsLoading(false);
-        return; // এখানেই ফাংশন থামিয়ে দেওয়া হলো
+        return;
       }
 
-      // সফলভাবে রেজিস্ট্রেশন সম্পন্ন হলে
       if (data?.user) {
-
-        // console.log("[RegisterForm] User registered successfully:", data.user);
-        toast.success(" Welcome to BookBridge.");
-
-        // স্টেট ক্লিয়ার করে হোম পেজে রিডাইরেক্ট
+        toast.success("Welcome to BookBridge.");
         setIsLoading(false);
         router.push(searchParams.get("redirect") || "/");
-        router.refresh(); // রিডাইরেক্টের পর নতুন সেশন ডেটা লোড করার জন্য
+        router.refresh();
       }
     } catch (err) {
-      // নেটওয়ার্ক বা অন্য কোনো আনএক্সপেক্টেড এরর হ্যান্ডেল করার জন্য
-      // console.error("[RegisterForm] Unexpected network error:", err);
+      console.error("[LoginForm] Unexpected network error:", err);
       toast.error("Network error. Please check your connection and try again.");
       setIsLoading(false);
     }
     setIsLoading(false);
   };
 
+  const inputBase =
+    "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
+  const labelBase = "text-xs font-bold text-text-secondary uppercase tracking-wider";
+  const errorText = "text-xs font-medium text-danger mt-0.5";
+
   return (
     <div className="w-full flex flex-col gap-5">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
-        {/* Email Input Field */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+          <label htmlFor="email" className={labelBase}>
             Email Address
           </label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               id="email"
               type="email"
               placeholder="name@student.com"
               {...register("email")}
-              className={`w-full bg-white border ${errors.email ? "border-red-500 focus:border-red-500" : "border-[#DDE5E7] focus:border-[#35858E]"
-                } rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-hidden transition-all`}
+              className={`${inputBase} ${errors.email ? "border-danger focus:border-danger focus-visible:outline-danger" : "border-border focus:border-border-focus focus-visible:outline-primary-focus"}`}
             />
           </div>
           {errors.email && (
-            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.email.message}</p>
+            <p className={errorText}>{errors.email.message}</p>
           )}
         </div>
 
-        {/* Password Input Field */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="password" className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+          <label htmlFor="password" className={labelBase}>
             Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               {...register("password")}
-              className={`w-full bg-white border ${errors.password ? "border-red-500 focus:border-red-500" : "border-[#DDE5E7] focus:border-[#35858E]"
-                } rounded-xl pl-10 pr-10 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-hidden transition-all`}
+              className={`${inputBase} pr-10 ${errors.password ? "border-danger focus:border-danger focus-visible:outline-danger" : "border-border focus:border-border-focus focus-visible:outline-primary-focus"}`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 rounded-md cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-text-muted hover:text-text-secondary rounded-md cursor-pointer"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
           {errors.password && (
-            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.password.message}</p>
+            <p className={errorText}>{errors.password.message}</p>
           )}
         </div>
 
-        {/* Remember Me & Forgot Password Links */}
         <div className="flex items-center justify-between text-xs sm:text-sm mt-1">
-          <label className="flex items-center gap-2 cursor-pointer text-gray-600 select-none">
+          <label className="flex items-center gap-2 cursor-pointer text-text-secondary select-none">
             <input
               type="checkbox"
               {...register("rememberMe")}
-              className="w-4 h-4 rounded-sm border-[#DDE5E7] text-[#35858E] focus:ring-[#35858E]"
+              className="w-4 h-4 rounded-sm border-border text-primary focus:ring-primary"
             />
             <span>Remember Me</span>
           </label>
           <Link
             href="/forgot-password"
-            className="font-semibold text-[#35858E] hover:text-[#35858E]/80 transition-colors"
+            className="font-semibold text-primary hover:text-primary-hover transition-colors"
           >
             Forgot Password?
           </Link>
         </div>
 
-        {/* Login Button */}
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full inline-flex items-center justify-center bg-[#35858E] hover:bg-[#35858E]/90 text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed mt-2 focus-visible:outline-2 focus-visible:outline-[#F6CE71]"
+          className="w-full inline-flex items-center justify-center bg-primary hover:bg-primary-hover text-text-inverse font-bold py-2.5 px-4 rounded-btn transition-base shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed mt-2 focus-visible:outline-2 focus-visible:outline-primary-focus"
         >
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -167,14 +154,12 @@ export default function LoginForm() {
         </button>
       </form>
 
-      {/* Divider */}
       <div className="flex items-center my-1">
-        <div className="flex-1 border-t border-[#DDE5E7]"></div>
-        <span className="px-3 text-xs font-bold text-gray-400 uppercase tracking-wider">OR</span>
-        <div className="flex-1 border-t border-[#DDE5E7]"></div>
+        <div className="flex-1 border-t border-border"></div>
+        <span className="px-3 text-xs font-bold text-text-muted uppercase tracking-wider">OR</span>
+        <div className="flex-1 border-t border-border"></div>
       </div>
 
-      {/* Social Google Provider Button */}
       <SocialAuth />
     </div>
   );

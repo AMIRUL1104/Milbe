@@ -33,16 +33,14 @@ export function ProfileAvatar({
 }: ProfileAvatarProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // displayUrl নতুন previewUrl অথবা আগের avatarUrl ব্যবহার করবে
     const displayUrl = previewUrl || avatarUrl;
-    // console.log(displayUrl);
+
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
 
         try {
             const res = await uploadImageToImgBB(file);
-            // console.log(res);
             if (res && res.url) {
                 onImageChange(file, res.url);
             }
@@ -50,16 +48,17 @@ export function ProfileAvatar({
             console.error("Image upload failed:", error);
         }
     }
+
     const imgbbLoader = ({ src }: { src: string }) => {
         return src;
     };
+
     return (
         <div className="relative inline-block">
-            {/* Avatar circle */}
-            <div className="w-28 h-28 rounded-full ring-4 ring-white shadow-lg overflow-hidden bg-[#7DA78C] flex items-center justify-center relative"> {/* 'relative' class যোগ করা হয়েছে যেহেতু fill ব্যবহার করছেন */}
+            <div className="w-28 h-28 rounded-full ring-4 ring-surface shadow-lg overflow-hidden bg-secondary flex items-center justify-center relative">
                 {displayUrl ? (
                     <Image
-                        loader={imgbbLoader} // <--- এই লাইনটি যোগ করুন
+                        loader={imgbbLoader}
                         fill
                         src={displayUrl as string}
                         alt={fullName}
@@ -67,19 +66,18 @@ export function ProfileAvatar({
                         sizes="112px"
                     />
                 ) : (
-                    <span className="text-white text-3xl font-bold select-none">
+                    <span className="text-text-inverse text-3xl font-bold select-none">
                         {getInitials(fullName)}
                     </span>
                 )}
             </div>
 
-            {/* Edit / Camera overlay button */}
             {isEditing ? (
                 <>
                     <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-[#35858E] hover:bg-[#35858E]/90 text-white shadow-md flex items-center justify-center transition-colors"
+                        className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-primary hover:bg-primary-hover text-text-inverse shadow-md flex items-center justify-center transition-base"
                         aria-label="Change profile photo"
                     >
                         <Camera size={16} />
@@ -96,10 +94,9 @@ export function ProfileAvatar({
                 <button
                     type="button"
                     onClick={onEditClick}
-                    className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-[#35858E] hover:bg-[#35858E]/90 text-white shadow-md flex items-center justify-center transition-colors"
+                    className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-primary hover:bg-primary-hover text-text-inverse shadow-md flex items-center justify-center transition-base"
                     aria-label="Edit profile"
                 >
-                    {/* Pencil icon inline */}
                     <svg
                         width="15"
                         height="15"

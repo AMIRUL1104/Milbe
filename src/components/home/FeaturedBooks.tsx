@@ -11,8 +11,8 @@ export default async function FeaturedBooks() {
 
   if (!postData) {
     return (
-      <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
-        <p className="text-red-500 font-bold">
+      <main className="min-h-screen w-full bg-background flex items-center justify-center">
+        <p className="text-danger font-bold">
           Featured Books not found or data error!
         </p>
       </main>
@@ -21,7 +21,7 @@ export default async function FeaturedBooks() {
 
   const featuredBooks = postData.data;
   return (
-    <section className="py-16 lg:py-24 bg-white">
+    <section className="py-16 lg:py-24 bg-surface">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHeading
           title="Featured Books"

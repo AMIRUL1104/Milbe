@@ -1,7 +1,5 @@
 "use client";
 
-// src/components/layout/navbar/NavigationLinks.tsx
-
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -45,12 +43,10 @@ const adminDashboardLinks: NavLinkItem[] = [
 ];
 
 const linkClass =
-  "flex items-center gap-2 text-sm font-medium text-white/90 hover:text-[#F6CE71] focus-visible:text-[#F6CE71] focus-visible:outline-2 focus-visible:outline-[#F6CE71] px-3 py-2 rounded-md transition-all group";
+  "flex items-center gap-2 text-sm font-medium text-text-inverse/90 hover:text-accent focus-visible:text-accent focus-visible:outline-2 focus-visible:outline-primary-focus px-3 py-2 rounded-md transition-base group";
 
 const iconClass =
-  "w-4 h-4 text-white/60 group-hover:text-[#F6CE71] transition-colors";
-
-// ─── Mobile Dashboard Dropdown ─────────────────────────────────────────────────
+  "w-4 h-4 text-text-inverse/60 group-hover:text-accent transition-colors";
 
 function MobileDashboardDropdown({
   role,
@@ -66,21 +62,21 @@ function MobileDashboardDropdown({
     <div>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-between w-full gap-2 text-sm font-medium text-white/90 hover:text-[#F6CE71] px-3 py-2 rounded-md transition-all group"
+        className="flex items-center justify-between w-full gap-2 text-sm font-medium text-text-inverse/90 hover:text-accent px-3 py-2 rounded-md transition-base group"
       >
         <span className="flex items-center gap-2">
           <LayoutDashboard className={iconClass} />
           Dashboard
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-white/60 transition-transform duration-200 ${
+          className={`w-4 h-4 text-text-inverse/60 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
         />
       </button>
 
       {isOpen && (
-        <div className="mt-1 ml-3 flex flex-col gap-1 border-l border-white/20 pl-3">
+        <div className="mt-1 ml-3 flex flex-col gap-1 border-l border-white-10 pl-3">
           {links.map((link) => {
             const Icon = link.icon;
             return (
@@ -88,9 +84,9 @@ function MobileDashboardDropdown({
                 key={link.href}
                 href={link.href}
                 onClick={onLinkClick}
-                className="flex items-center gap-2 text-sm text-white/80 hover:text-[#F6CE71] px-2 py-1.5 rounded-md transition-all group"
+                className="flex items-center gap-2 text-sm text-text-inverse/80 hover:text-accent px-2 py-1.5 rounded-md transition-base group"
               >
-                <Icon className="w-3.5 h-3.5 text-white/50 group-hover:text-[#F6CE71] transition-colors" />
+                <Icon className="w-3.5 h-3.5 text-text-inverse/50 group-hover:text-accent transition-colors" />
                 {link.name}
               </Link>
             );
@@ -100,8 +96,6 @@ function MobileDashboardDropdown({
     </div>
   );
 }
-
-// ─── Main Component ────────────────────────────────────────────────────────────
 
 export default function NavigationLinks({
   isLoggedIn,
@@ -137,7 +131,6 @@ export default function NavigationLinks({
         );
       })}
 
-      {/* Desktop: single Dashboard link */}
       {isLoggedIn && !isMobile && role && (
         <Link
           href={`/dashboard/${role}`}
@@ -149,7 +142,6 @@ export default function NavigationLinks({
         </Link>
       )}
 
-      {/* Mobile: dropdown with sub-links */}
       {isLoggedIn && isMobile && role && (
         <MobileDashboardDropdown role={role} onLinkClick={onLinkClick} />
       )}

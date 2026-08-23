@@ -33,7 +33,7 @@ export default function PrivacyNavigation({ items }: PrivacyNavigationProps) {
         };
 
         window.addEventListener("scroll", handleScroll);
-        handleScroll(); // Initial check
+        handleScroll();
 
         return () => window.removeEventListener("scroll", handleScroll);
     }, [items]);
@@ -60,9 +60,9 @@ export default function PrivacyNavigation({ items }: PrivacyNavigationProps) {
                 <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className={`w-full text-left px-4 py-2.5 text-sm font-semibold rounded-xl transition-all block ${activeId === item.id
-                            ? "bg-[#35858E]/10 text-[#35858E] pl-6"
-                            : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                    className={`w-full text-left px-4 py-2.5 text-sm font-semibold rounded-xl transition-base block ${activeId === item.id
+                            ? "bg-primary-light text-primary pl-6"
+                            : "text-text-muted hover:text-text-primary hover:bg-background"
                         }`}
                 >
                     {item.label}

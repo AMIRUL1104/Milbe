@@ -2,7 +2,6 @@ import React from "react";
 import { Mail, Phone, MapPin, Calendar, Shield, Home } from "lucide-react";
 import { UserProfile } from "@/interface/user/userProfile";
 
-
 interface ProfileInfoProps {
     user: UserProfile;
 }
@@ -17,19 +16,19 @@ interface InfoFieldProps {
 function InfoField({ icon, label, value, locked }: InfoFieldProps) {
     return (
         <div className="flex items-start gap-3">
-            <div className="mt-0.5 w-8 h-8 rounded-lg bg-[#35858E]/8 flex items-center justify-center shrink-0 text-[#35858E]">
+            <div className="mt-0.5 w-8 h-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0 text-primary">
                 {icon}
             </div>
             <div className="min-w-0">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">
+                <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-0.5">
                     {label}
                     {locked && (
-                        <span className="ml-1.5 text-[10px] font-semibold text-gray-300 normal-case tracking-normal">
+                        <span className="ml-1.5 text-[10px] font-semibold text-text-muted normal-case tracking-normal">
                             (locked)
                         </span>
                     )}
                 </p>
-                <p className="text-sm font-medium text-gray-800 wrap-break-word">{value}</p>
+                <p className="text-sm font-medium text-text-primary wrap-break-word">{value}</p>
             </div>
         </div>
     );
@@ -50,8 +49,8 @@ const ROLE_DISPLAY: Record<UserProfile["role"], string> = {
 
 export function ProfileInfo({ user }: ProfileInfoProps) {
     return (
-        <div className="rounded-2xl border border-[#EDF1F2] shadow-sm bg-white p-6">
-            <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-5">
+        <div className="rounded-card border border-border-light shadow-sm bg-surface p-6">
+            <h2 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-5">
                 Account Details
             </h2>
 

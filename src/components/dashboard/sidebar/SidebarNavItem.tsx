@@ -44,17 +44,17 @@ export default function SidebarNavItem({
       title={isCollapsed ? item.label : undefined}
       className={`
         group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
-        transition-all duration-200 ease-in-out
+        transition-base ease-in-out
         ${
           isActive
-            ? "bg-[#35858E] text-white shadow-sm"
-            : "text-gray-600 hover:bg-[#35858E]/10 hover:text-[#35858E]"
+            ? "bg-primary text-text-inverse shadow-sm"
+            : "text-text-secondary hover:bg-primary-light hover:text-primary"
         }
         ${isCollapsed ? "justify-center" : ""}
       `}
     >
       {isActive && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-[#FCDE70]" />
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-accent" />
       )}
       <Icon className="w-4.5 h-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
       {!isCollapsed && <span className="whitespace-nowrap">{item.label}</span>}
