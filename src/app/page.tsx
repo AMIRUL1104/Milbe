@@ -1,16 +1,22 @@
 // src/app/page.tsx
-import HomePage from "@/components/home/HomePage";
-import { getAllPosts } from "@/services/server/adminApi/adminApi";
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { getPosts } from "@/services/server/api";
+import { BookItem } from "@/interface/post related/postDetails";
+import HeroSection from "@/components/home/HeroSection";
+import SearchAndLocation from "@/components/home/SearchAndLocation";
+import CategoriesFilter from "@/components/home/CategoriesFilter";
+import NearbyBooks from "@/components/home/NearbyBooks";
+import RecentlyListedBooks from "@/components/home/RecentlyListedBooks";
+import BooksDiscovery from "@/components/home/BooksDiscovery";
 
 export const metadata: Metadata = {
-  title: "BookBridge BD | Buy, Sell & Donate Academic Books",
+  title: "milbe.shop | Bangladesh's Student Book Hub",
   description:
-    "BookBridge BD is a trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh. Discover affordable textbooks or share books with others.",
+    "milbe is a trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh. Discover affordable textbooks or share books with others.",
 
   keywords: [
-    "BookBridge",
-    "BookBridge BD",
+    "milbe",
+    "milbe.shop",
     "academic books",
     "used books",
     "buy books",
@@ -22,33 +28,33 @@ export const metadata: Metadata = {
   ],
 
   alternates: {
-    canonical: "https://bookbridgebd.com",
+    canonical: "https://milbe.shop",
   },
 
   openGraph: {
-    title: "BookBridge BD | Buy, Sell & Donate Academic Books",
+    title: "milbe.shop | Bangladesh's Student Book Hub",
     description:
       "Buy, sell, and donate used academic books with students across Bangladesh.",
-    url: "https://bookbridgebd.com",
-    siteName: "BookBridge BD",
+    url: "https://milbe.shop",
+    siteName: "milbe.shop",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://bookbridgebd.com/og-image.png",
+        url: "https://milbe.shop/og-image.png",
         width: 1200,
         height: 630,
-        alt: "BookBridge BD",
+        alt: "milbe.shop",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "BookBridge BD | Buy, Sell & Donate Academic Books",
+    title: "milbe.shop | Bangladesh's Student Book Hub",
     description:
       "A student marketplace for buying, selling, and donating academic books.",
-    images: ["https://bookbridgebd.com/og-image.png"],
+    images: ["https://milbe.shop/og-image.png"],
   },
 
   robots: {
@@ -56,12 +62,75 @@ export const metadata: Metadata = {
     follow: true,
   },
 };
-export default function Home() {
-  // console.log("[Root Home] Rendering main layout with full responsive width support.");
+
+function sortByLocationMatch(books: BookItem[], userLocation?: string): BookItem[] {
+  if (!userLocation) return books;
+  console.log(userLocation);
+  console.log(books);
+
+  const normalizedUserLocation = userLocation.toLowerCase().trim();
+  console.log(normalizedUserLocation);
+
+  return [...books].sort((a, b) => {
+    const aDistrict = a.district?.toLowerCase().trim() || "";
+    const bDistrict = b.district?.toLowerCase().trim() || "";
+
+    const aMatches = aDistrict === normalizedUserLocation;
+    const bMatches = bDistrict === normalizedUserLocation;
+
+    if (aMatches && !bMatches) return -1;
+    if (!aMatches && bMatches) return 1;
+    return 0;
+  });
+}
+console.log(sortByLocationMatch);
+
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    search?: string;
+    location?: string;
+    category?: string;
+    listingType?: "sell" | "donate";
+    condition?: string;
+  }>;
+}) {
+  const { search, location, category, listingType, condition } = await searchParams;
+
+  const filteredBooks = await getPosts<BookItem>({
+    search,
+    category,
+    listingType: listingType as "sell" | "donate" | "",
+    condition,
+    sort: "newest",
+    limit: 20,
+  });
+  console.log(filteredBooks);
+
+  const recentBooks = await getPosts<BookItem>({
+    sort: "newest",
+    limit: 8,
+  });
+
+  const allBooks = await getPosts<BookItem>({ limit: 50 });
+  const nearbyBooks = sortByLocationMatch(allBooks.books, location);
 
   return (
     <div className="w-full min-h-screen bg-[#F5F7F8] font-sans antialiased overflow-x-hidden">
-      <HomePage />
+      <main>
+        <HeroSection />
+        <SearchAndLocation initialSearch={search} initialLocation={location} />
+        <CategoriesFilter initialCategory={category} />
+        <NearbyBooks books={nearbyBooks} userLocation={location} />
+        <RecentlyListedBooks books={recentBooks.books} />
+        <BooksDiscovery
+          initialListingType={listingType}
+          allBooks={filteredBooks.books}
+          nearbyBooks={nearbyBooks}
+          recentBooks={recentBooks.books}
+        />
+      </main>
     </div>
   );
 }
