@@ -1,23 +1,25 @@
 "use server";
 
 import { authHeader } from "./serverFetch";
+import { ApiResponse, ApiError } from "@/interface/apiResponse";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
 
-interface ServerMutationResponse<T = unknown> {
-  success?: boolean;
-  message?: string;
-  data?: T;
-  insertedId?: string;
-  createdAt?: string;
-  error?: string;
+async function handleMutationResponse<T>(res: Response): Promise<ApiResponse<T>> {
+  const responseData = (await res.json()) as ApiResponse<T>;
+
+  if (!res.ok) {
+    throw new ApiError(responseData, res.status);
+  }
+
+  return responseData;
 }
 
-export const serverMutation = async <TData>(
+export const serverMutation = async <TData, TResponse = unknown>(
   path: string,
   data: TData,
-  method: "POST" | "PATCH" = "POST",
-): Promise<ServerMutationResponse> => {
+  method: "POST" | "PATCH" | "DELETE" = "POST",
+): Promise<ApiResponse<TResponse>> => {
   try {
     const response = await fetch(`${baseUrl}${path}`, {
       method,
@@ -25,16 +27,23 @@ export const serverMutation = async <TData>(
         "Content-Type": "application/json",
         ...(await authHeader()),
       },
-      body: JSON.stringify(data),
+      body: method !== "DELETE" ? JSON.stringify(data) : undefined,
     });
 
-    return await response.json();
+    return handleMutationResponse<TResponse>(response);
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     console.error(error);
 
-    return {
-      success: false,
-      error: "Something went wrong!",
-    };
+    throw new ApiError(
+      {
+        success: false,
+        statusCode: 0,
+        message: "Something went wrong!",
+      },
+      0
+    );
   }
 };

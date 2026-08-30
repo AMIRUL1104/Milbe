@@ -1,6 +1,4 @@
 import { BookItem } from "./postDetails";
+import { ApiResponse } from "@/interface/apiResponse";
 
-export interface PostResponse {
-  success: boolean;
-  data: BookItem;
-}
+export type PostResponse = ApiResponse<BookItem>;

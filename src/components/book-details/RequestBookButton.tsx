@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { HandHelping, Loader2 } from "lucide-react";
-import { checkBookRequest } from "@/services/server/api";
+import { checkBookRequest } from "@/services/features/bookRequests";
 import RequestBookModal from "./RequestBookModal";
 import { CheckBookRequestResponse } from "@/interface/bookRequest/checkRequest";
 
@@ -46,25 +46,25 @@ export default function RequestBookButton({
     let isMounted = true;
 
     const runCheck = async () => {
-      const result: CheckBookRequestResponse | null = await checkBookRequest(postId, sellerId, requesterId as string);
+      const result = await checkBookRequest(postId, sellerId, requesterId as string);
       if (!isMounted) return;
 
-      if (!result?.success) {
+      if (!result.success || !result.data) {
         setStatus("already-requested");
         return;
       }
 
-      if (result.reason === "own_post") {
+      if (result.data.reason === "own_post") {
         setStatus("own-post");
         return;
       }
 
-      if (result.reason === "already_requested") {
+      if (result.data.reason === "already_requested") {
         setStatus("already-requested");
         return;
       }
 
-      setStatus(result.canRequest ? "can-request" : "already-requested");
+      setStatus(result.data.canRequest ? "can-request" : "already-requested");
     };
 
     runCheck();

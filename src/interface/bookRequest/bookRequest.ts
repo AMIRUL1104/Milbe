@@ -1,11 +1,6 @@
 import { BookRequest } from "./checkRequest";
+import { ApiResponse } from "@/interface/apiResponse";
 
-export interface BookRequestResponse {
-  success: boolean;
-  requests: BookRequest[];
-}
+export type BookRequestResponse = ApiResponse<BookRequest[]>;
 
-export interface BookRequestUpdateResponse {
-  success: boolean;
-  message: string;
-}
+export type BookRequestUpdateResponse = ApiResponse<null>;

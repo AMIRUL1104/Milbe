@@ -15,7 +15,7 @@ import DescriptionSection from "./DescriptionSection";
 import SubmitButton from "./SubmitButton";
 import { AddPostFormValues, addPostSchema } from "@/lib/validaions/add-post-schema";
 import { BookItem } from "./post";
-import { addNewPost } from "@/services/server/action";
+import { addNewPost } from "@/services/features/posts";
 
 type AddPostFormInput = z.input<typeof addPostSchema>;
 

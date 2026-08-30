@@ -7,7 +7,7 @@ import { Loader2, Send } from "lucide-react";
 import { toast } from "react-toastify";
 import type { BookRequest } from "@/interface/bookRequest/checkRequest";
 import { RequestBookFormValues, requestBookSchema } from "@/lib/validaions/request-book-schema";
-import { createBookRequest } from "@/services/server/action";
+import { createBookRequest } from "@/services/features/bookRequests";
 
 interface RequestBookFormProps {
   bookCoverUrl: string;

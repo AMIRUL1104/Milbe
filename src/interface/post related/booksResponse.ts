@@ -1,12 +1,9 @@
-export interface BooksResponse<T> {
-  success: boolean;
-  books: T[];
-  total: number;
-  totalPages: number;
-  currentPage: number;
+import { ApiResponse, PaginatedMeta } from "@/interface/apiResponse";
+
+export interface BooksResponse<T> extends ApiResponse<T[]> {
+  meta?: PaginatedMeta;
 }
 
-export interface FeaturedPostsResponse<T> {
-  success: boolean;
-  data: T[];
+export interface FeaturedPostsResponse<T> extends ApiResponse<T[]> {
+  meta?: never;
 }

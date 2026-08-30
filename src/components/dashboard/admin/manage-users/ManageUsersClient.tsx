@@ -9,7 +9,8 @@ import { UsersTable } from "./UsersTable";
 import { UserMobileCard } from "./UserMobileCard";
 import { UsersEmptyState } from "./UsersEmptyState";
 import { UsersPagination } from "./UsersPagination";
-import { SortOption } from "@/services/server/adminApi/adminApi";
+import type { GetUsersParams } from "@/services/features/admin";
+type SortOption = GetUsersParams["sort"];
 
 interface ManageUsersClientProps {
   users: UserProfile[];

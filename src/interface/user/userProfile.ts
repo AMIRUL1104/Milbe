@@ -1,3 +1,5 @@
+import { ApiResponse } from "@/interface/apiResponse";
+
 export interface UserProfile {
   _id: string;
   userId: string;
@@ -19,7 +21,4 @@ export interface UpdateProfilePayload {
   avatarUrl?: string | null;
 }
 
-export interface UserProfileResponse {
-  success: boolean;
-  data: UserProfile;
-}
+export type UserProfileResponse = ApiResponse<UserProfile>;

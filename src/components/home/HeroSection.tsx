@@ -12,7 +12,7 @@ export default function HeroSection() {
               milbe
             </span>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-text-primary tracking-tight leading-tight">
-              Bangladesh's Student Book Hub
+              {"Bangladesh's Student Book Hub"}
             </h1>
           </div>
           <div className="w-full lg:w-auto lg:max-w-[500px]">

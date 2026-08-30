@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getMyPosts } from "@/services/server/api";
+import { getMyPosts } from "@/services/features/posts";
 import MyPostsClient from "@/components/dashboard/user/my-posts/MyPostsClient";
 import { MyPost } from "@/components/dashboard/user/my-posts/my-post";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default async function MyPostsPage() {
   const response = await getMyPosts();
 
-  if (!response) {
+  if (!response.success || !response.data) {
     return (
       <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
         <p className="text-red-500 font-bold">My Posts not found or data error!</p>
@@ -23,7 +23,7 @@ export default async function MyPostsPage() {
   }
 
   // ২. Type Assertion (as MyPost[]) ব্যবহার করে unknown[] কে MyPost[] এ রূপান্তর করো
-  const posts = (response?.books ?? []) as MyPost[];
+  const posts = (response.data.books ?? []) as MyPost[];
 
   return (
     <main className="p-4 sm:p-6 lg:p-8 space-y-6">

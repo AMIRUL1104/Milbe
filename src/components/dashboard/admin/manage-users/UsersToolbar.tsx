@@ -2,7 +2,8 @@
 
 import { Search } from "lucide-react";
 import type { RoleFilter, StatusFilter } from "@/interface/dashboard/manageUsers";
-import { SortOption } from "@/services/server/adminApi/adminApi";
+import type { GetUsersParams } from "@/services/features/admin";
+type SortOption = GetUsersParams["sort"];
 
 interface UsersToolbarProps {
   search: string;

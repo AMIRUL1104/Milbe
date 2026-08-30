@@ -2,7 +2,7 @@ import type { RoleFilter, StatusFilter } from "@/interface/dashboard/manageUsers
 import { ManageUsersClient } from "@/components/dashboard/admin/manage-users/ManageUsersClient";
 import { UsersStatsCards } from "@/components/dashboard/admin/manage-users/UsersStatsCards";
 import { UsersErrorFallback } from "@/components/dashboard/admin/manage-users/UsersErrorFallback";
-import { getAllUsers, SortOption } from "@/services/server/adminApi/adminApi";
+import { getAllUsers, GetUsersParams } from "@/services/features/admin";
 
 interface ManageUsersPageProps {
   searchParams: Promise<{
@@ -26,7 +26,6 @@ export default async function ManageUsersPage({
   const page = Math.max(1, parseInt(params.page ?? "1", 10));
 
   const response = await getAllUsers({ search, role, status, sort, page, limit: 10 });
-  // console.log(response)
 
   const pageHeader = (
     <div>
@@ -37,7 +36,7 @@ export default async function ManageUsersPage({
     </div>
   );
 
-  if (!response.success) {
+  if (!response.success || !response.data) {
     return (
       <div className="flex flex-col gap-6">
         {pageHeader}
@@ -50,17 +49,13 @@ export default async function ManageUsersPage({
     <div className="flex flex-col gap-6">
       {pageHeader}
 
-      <UsersStatsCards total={response.total} />
+      <UsersStatsCards total={response.meta?.total ?? 0} />
 
       <ManageUsersClient
-        users={response.users}
-        total={response.total}
-        totalPages={response.totalPages}
-        currentPage={
-          typeof response.currentPage === "string"
-            ? parseInt(response.currentPage, 10)
-            : response.currentPage
-        }
+        users={response.data}
+        total={response.meta?.total ?? 0}
+        totalPages={response.meta?.totalPages ?? 1}
+        currentPage={response.meta?.currentPage ?? 1}
         search={search}
         roleFilter={role}
         statusFilter={status}

@@ -1,6 +1,6 @@
 // src/app/page.tsx
 import { Metadata } from "next";
-import { getPosts } from "@/services/server/api";
+import { getPosts } from "@/services/features/posts";
 import { BookItem } from "@/interface/post related/postDetails";
 import HeroSection from "@/components/home/HeroSection";
 import SearchAndLocation from "@/components/home/SearchAndLocation";
@@ -106,7 +106,6 @@ export default async function HomePage({
     sort: "newest",
     limit: 20,
   });
-  console.log(filteredBooks);
 
   const recentBooks = await getPosts<BookItem>({
     sort: "newest",
@@ -114,7 +113,7 @@ export default async function HomePage({
   });
 
   const allBooks = await getPosts<BookItem>({ limit: 50 });
-  const nearbyBooks = sortByLocationMatch(allBooks.books, location);
+  const nearbyBooks = sortByLocationMatch(allBooks.data?.books || [], location);
 
   return (
     <div className="w-full min-h-screen bg-[#F5F7F8] font-sans antialiased overflow-x-hidden">
@@ -123,12 +122,12 @@ export default async function HomePage({
         <SearchAndLocation initialSearch={search} initialLocation={location} />
         <CategoriesFilter initialCategory={category} />
         <NearbyBooks books={nearbyBooks} userLocation={location} />
-        <RecentlyListedBooks books={recentBooks.books} />
+        <RecentlyListedBooks books={recentBooks.data?.books || []} />
         <BooksDiscovery
           initialListingType={listingType}
-          allBooks={filteredBooks.books}
+          allBooks={filteredBooks.data?.books || []}
           nearbyBooks={nearbyBooks}
-          recentBooks={recentBooks.books}
+          recentBooks={recentBooks.data?.books || []}
         />
       </main>
     </div>

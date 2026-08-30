@@ -10,7 +10,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
-import { createUserProfile } from "@/services/server/action";
+import { createUserProfile } from "@/services/features/userProfile";
 
 const registerSchema = z.object({
   fullName: z.string().min(1, "Full Name is required"),

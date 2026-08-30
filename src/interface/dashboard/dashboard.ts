@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import { ApiResponse } from "@/interface/apiResponse";
 
 export type DashboardRole = "admin" | "user";
 
@@ -54,7 +55,7 @@ export interface ApiActivity {
   createdAt: string; // ISO date string
 }
 
-export interface AdminDashboardResponse {
+export interface AdminDashboardData {
   totalUsers: number;
   activePosts: number;
   pendingReviews: number;
@@ -62,10 +63,14 @@ export interface AdminDashboardResponse {
   recentActivities: ApiActivity[];
 }
 
-export interface UserDashboardResponse {
+export interface UserDashboardData {
   activePosts: number;
   pendingRequests: number;
   booksSold: number;
   booksDonated: number;
   recentActivities: ApiActivity[];
 }
+
+export type AdminDashboardResponse = ApiResponse<AdminDashboardData>;
+
+export type UserDashboardResponse = ApiResponse<UserDashboardData>;

@@ -1,12 +1,10 @@
 import type { ObjectId } from "mongodb";
+import { ApiResponse } from "@/interface/apiResponse";
 
-export interface CheckBookRequestResponse {
-  success: boolean;
-  canRequest: boolean;
-  reason?: "own_post" | "already_requested";
-}
+export type CheckBookRequestResponse =
+  ApiResponse<{ canRequest: boolean; reason?: "own_post" | "already_requested" }>;
 
-export type RequestStatus = "pending" | "accepted" | "rejected";
+export type RequestStatus = "pending" | "accepted" | "rejected" | "cancelled";
 
 export interface BookRequest {
   _id?: ObjectId;

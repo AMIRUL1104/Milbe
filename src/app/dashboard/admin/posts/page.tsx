@@ -2,13 +2,13 @@
 
 import ManagePostsTable from "./ManagePostsTable";
 
-import { getAllPosts } from "@/services/server/adminApi/adminApi";
+import { getAllPosts } from "@/services/features/admin";
 
 
 
 export default async function ManagePostsPage() {
   const allPosts = await getAllPosts();
-  const posts = allPosts?.data ?? [];
+  const posts = allPosts.data?.data ?? [];
   return (
     <div className="space-y-6">
       <div>

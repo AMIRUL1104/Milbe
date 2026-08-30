@@ -1,4 +1,5 @@
 import type { UserProfile } from "@/interface/user/userProfile";
+import { ApiResponse, PaginatedMeta } from "@/interface/apiResponse";
 
 export type { UserProfile };
 
@@ -9,10 +10,6 @@ export type UserRole = "admin" | "user";
 export type RoleFilter = "all" | UserRole;
 export type StatusFilter = "all" | "active" | "suspended";
 
-export interface GetUsersResponse {
-  success: boolean;
-  users: ManagedUser[];
-  total: number;
-  totalPages: number;
-  currentPage: number;
+export interface GetUsersResponse extends ApiResponse<ManagedUser[]> {
+  meta?: PaginatedMeta;
 }

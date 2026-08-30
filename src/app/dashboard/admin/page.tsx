@@ -18,7 +18,7 @@ import type {
 } from "@/interface/dashboard/dashboard";
 
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
-import { getAdminDashboard } from "@/services/server/adminApi/adminApi";
+import { getAdminDashboard } from "@/services/features/dashboard";
 import { formatRelativeTime } from "@/lib/formatRelativeTime";
 
 
@@ -86,10 +86,8 @@ function mapActivities(raw: ApiActivity[]): ActivityItemData[] {
 
 export default async function AdminDashboardPage() {
   const data = await getAdminDashboard();
-  // console.log(data);
 
-
-  if (!data) {
+  if (!data.success || !data.data) {
     return (
       <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
         <p className="text-red-500 font-bold">Admin Dashboard not found or data error!</p>
@@ -101,8 +99,8 @@ export default async function AdminDashboardPage() {
     <DashboardOverview
       title="Admin Overview"
       subtitle="Monitor platform activity and manage the community."
-      stats={mapAdminStats(data)}
-      activities={mapActivities(data.recentActivities)}
+      stats={mapAdminStats(data.data)}
+      activities={mapActivities(data.data?.recentActivities)}
       actions={adminQuickActions}
     />
   );

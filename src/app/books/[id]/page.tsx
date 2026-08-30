@@ -7,7 +7,7 @@ import BookInformation from "@/components/book-details/BookInformation";
 import SellerCard from "@/components/book-details/SellerCard";
 import BookMetaCard from "@/components/book-details/BookMetaCard";
 import BookHero from "@/components/book-details/BookHero";
-import { getPostById } from "@/services/server/api";
+import { getPostById } from "@/services/features/posts";
 
 
 // let bookName ;
@@ -62,7 +62,7 @@ export default async function BookDetailsPage({ params }: { params: Params }) {
   // console.log("Fetched post data:", response);
 
   // ২. রেসপন্স null কিনা এবং তাতে data আছে কিনা তা চেক করো (Type Guard)
-  if (!response || !('data' in response) || !response.data) {
+  if (!response || !response.success || !response.data) {
     return (
       <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
         <p className="text-red-500 font-bold">Book not found or data error!</p>

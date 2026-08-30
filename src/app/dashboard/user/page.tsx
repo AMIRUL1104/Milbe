@@ -14,7 +14,7 @@ import DashboardOverview from "@/components/dashboard/DashboardOverview";
 
 import { ActivityItemData, ApiActivity, QuickActionData, StatCardData, UserDashboardResponse } from "@/interface/dashboard/dashboard";
 import { formatRelativeTime } from "@/lib/formatRelativeTime";
-import { getUserDashboard } from "@/services/server/api";
+import { getUserDashboard } from "@/services/features/dashboard";
 
 // ─── Static quick actions ─────────────────────────────────────────────────────
 
@@ -77,7 +77,7 @@ function mapActivities(raw: ApiActivity[]): ActivityItemData[] {
 export default async function UserDashboardPage() {
   const data = await getUserDashboard();
 
-  if (!data) {
+  if (!data.success || !data.data) {
     return (
       <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
         <p className="text-red-500 font-bold">User Dashboard not found or data error!</p>
@@ -89,8 +89,8 @@ export default async function UserDashboardPage() {
     <DashboardOverview
       title="Welcome back 👋"
       subtitle="Here's what's happening with your books today."
-      stats={mapUserStats(data)}
-      activities={mapActivities(data?.recentActivities)}
+      stats={mapUserStats(data.data)}
+      activities={mapActivities(data.data?.recentActivities)}
       actions={userQuickActions}
     />
   );

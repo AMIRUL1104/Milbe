@@ -11,7 +11,7 @@ import { ProfileHeader } from "./Profileheader";
 import { ProfileForm } from "./Profileform";
 import { ProfileActions } from "./Profileactions";
 import { ProfileInfo } from "./Profileinfo";
-import { updateUserProfile } from "@/services/server/action";
+import { updateUserProfile } from "@/services/features/userProfile";
 
 
 interface ProfileClientProps {

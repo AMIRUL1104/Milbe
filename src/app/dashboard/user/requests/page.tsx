@@ -6,7 +6,8 @@ import type { BookRequest } from "@/interface/bookRequest/checkRequest";
 import type { PostSummary, ReceivedRequest, SentRequest } from "@/interface/dashboard/request";
 import type { BookItem } from "@/interface/post related/postDetails";
 import { getUserSession } from "@/services/core/session";
-import { getMyPosts, getReceivedRequests, getSentRequests } from "@/services/server/api";
+import { getMyPosts, getReceivedRequests, getSentRequests } from "@/services/features/posts";
+import { getSentRequests as getSentBookRequests, getReceivedRequests as getReceivedBookRequests } from "@/services/features/bookRequests";
 
 function toIsoDate(value: Date | string | undefined): string {
   if (!value) {
@@ -83,19 +84,19 @@ export default async function RequestsPage() {
 
   const [sentResponse, receivedResponse] = await Promise.all([
     userId
-      ? getSentRequests(userId)
-      : Promise.resolve<BookRequestResponse | null>(null),
+      ? getSentBookRequests(userId)
+      : Promise.resolve(null),
     userId
-      ? getReceivedRequests(userId)
-      : Promise.resolve<BookRequestResponse | null>(null),
+      ? getReceivedBookRequests(userId)
+      : Promise.resolve(null),
   ]);
 
-  const sentRequests = (sentResponse?.requests ?? []).map(toSentRequest);
-  const receivedRequestsData = receivedResponse?.requests ?? [];
+  const sentRequests = (sentResponse?.data?.requests ?? []).map(toSentRequest);
+  const receivedRequestsData = receivedResponse?.data?.requests ?? [];
   const receivedRequests = receivedRequestsData.map(toReceivedRequest);
 
   const myPostsResponse = await getMyPosts();
-  const postsData = (myPostsResponse?.books ?? []) as BookItem[];
+  const postsData = (myPostsResponse.data?.books ?? []) as BookItem[];
   const posts = buildPostSummaries(postsData, receivedRequestsData);
 
   return (

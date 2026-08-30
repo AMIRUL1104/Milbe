@@ -1,6 +1,6 @@
 import BookCard from "@/components/shared/BookCard";
 import { BookItem } from "@/interface/post related/postDetails";
-import { getPosts } from "@/services/server/api";
+import { getPosts } from "@/services/features/posts";
 
 interface BooksGridProps {
   searchParams: Promise<{
@@ -27,7 +27,7 @@ export default async function BooksGrid({ searchParams }: BooksGridProps) {
   const postData = await getPosts<BookItem>(apiParams);
 
   console.log(postData);
-  if (!postData.success) {
+  if (!postData.success || !postData.data) {
     return (
       <div className="text-center text-danger py-10 font-medium">
         Failed to load books. Please try again later.
@@ -35,7 +35,7 @@ export default async function BooksGrid({ searchParams }: BooksGridProps) {
     );
   }
 
-  const bookItems: BookItem[] = postData.books;
+  const bookItems: BookItem[] = postData.data.books;
 
   if (!bookItems || bookItems.length === 0) {
     return (

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Trash2, Loader2, TriangleAlert, X } from "lucide-react";
 import { toast } from "react-toastify";
-import { deletePost } from "@/services/server/action";
+import { deletePost } from "@/services/features/posts";
 
 interface DeleteButtonProps {
   postId: string;

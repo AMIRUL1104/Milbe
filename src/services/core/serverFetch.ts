@@ -1,5 +1,7 @@
 "use server";
 import { getUserToken } from "./session";
+import { ApiResponse, ApiError } from "@/interface/apiResponse";
+
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const authHeader = async (): Promise<HeadersInit> => {
@@ -12,10 +14,20 @@ export const authHeader = async (): Promise<HeadersInit> => {
   };
 };
 
+async function handleResponse<T>(res: Response): Promise<ApiResponse<T>> {
+  const responseData = (await res.json()) as ApiResponse<T>;
+
+  if (!res.ok) {
+    throw new ApiError(responseData, res.status);
+  }
+
+  return responseData;
+}
+
 export async function serverFetch<T>(
   path: string,
   options?: RequestInit,
-): Promise<T | null> {
+): Promise<ApiResponse<T>> {
   try {
     const res = await fetch(`${baseUrl}${path}`, {
       ...options,
@@ -26,20 +38,24 @@ export async function serverFetch<T>(
       cache: "no-store",
     });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-
-      throw new Error(`Server returned ${res.status}: ${errorText}`);
-    }
-
-    return (await res.json()) as T;
+    return handleResponse<T>(res);
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     console.error("Fetch error:", error);
-    return null;
+    throw new ApiError(
+      {
+        success: false,
+        statusCode: 0,
+        message: error instanceof Error ? error.message : "Network error",
+      },
+      0
+    );
   }
 }
 
-export async function protectedFetch<T>(path: string): Promise<T | null> {
+export async function protectedFetch<T>(path: string): Promise<ApiResponse<T>> {
   try {
     const res = await fetch(`${baseUrl}${path}`, {
       headers: {
@@ -49,15 +65,19 @@ export async function protectedFetch<T>(path: string): Promise<T | null> {
       cache: "no-store",
     });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-
-      throw new Error(`Server returned ${res.status}: ${errorText}`);
-    }
-
-    return (await res.json()) as T;
+    return handleResponse<T>(res);
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     console.error("Fetch error:", error);
-    return null;
+    throw new ApiError(
+      {
+        success: false,
+        statusCode: 0,
+        message: error instanceof Error ? error.message : "Network error",
+      },
+      0
+    );
   }
 }

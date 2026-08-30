@@ -1,15 +1,15 @@
 import { Card } from "@heroui/react";
 import RequestBookButton from "./RequestBookButton";
 import { PostDetailData } from "@/app/books/[id]/page";
-import { getUserProfile } from "@/services/server/api";
+import { getUserProfile } from "@/services/features/userProfile";
 import { UserProfileResponse } from "@/interface/user/userProfile";
 interface BookMetaCardProps {
   post: PostDetailData;
 }
 
 export default async function BookMetaCard({ post }: BookMetaCardProps) {
-  const response = (await getUserProfile()) as UserProfileResponse | null;
-  const user = response?.data;
+  const response = await getUserProfile();
+  const user = response.success ? response.data : undefined;
 
   const totalBundlePrice = post.books.reduce((acc, book) => acc + book.price, 0);
 

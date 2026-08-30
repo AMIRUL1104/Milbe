@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
-import { cancelBookRequest } from "@/services/server/action";
+import { cancelBookRequest } from "@/services/features/bookRequests";
 
 interface SentRequestActionsProps {
   status: string;
