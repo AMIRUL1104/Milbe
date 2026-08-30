@@ -173,6 +173,13 @@ body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
   line-height: 1.6;
+  padding-bottom: env(safe-area-inset-bottom, 88px);
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-bottom: 0;
+  }
 }
 
 :focus-visible {

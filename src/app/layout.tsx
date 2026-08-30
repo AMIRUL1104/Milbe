@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar/Navbar";
+import Header from "@/components/navbar/Header";
+import MobileHeader from "@/components/navbar/MobileHeader";
+// import BottomNav from "@/components/navbar/BottomNav";
 import Footer from "@/components/layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
+import { getUserSession } from "@/services/core/session";
+import { BottomNav } from "@/components/navbar/BottomNav";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -18,23 +22,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BookBridge",
+  title: "milbe",
   description: "Share and discover books in your community",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getUserSession();
+
   return (
     <html
       lang="en"
       className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
+        <Header />
+        <MobileHeader user={user} />
         {children}
+        <BottomNav />
         <Footer />
 
         <ToastContainer />

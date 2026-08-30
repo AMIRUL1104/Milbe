@@ -26,6 +26,7 @@ export default async function BooksGrid({ searchParams }: BooksGridProps) {
 
   const postData = await getPosts<BookItem>(apiParams);
 
+  console.log(postData);
   if (!postData.success) {
     return (
       <div className="text-center text-danger py-10 font-medium">
@@ -36,7 +37,7 @@ export default async function BooksGrid({ searchParams }: BooksGridProps) {
 
   const bookItems: BookItem[] = postData.books;
 
-  if (bookItems.length === 0) {
+  if (!bookItems || bookItems.length === 0) {
     return (
       <div className="text-center text-text-muted py-16 text-lg bg-background rounded-card border border-dashed border-border">
         No books found matching your criteria.
