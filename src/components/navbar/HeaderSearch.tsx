@@ -84,18 +84,27 @@ export function HeaderSearch() {
             </span>
           </div>
           {selectedLocation && (
-            <button
-              type="button"
+            <div
               onClick={(e) => {
                 e.preventDefault();
                 handleClearLocation();
               }}
-              className="text-text-muted hover:text-text-primary transition-colors"
+              className="text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+              aria-label="Clear location selection"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleClearLocation();
+                }
+              }}
             >
               <X className="w-4 h-4" />
-            </button>
+            </div>
           )}
         </button>
+
         {isLocationOpen && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-surface border border-border rounded-btn shadow-lg overflow-hidden z-10 max-h-60 overflow-y-auto">
             {DISTRICTS.map((district) => (
