@@ -1,9 +1,8 @@
 "use client";
-
-import { acceptBookRequest, cancelBookRequest, rejectBookRequest } from '@/services/server/action';
 import { Check, X } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { acceptBookRequest, cancelBookRequest, rejectBookRequest } from '@/services';
 
 interface ReceiveRequestActionsProps {
   status: string;
