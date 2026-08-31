@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/navbar/Header";
-import MobileHeader from "@/components/navbar/MobileHeader";
 import Footer from "@/components/layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
 import { getUserSession } from "@/services/core/session";
 import { BottomNav } from "@/components/navbar/BottomNav";
+import { UserSession } from "@/interface/user/userSession";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,7 +30,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUserSession();
+  const user = await getUserSession() as UserSession;
 
   return (
     <html
@@ -39,7 +39,6 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Header />
-        {/* <MobileHeader user={user} /> */}
         {children}
         <BottomNav />
         <Footer />

@@ -1,18 +1,11 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { UserSession } from "@/interface/user/userSession";
 
-// User ইন্টারফেস
-interface User {
-  id: string;
-  email: string;
-  name?: string | null;
-  image?: string | null;
-  role: "user" | "admin" | null;
-}
 
 // ১. ইউজার সেশন পাওয়ার ফাংশন
-export async function getUserSession(): Promise<User | null> {
+export async function getUserSession(): Promise<UserSession | null> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -23,7 +16,7 @@ export async function getUserSession(): Promise<User | null> {
   }
 
   // টাইপ কাস্টিং করে সঠিক স্ট্রাকচার রিটার্ন
-  return session.user as User;
+  return session.user as UserSession;
 }
 
 // ২. ইউজার টোকেন পাওয়ার ফাংশন

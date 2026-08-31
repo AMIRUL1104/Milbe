@@ -2,6 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "@/lib/auth-client";
+import { LogOut, User } from "lucide-react";
 
 interface NavItem {
   href: string;
@@ -10,7 +12,7 @@ interface NavItem {
   isFab?: boolean;
 }
 
-const navItems: NavItem[] = [
+const baseNavItems: NavItem[] = [
   {
     href: "/",
     label: "Home",
@@ -48,30 +50,50 @@ const navItems: NavItem[] = [
       </svg>
     ),
   },
-  {
-    href: "/profile",
-    label: "Profile",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
-    ),
-  },
 ];
+
+const getAuthNavItems = (isLoggedIn: boolean): NavItem[] => {
+  if (isLoggedIn) {
+    return [
+      {
+        href: "/profile",
+        label: "Profile",
+        icon: (
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        ),
+      },
+    ];
+  }
+
+  return [
+    {
+      href: "/auth/signin",
+      label: "Login",
+      icon: <User className="w-6 h-6" />,
+    },
+  ];
+};
 
 export function BottomNav() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const isLoggedIn = !!session?.user;
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
 
+  const authNavItems = getAuthNavItems(isLoggedIn);
+  const allNavItems = [...baseNavItems, ...authNavItems];
+
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 pb-safe pb-2" aria-label="Bottom navigation">
       <div className="relative mx-auto max-w-screen-xl bg-primary border-t border-white-10 shadow-lg rounded-t-[24px]">
         <div className="flex items-center justify-around h-16 px-4 relative">
-          {navItems.map((item) => {
+          {allNavItems.map((item) => {
             const active = isActive(item.href);
 
             if (item.isFab) {
