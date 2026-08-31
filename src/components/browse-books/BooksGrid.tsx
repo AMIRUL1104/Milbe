@@ -7,7 +7,7 @@ interface BooksGridProps {
     search?: string;
     category?: string;
     condition?: string;
-    listingType?: "sell" | "donate" | "";
+    type?: "sell" | "donate" | "";
     page?: string;
   }>;
 }
@@ -19,7 +19,7 @@ export default async function BooksGrid({ searchParams }: BooksGridProps) {
     search: resolvedParams.search || "",
     category: resolvedParams.category || "",
     condition: resolvedParams.condition || "",
-    listingType: (resolvedParams.listingType || "") as "sell" | "donate" | "",
+    type: (resolvedParams.type || "") as "sell" | "donate" | "",
     page: Number(resolvedParams.page) || 1,
     limit: 8,
   };
@@ -35,7 +35,7 @@ export default async function BooksGrid({ searchParams }: BooksGridProps) {
     );
   }
 
-  const bookItems: BookItem[] = postData.data.books;
+  const bookItems: BookItem[] = postData.data;
 
   if (!bookItems || bookItems.length === 0) {
     return (

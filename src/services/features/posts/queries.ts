@@ -10,7 +10,10 @@ export async function getPosts(
     search = "",
     category = "",
     condition = "",
-    listingType = "",
+    type = "",
+    district = "",
+    area = "",
+    academicLevel = "",
     sort = "newest",
     page = 1,
     limit = 6,
@@ -21,7 +24,10 @@ export async function getPosts(
   if (search) queryParams.set("search", search);
   if (category) queryParams.set("category", category);
   if (condition) queryParams.set("condition", condition);
-  if (listingType) queryParams.set("listingType", listingType);
+  if (type) queryParams.set("type", type);
+  if (district) queryParams.set("district", district);
+  if (area) queryParams.set("area", area);
+  if (academicLevel) queryParams.set("academicLevel", academicLevel);
   if (sort) queryParams.set("sort", sort);
 
   queryParams.set("page", String(page));

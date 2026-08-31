@@ -3,8 +3,8 @@ import { Metadata } from "next";
 import SectionHeading from "@/components/shared/SectionHeading";
 import FilterSection from "@/components/browse-books/FilterSection";
 import BooksGrid from "@/components/browse-books/BooksGrid";
-import { getPosts } from "@/services/features/posts"; // এপিআই ইমপোর্ট করা হলো
-import { BookItem } from "@/interface/post related/postDetails"; // ইন্টারফেস ইমপোর্ট করা হলো
+import { getPosts } from "@/services/features/posts";
+import { BookItem } from "@/interface/post related/postDetails";
 import CustomPagination from "@/components/browse-books/BooksPagination";
 
 // Next.js Metadata API
@@ -23,7 +23,7 @@ export default async function BrowseBooksPage({ searchParams }: PageProps) {
     search: typeof resolvedParams.search === "string" ? resolvedParams.search : "",
     category: typeof resolvedParams.category === "string" ? resolvedParams.category : "",
     condition: typeof resolvedParams.condition === "string" ? resolvedParams.condition : "",
-    listingType: (resolvedParams.listingType as "sell" | "donate" | "") || "",
+    type: (resolvedParams.type as "sell" | "donate" | "") || "",
     page: Number(resolvedParams.page) || 1,
     limit: 8,
   });
@@ -43,7 +43,7 @@ export default async function BrowseBooksPage({ searchParams }: PageProps) {
         <BooksGrid searchParams={searchParams} />
 
         <div className="flex justify-center mt-6">
-          <CustomPagination totalPages={postData.totalPages || 1} />
+          <CustomPagination totalPages={postData.meta?.totalPages || 1} />
         </div>
 
       </div>

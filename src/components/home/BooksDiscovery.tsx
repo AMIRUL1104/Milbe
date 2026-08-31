@@ -43,9 +43,9 @@ export default function BooksDiscovery({
   const handleTabClick = (type: string) => {
     const params = new URLSearchParams(searchParams.toString());
     if (type) {
-      params.set("listingType", type);
+      params.set("type", type);
     } else {
-      params.delete("listingType");
+      params.delete("type");
     }
     router.push(`?${params.toString()}`, { scroll: false });
   };

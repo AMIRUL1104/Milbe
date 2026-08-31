@@ -2,7 +2,10 @@ export interface GetPostsParams {
   search?: string;
   category?: string;
   condition?: string;
-  listingType?: "sell" | "donate" | "";
+  type?: "sell" | "donate" | "";
+  district?: string;
+  area?: string;
+  academicLevel?: string;
   sort?: "newest" | "oldest" | "title-asc" | "title-desc";
   page?: number;
   limit?: number;

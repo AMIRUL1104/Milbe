@@ -3,7 +3,6 @@ import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/navbar/Header";
 import MobileHeader from "@/components/navbar/MobileHeader";
-// import BottomNav from "@/components/navbar/BottomNav";
 import Footer from "@/components/layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
 import { getUserSession } from "@/services/core/session";
@@ -40,7 +39,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Header />
-        <MobileHeader user={user} />
+        {/* <MobileHeader user={user} /> */}
         {children}
         <BottomNav />
         <Footer />

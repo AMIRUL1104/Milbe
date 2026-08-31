@@ -71,7 +71,7 @@ export function HeaderAuth({ user, isLoggedIn }: HeaderAuthProps) {
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative max-md:hidden" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary text-text-inverse font-bold border-2 border-border hover:border-primary focus-visible:outline-2 focus-visible:outline-primary-focus transition-base"

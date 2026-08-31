@@ -2,12 +2,9 @@
 import { Metadata } from "next";
 import { getPosts } from "@/services/features/posts";
 import { BookItem } from "@/interface/post related/postDetails";
-import HeroSection from "@/components/home/HeroSection";
-import SearchAndLocation from "@/components/home/SearchAndLocation";
-import CategoriesFilter from "@/components/home/CategoriesFilter";
 import NearbyBooks from "@/components/home/NearbyBooks";
-import RecentlyListedBooks from "@/components/home/RecentlyListedBooks";
 import BooksDiscovery from "@/components/home/BooksDiscovery";
+import FilterSection from "@/components/browse-books/FilterSection";
 
 export const metadata: Metadata = {
   title: "milbe.shop | Bangladesh's Student Book Hub",
@@ -92,42 +89,39 @@ export default async function HomePage({
     search?: string;
     location?: string;
     category?: string;
-    listingType?: "sell" | "donate";
+    type?: "sell" | "donate";
     condition?: string;
   }>;
 }) {
-  const { search, location, category, listingType, condition } = await searchParams;
+  const { search, location, category, type, condition } = await searchParams;
 
-  const filteredBooks = await getPosts<BookItem>({
+  const filteredBooks = await getPosts({
     search,
     category,
-    listingType: listingType as "sell" | "donate" | "",
+    type: type as "sell" | "donate" | "",
     condition,
     sort: "newest",
     limit: 20,
   });
 
-  const recentBooks = await getPosts<BookItem>({
+  const recentBooks = await getPosts({
     sort: "newest",
     limit: 8,
   });
 
-  const allBooks = await getPosts<BookItem>({ limit: 50 });
-  const nearbyBooks = sortByLocationMatch(allBooks.data?.books || [], location);
+  const allBooks = await getPosts({ limit: 50 });
+  const nearbyBooks = sortByLocationMatch(allBooks.data || [], location);
 
   return (
     <div className="w-full min-h-screen bg-[#F5F7F8] font-sans antialiased overflow-x-hidden">
       <main>
-        <HeroSection />
-        <SearchAndLocation initialSearch={search} initialLocation={location} />
-        <CategoriesFilter initialCategory={category} />
+        <FilterSection />
         <NearbyBooks books={nearbyBooks} userLocation={location} />
-        <RecentlyListedBooks books={recentBooks.data?.books || []} />
         <BooksDiscovery
-          initialListingType={listingType}
-          allBooks={filteredBooks.data?.books || []}
+          initialListingType={type}
+          allBooks={filteredBooks.data || []}
           nearbyBooks={nearbyBooks}
-          recentBooks={recentBooks.data?.books || []}
+          recentBooks={recentBooks.data || []}
         />
       </main>
     </div>
