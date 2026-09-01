@@ -4,9 +4,8 @@ import { getPosts } from "@/services/features/posts";
 import { BookItem } from "@/interface/post related/postDetails";
 import NearbyBooks from "@/components/home/NearbyBooks";
 import BooksGrid from "@/components/home/BooksGrid";
-import BooksTabs from "@/components/home/BooksTabs";
+import HeaderFilters from "@/components/home/HeaderFilters";
 import BooksPagination from "@/components/shared/BooksPagination";
-import FilterSection from "@/components/home/FilterSection";
 
 export const metadata: Metadata = {
   title: "milbe.shop | Bangladesh's Student Book Hub",
@@ -115,16 +114,14 @@ export default async function HomePage({
   return (
     <div className="w-full min-h-screen bg-[#F5F7F8] font-sans antialiased overflow-x-hidden">
       <main>
-        <FilterSection />
-
-        <NearbyBooks books={nearbyBooks} userLocation={location} />
-
-        <BooksTabs
+        <HeaderFilters
           activeType={type || ""}
           category={category}
           condition={condition}
           search={search}
         />
+        <NearbyBooks books={nearbyBooks} userLocation={location} />
+
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <BooksGrid books={books} />

@@ -22,10 +22,10 @@ export default async function Header() {
 
         <HeaderSearch />
 
-        <div className="flex items-center gap-4">
+        <div className="max-md:hidden flex items-center gap-4">
           <Link
             href="/books/add"
-            className="hidden md:flex px-5 py-2.5 text-sm font-semibold text-primary bg-accent hover:bg-accent-hover rounded-btn transition-base shadow-sm focus-visible:outline-2 focus-visible:outline-primary-focus whitespace-nowrap"
+            className=" px-5 py-2.5 text-sm font-semibold text-primary bg-accent hover:bg-accent-hover rounded-btn transition-base shadow-sm focus-visible:outline-2 focus-visible:outline-primary-focus whitespace-nowrap"
           >
             Sell/Donate
           </Link>
