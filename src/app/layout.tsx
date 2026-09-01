@@ -21,24 +21,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "milbe",
-  description: "Share and discover books in your community",
+  title: "Milbe",
+  description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
   metadataBase: new URL("https://milbe.shop"),
   alternates: {
     canonical: "https://milbe.shop",
   },
   openGraph: {
-    title: "milbe",
-    description: "Share and discover books in your community",
+    title: "Milbe",
+    description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
     url: "https://milbe.shop",
-    siteName: "milbe",
+    siteName: "Milbe",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "milbe",
-    description: "Share and discover books in your community",
+    title: "Milbe",
+    description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
   },
   robots: {
     index: true,
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "milbe",
+  name: "Milbe",
   url: "https://milbe.shop",
-  description: "Share and discover books in your community",
+  description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
   potentialAction: {
     "@type": "SearchAction",
     target: "https://milbe.shop?search={search_term_string}",

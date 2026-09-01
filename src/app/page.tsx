@@ -40,14 +40,6 @@ export const metadata: Metadata = {
     siteName: "milbe.shop",
     locale: "en_US",
     type: "website",
-    images: [
-      {
-        url: "https://milbe.shop/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "milbe.shop",
-      },
-    ],
   },
 
   twitter: {
@@ -55,7 +47,6 @@ export const metadata: Metadata = {
     title: "milbe.shop | Bangladesh's Student Book Hub",
     description:
       "A student marketplace for buying, selling, and donating academic books.",
-    images: ["https://milbe.shop/og-image.png"],
   },
 
   robots: {
