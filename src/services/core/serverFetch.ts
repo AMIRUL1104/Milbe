@@ -1,6 +1,6 @@
 "use server";
 import { getUserToken } from "./session";
-import { ApiResponse, ApiError } from "@/interface/apiResponse";
+import { ApiResponse, ApiError, PaginatedMeta } from "@/interface/apiResponse";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -50,7 +50,7 @@ export async function serverFetch<T>(
         statusCode: 0,
         message: error instanceof Error ? error.message : "Network error",
       },
-      0
+      0,
     );
   }
 }
@@ -77,7 +77,21 @@ export async function protectedFetch<T>(path: string): Promise<ApiResponse<T>> {
         statusCode: 0,
         message: error instanceof Error ? error.message : "Network error",
       },
-      0
+      0,
     );
   }
+}
+
+export async function unwrapResponse<T>(response: ApiResponse<T>): Promise<T> {
+  if (!response.success) {
+    throw new ApiError(response, response.statusCode || 0);
+  }
+  return response.data as T;
+}
+
+export async function serverFetchInternal<T>(
+  path: string,
+  options?: RequestInit,
+): Promise<ApiResponse<T>> {
+  return serverFetch<T>(path, options);
 }

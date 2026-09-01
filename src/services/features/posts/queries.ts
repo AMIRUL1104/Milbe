@@ -1,11 +1,11 @@
-import { serverFetch, protectedFetch } from "@/services/core/serverFetch";
+import { serverFetch, protectedFetch, unwrapResponse } from "@/services/core/serverFetch";
 import { GetPostsParams } from "@/interface/post related/getPostsParams";
 import { BookItem } from "@/interface/post related/postDetails";
 import { BooksResponse, FeaturedPostsResponse, PostResponse } from "@/interface/post related/booksResponse";
 
 export async function getPosts(
   params: GetPostsParams = {}
-): Promise<BooksResponse<BookItem>> {
+): Promise<BookItem[]> {
   const {
     search = "",
     category = "",
@@ -33,17 +33,25 @@ export async function getPosts(
   queryParams.set("page", String(page));
   queryParams.set("limit", String(limit));
 
-  return serverFetch<BooksResponse<BookItem>>(`/api/posts?${queryParams.toString()}`);
+  return unwrapResponse<BookItem[]>(
+    await serverFetch<BookItem[]>(
+      `/api/posts?${queryParams.toString()}`
+    )
+  );
 }
 
 export async function getPostById(id: string): Promise<PostResponse> {
-  return serverFetch<PostResponse>(`/api/posts/${id}`);
+  return unwrapResponse<PostResponse>(await serverFetch<PostResponse>(`/api/posts/${id}`));
 }
 
-export async function getFeaturedPosts(): Promise<FeaturedPostsResponse<BookItem>> {
-  return serverFetch<FeaturedPostsResponse<BookItem>>("/api/posts/featured");
+export async function getFeaturedPosts(): Promise<BookItem[]> {
+  return unwrapResponse<BookItem[]>(
+    await serverFetch<BookItem[]>("/api/posts/featured")
+  );
 }
 
-export async function getMyPosts(): Promise<BooksResponse<BookItem>> {
-  return protectedFetch<BooksResponse<BookItem>>("/api/posts/my");
+export async function getMyPosts(): Promise<BookItem[]> {
+  return unwrapResponse<BookItem[]>(
+    await protectedFetch<BookItem[]>("/api/posts/my")
+  );
 }

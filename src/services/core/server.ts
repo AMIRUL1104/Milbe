@@ -19,7 +19,8 @@ export const serverMutation = async <TData, TResponse = unknown>(
   path: string,
   data: TData,
   method: "POST" | "PATCH" | "DELETE" = "POST",
-): Promise<ApiResponse<TResponse>> => {
+  options?: { unwrap?: boolean },
+): Promise<ApiResponse<TResponse> | TResponse> => {
   try {
     const response = await fetch(`${baseUrl}${path}`, {
       method,
@@ -30,7 +31,13 @@ export const serverMutation = async <TData, TResponse = unknown>(
       body: method !== "DELETE" ? JSON.stringify(data) : undefined,
     });
 
-    return handleMutationResponse<TResponse>(response);
+    const responseData = await handleMutationResponse<TResponse>(response);
+    
+    if (options?.unwrap) {
+      return responseData.data as TResponse;
+    }
+    
+    return responseData;
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;

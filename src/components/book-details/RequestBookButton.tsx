@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { HandHelping, Loader2 } from "lucide-react";
 import { checkBookRequest } from "@/services/features/bookRequests";
 import RequestBookModal from "./RequestBookModal";
-import { CheckBookRequestResponse } from "@/interface/bookRequest/checkRequest";
 
 type ButtonStatus =
   | "checking"
