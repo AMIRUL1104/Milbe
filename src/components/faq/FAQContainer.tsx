@@ -263,7 +263,7 @@ export default function FAQContainer() {
                             Contact Support
                         </Link>
                         <Link
-                            href="/books"
+                            href="/"
                             className="w-full sm:w-auto text-center bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-3.5 rounded-xl border border-white/10 transition-colors text-sm"
                         >
                             Browse Books

@@ -13,7 +13,7 @@ export function SentRequestsEmptyState() {
         one you like. Your requests will show up here.
       </p>
       <Link
-        href="/browse"
+        href="/"
         className="mt-2 rounded-btn bg-primary px-5 py-2.5 text-sm font-bold text-text-inverse shadow-md transition-colors hover:bg-primary-hover"
       >
         Browse Books

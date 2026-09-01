@@ -76,9 +76,9 @@ export default async function BookDetailsPage({ params }: { params: Params }) {
     <main className="min-h-screen w-full bg-[#F5F7F8] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col gap-6">
 
-        <Link href="/books" className="inline-flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-[#35858E] transition-colors w-fit">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-[#35858E] transition-colors w-fit">
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Browse</span>
+          <span>Back to Home</span>
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

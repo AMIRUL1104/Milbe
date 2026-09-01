@@ -5,7 +5,7 @@ import FooterContact from "./FooterContact";
 export default function Footer() {
   const quickLinks = [
     { label: "Home", href: "/" },
-    { label: "Browse Books", href: "/books" },
+    { label: "Browse Books", href: "/" },
     { label: "Add Book", href: "/books/add" },
   ];
 

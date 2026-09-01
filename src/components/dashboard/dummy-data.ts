@@ -81,7 +81,7 @@ export const userQuickActions: QuickActionData[] = [
   { label: "Add New Post", href: "/dashboard/user/posts", icon: PlusCircle },
   { label: "View Requests", href: "/dashboard/user/requests", icon: Inbox },
   { label: "Edit Profile", href: "/dashboard/user/profile", icon: UserCog },
-  { label: "Browse Books", href: "/browse", icon: BookOpen },
+  { label: "Browse Books", href: "/", icon: BookOpen },
 ];
 
 export const adminStats: StatCardData[] = [

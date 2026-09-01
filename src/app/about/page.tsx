@@ -215,7 +215,7 @@ export default function AboutUsPage() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
                         <Link
-                            href="/books"
+                            href="/"
                             className="w-full sm:w-auto text-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors shadow-sm"
                         >
                             Browse Books

@@ -21,7 +21,7 @@ import { getUserDashboard } from "@/services/features/dashboard";
 const userQuickActions: QuickActionData[] = [
   { label: "My Posts", href: "/dashboard/user/posts", icon: PlusCircle },
   { label: "View Requests", href: "/dashboard/user/requests", icon: Inbox },
-  { label: "Browse Books", href: "/browse", icon: BookOpen },
+  { label: "Browse Books", href: "/", icon: BookOpen },
   { label: "Profile", href: "/profile", icon: UserCog },
 ];
 

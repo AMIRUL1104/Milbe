@@ -3,8 +3,9 @@ import { Metadata } from "next";
 import { getPosts } from "@/services/features/posts";
 import { BookItem } from "@/interface/post related/postDetails";
 import NearbyBooks from "@/components/home/NearbyBooks";
-import BooksDiscovery from "@/components/home/BooksDiscovery";
-import FilterSection from "@/components/browse-books/FilterSection";
+import BooksGrid from "@/components/home/BooksGrid";
+import BooksTabs from "@/components/home/BooksTabs";
+import FilterSection from "@/components/home/FilterSection";
 
 export const metadata: Metadata = {
   title: "milbe.shop | Bangladesh's Student Book Hub",
@@ -62,11 +63,8 @@ export const metadata: Metadata = {
 
 function sortByLocationMatch(books: BookItem[], userLocation?: string): BookItem[] {
   if (!userLocation) return books;
-  console.log(userLocation);
-  console.log(books);
 
   const normalizedUserLocation = userLocation.toLowerCase().trim();
-  console.log(normalizedUserLocation);
 
   return [...books].sort((a, b) => {
     const aDistrict = a.district?.toLowerCase().trim() || "";
@@ -80,7 +78,6 @@ function sortByLocationMatch(books: BookItem[], userLocation?: string): BookItem
     return 0;
   });
 }
-console.log(sortByLocationMatch);
 
 export default async function HomePage({
   searchParams,
@@ -95,34 +92,37 @@ export default async function HomePage({
 }) {
   const { search, location, category, type, condition } = await searchParams;
 
-  const filteredBooks = await getPosts({
+  // All books for Nearby Books (no type/category filter — preserves current behavior)
+  const allBooks = await getPosts({ limit: 50 });
+  const nearbyBooks = sortByLocationMatch(allBooks, location);
+
+  // Filtered books for All Books section
+  const books = await getPosts({
     search,
     category,
-    type: type as "sell" | "donate" | "",
+    type: (type || "") as "sell" | "donate" | "",
     condition,
     sort: "newest",
     limit: 20,
   });
 
-  const recentBooks = await getPosts({
-    sort: "newest",
-    limit: 8,
-  });
-
-  const allBooks = await getPosts({ limit: 50 });
-  const nearbyBooks = sortByLocationMatch(allBooks.data || [], location);
-
   return (
     <div className="w-full min-h-screen bg-[#F5F7F8] font-sans antialiased overflow-x-hidden">
       <main>
         <FilterSection />
+
         <NearbyBooks books={nearbyBooks} userLocation={location} />
-        <BooksDiscovery
-          initialListingType={type}
-          allBooks={filteredBooks.data || []}
-          nearbyBooks={nearbyBooks}
-          recentBooks={recentBooks.data || []}
+
+        <BooksTabs
+          activeType={type || ""}
+          category={category}
+          condition={condition}
+          search={search}
         />
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <BooksGrid books={books} />
+        </div>
       </main>
     </div>
   );
