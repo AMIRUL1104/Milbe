@@ -5,6 +5,7 @@ import { BookItem } from "@/interface/post related/postDetails";
 import NearbyBooks from "@/components/home/NearbyBooks";
 import BooksGrid from "@/components/home/BooksGrid";
 import BooksTabs from "@/components/home/BooksTabs";
+import BooksPagination from "@/components/shared/BooksPagination";
 import FilterSection from "@/components/home/FilterSection";
 
 export const metadata: Metadata = {
@@ -88,23 +89,28 @@ export default async function HomePage({
     category?: string;
     type?: "sell" | "donate";
     condition?: string;
+    page?: string;
   }>;
 }) {
-  const { search, location, category, type, condition } = await searchParams;
+  const { search, location, category, type, condition, page } = await searchParams;
 
   // All books for Nearby Books (no type/category filter — preserves current behavior)
-  const allBooks = await getPosts({ limit: 50 });
-  const nearbyBooks = sortByLocationMatch(allBooks, location);
+  const allBooksResponse = await getPosts({ limit: 50 });
+  const nearbyBooks = sortByLocationMatch(allBooksResponse.data || [], location);
 
-  // Filtered books for All Books section
-  const books = await getPosts({
+  // Filtered books for All Books section (with pagination metadata)
+  const paginatedResponse = await getPosts({
     search,
     category,
     type: (type || "") as "sell" | "donate" | "",
     condition,
     sort: "newest",
+    page: Number(page) || 1,
     limit: 20,
   });
+
+  const books = paginatedResponse.data || [];
+  const totalPages = paginatedResponse.meta?.totalPages || 1;
 
   return (
     <div className="w-full min-h-screen bg-[#F5F7F8] font-sans antialiased overflow-x-hidden">
@@ -122,6 +128,9 @@ export default async function HomePage({
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <BooksGrid books={books} />
+          <div className="flex justify-center mt-6">
+            <BooksPagination totalPages={totalPages} />
+          </div>
         </div>
       </main>
     </div>

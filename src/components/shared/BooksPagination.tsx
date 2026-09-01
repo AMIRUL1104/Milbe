@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { generatePagination } from "./genaratePagination";
+import { generatePagination } from "@/components/shared/generatePagination";
 
 interface CustomPaginationProps {
   totalPages: number;
@@ -52,7 +52,7 @@ export default function CustomPagination({ totalPages }: CustomPaginationProps) 
                 : isDots 
                   ? "text-text-muted cursor-default" 
                   : "text-text-secondary hover:bg-background cursor-pointer"
-              }`}
+            }`}
           >
             {page}
           </button>
