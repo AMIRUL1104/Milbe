@@ -8,8 +8,7 @@ interface BookMetaCardProps {
 }
 
 export default async function BookMetaCard({ post }: BookMetaCardProps) {
-  const response = await getUserProfile();
-  const user = response.success ? response.data : undefined;
+  const user = await getUserProfile();
 
   const totalBundlePrice = post.books.reduce((acc, book) => acc + book.price, 0);
 

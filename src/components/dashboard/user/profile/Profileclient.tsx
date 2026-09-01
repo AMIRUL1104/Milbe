@@ -71,24 +71,22 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
             avatarUrl: previewUrl ?? user.avatarUrl,
         };
 
-        const res = await updateUserProfile(payload);
-        // console.log(res);
-        if (res.success) {
+        try {
+            const res = await updateUserProfile(payload);
             toast.success("Profile updated successfully!");
-            // Optimistically update local state
             setUser((prev) => ({
                 ...prev,
-                fullName: payload.fullName,
-                phoneNumber: payload.phoneNumber,
-                district: payload.district,
-                area: payload.area,
-                avatarUrl: payload.avatarUrl ?? prev.avatarUrl,
+                fullName: res.fullName,
+                phoneNumber: res.phoneNumber,
+                district: res.district,
+                area: res.area,
+                avatarUrl: res.avatarUrl ?? prev.avatarUrl,
             }));
             setIsEditing(false);
             setPreviewUrl(null);
             setPendingImageFile(null);
-        } else {
-            toast.error(res.message);
+        } catch {
+            toast.error("Failed to update profile. Please try again.");
         }
     }
 

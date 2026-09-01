@@ -1,5 +1,6 @@
 import { BookItem } from "@/interface/post related/postDetails";
 import BookCard from "@/components/shared/BookCard";
+import SectionHeading from "../shared/SectionHeading";
 
 interface BooksGridProps {
   books: BookItem[];
@@ -15,10 +16,19 @@ export default function BooksGrid({ books }: BooksGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
-      {books.map((book) => (
-        <BookCard key={book._id} book={book} />
-      ))}
-    </div>
-  );
+    <>
+
+      <SectionHeading
+        title="All Books"
+        subtitle=""
+      />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+
+        {books.map((book) => (
+          <BookCard key={book._id} book={book} />
+        ))}
+      </div>
+    </>
+  )
+    ;
 }

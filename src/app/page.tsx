@@ -1,7 +1,10 @@
 // src/app/page.tsx
 import { Metadata } from "next";
 import { getPosts } from "@/services/features/posts";
+import { getUserSession } from "@/services/core/session";
+import { getUserProfile } from "@/services/features/userProfile";
 import { BookItem } from "@/interface/post related/postDetails";
+import type { NearbyBooksState } from "@/components/home/NearbyBooks";
 import NearbyBooks from "@/components/home/NearbyBooks";
 import BooksGrid from "@/components/home/BooksGrid";
 import HeaderFilters from "@/components/home/HeaderFilters";
@@ -61,24 +64,6 @@ export const metadata: Metadata = {
   },
 };
 
-function sortByLocationMatch(books: BookItem[], userLocation?: string): BookItem[] {
-  if (!userLocation) return books;
-
-  const normalizedUserLocation = userLocation.toLowerCase().trim();
-
-  return [...books].sort((a, b) => {
-    const aDistrict = a.district?.toLowerCase().trim() || "";
-    const bDistrict = b.district?.toLowerCase().trim() || "";
-
-    const aMatches = aDistrict === normalizedUserLocation;
-    const bMatches = bDistrict === normalizedUserLocation;
-
-    if (aMatches && !bMatches) return -1;
-    if (!aMatches && bMatches) return 1;
-    return 0;
-  });
-}
-
 export default async function HomePage({
   searchParams,
 }: {
@@ -93,9 +78,33 @@ export default async function HomePage({
 }) {
   const { search, location, category, type, condition, page } = await searchParams;
 
-  // All books for Nearby Books (no type/category filter — preserves current behavior)
-  const allBooksResponse = await getPosts({ limit: 50 });
-  const nearbyBooks = sortByLocationMatch(allBooksResponse.data || [], location);
+  // --- Nearby Books: user-centric logic ---
+  const session = await getUserSession();
+
+  let nearbyState: NearbyBooksState = "needs-login";
+  let nearbyBooks: BookItem[] = [];
+  let nearbyDistrict: string | undefined;
+
+  if (location) {
+    const nearbyResponse = await getPosts({ district: location, limit: 50 });
+    nearbyBooks = nearbyResponse.data || [];
+    nearbyDistrict = location;
+    nearbyState = nearbyBooks.length > 0 ? "loaded" : "empty";
+  } else if (session) {
+    const profile = await getUserProfile();
+    const profileDistrict = profile?.district?.trim();
+    if (profileDistrict) {
+      const nearbyResponse = await getPosts({
+        district: profileDistrict,
+        limit: 50,
+      });
+      nearbyBooks = nearbyResponse.data || [];
+      nearbyDistrict = profileDistrict;
+      nearbyState = nearbyBooks.length > 0 ? "loaded" : "empty";
+    } else {
+      nearbyState = "needs-profile";
+    }
+  }
 
   // Filtered books for All Books section (with pagination metadata)
   const paginatedResponse = await getPosts({
@@ -120,7 +129,7 @@ export default async function HomePage({
           condition={condition}
           search={search}
         />
-        <NearbyBooks books={nearbyBooks} userLocation={location} />
+        <NearbyBooks state={nearbyState} books={nearbyBooks} district={nearbyDistrict} />
 
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
