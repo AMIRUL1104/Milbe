@@ -1,20 +1,20 @@
 ## Backend Repository
 
-[View Backend Repository](https://github.com/AMIRUL1104/BookBridge-Server)
+[View Backend Repository](https://github.com/AMIRUL1104/Milbe-Server)
 
 ---
 
-# BookBridge
+# Milbe
 
-### Live Link --- [View Live Application](https://bookbridgebd.vercel.app)
+### Live Link --- [View Live Application](https://milbe.shop)
 
 A student-to-student academic book marketplace for Bangladesh — enabling students to buy, sell, and donate used textbooks through a peer-to-peer platform.
 
 ## Project Overview
 
-BookBridge addresses the high cost of academic materials by connecting students who have completed courses with those who need books for upcoming semesters. The platform reduces financial barriers to education while promoting sustainability through book reuse.
+Milbe addresses the high cost of academic materials by connecting students who have completed courses with those who need books for upcoming semesters. The platform reduces financial barriers to education while promoting sustainability through book reuse.
 
-**Problem Solved:** Students in Bangladesh often struggle with expensive textbooks. BookBridge creates a structured marketplace where students can list books they no longer need and find affordable alternatives from peers.
+**Problem Solved:** Students in Bangladesh often struggle with expensive textbooks. Milbe creates a structured marketplace where students can list books they no longer need and find affordable alternatives from peers.
 
 **Target Users:** University and college students across Bangladesh looking to buy, sell, or donate academic books.
 
@@ -101,7 +101,7 @@ BookBridge addresses the high cost of academic materials by connecting students 
 
 ## Authentication
 
-BookBridge uses **Better Auth** for authentication with a MongoDB adapter.
+Milbe uses **Better Auth** for authentication with a MongoDB adapter.
 
 ### Flow
 
@@ -203,10 +203,10 @@ All dashboard pages, book grids, forms, and navigation components adapt fluidly 
 
 ```bash
 # Clone the repository
-git clone https://github.com/AMIRUL1104/BookBridge.git
+git clone https://github.com/AMIRUL1104/Milbe.git
 
 # Navigate to project
-cd BookBridge
+cd Milbe
 
 # Install dependencies
 npm install
@@ -312,8 +312,8 @@ src/
 
 ## Repository Links
 
-- **Frontend**: https://github.com/AMIRUL1104/BookBridge
-- **Backend**: https://github.com/AMIRUL1104/BookBridge-Server
+- **Frontend**: https://github.com/AMIRUL1104/Milbe
+- **Backend**: https://github.com/AMIRUL1104/Milbe-Server
 
 ---
 

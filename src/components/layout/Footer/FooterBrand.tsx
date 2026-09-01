@@ -6,12 +6,12 @@ export default function FooterBrand() {
       <Link
         href="/"
         className="inline-block text-2xl font-black tracking-tight text-text-inverse focus-visible:outline-2 focus-visible:outline-primary-focus rounded-md"
-        aria-label="BookBridge Home"
+        aria-label="Milbe Home"
       >
-        Book<span className="text-accent">Bridge</span>
+        Milbe
       </Link>
       <p className="text-accent-muted text-sm leading-relaxed">
-        BookBridge helps students buy, sell, and donate academic books across Bangladesh through a simple and reliable platform.
+        Milbe helps students buy, sell, and donate academic books across Bangladesh through a simple and reliable platform.
       </p>
     </div>
   );

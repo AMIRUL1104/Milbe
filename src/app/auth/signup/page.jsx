@@ -27,7 +27,7 @@ export default function RegisterPage() {
         {/* হেডিং টেক্সট */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">
-            Join BookBridge
+            Join Milbe
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             Create an account to start sharing and discovering academic books.

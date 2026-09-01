@@ -69,7 +69,7 @@ export default function RegisterForm() {
 
       if (data?.user) {
         await createUserProfile();
-        toast.success("Registration successful! Welcome to BookBridge.");
+        toast.success("Registration successful! Welcome to Milbe.");
         setIsLoading(false);
         router.push(redirectUrl);
         router.refresh();

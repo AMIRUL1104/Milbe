@@ -16,10 +16,10 @@ export default function FooterContact() {
         <li className="flex items-center gap-2.5">
           <Mail className="w-4 h-4 text-accent shrink-0" />
           <a
-            href="mailto:info@bookbridge.com"
+            href="mailto:info@milbe.shop"
             className="hover:text-accent transition-base focus-visible:outline-2 focus-visible:outline-primary-focus rounded"
           >
-            info@bookbridge.com
+            info@milbe.shop
           </a>
         </li>
       </ul>
@@ -31,7 +31,7 @@ export default function FooterContact() {
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-full bg-white-5 hover:bg-white-10 text-accent-muted hover:text-accent transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
-          aria-label="BookBridge Facebook"
+          aria-label="Milbe Facebook"
         >
           <svg
             className="w-4 h-4 fill-current"
@@ -47,7 +47,7 @@ export default function FooterContact() {
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-full bg-white-5 hover:bg-white-10 text-accent-muted hover:text-accent transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
-          aria-label="BookBridge LinkedIn"
+          aria-label="Milbe LinkedIn"
         >
           <svg
             className="w-4 h-4 fill-current"

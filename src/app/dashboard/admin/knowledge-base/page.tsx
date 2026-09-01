@@ -5,7 +5,7 @@ import { BookMarked, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Knowledge Base | Dashboard",
-    description: "View curated academic resources and verified books on BookBridge.",
+    description: "View curated academic resources and verified books on Milbe.",
 };
 
 export default function KnowledgeBasePlaceholderPage() {

@@ -23,6 +23,40 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "milbe",
   description: "Share and discover books in your community",
+  metadataBase: new URL("https://milbe.shop"),
+  alternates: {
+    canonical: "https://milbe.shop",
+  },
+  openGraph: {
+    title: "milbe",
+    description: "Share and discover books in your community",
+    url: "https://milbe.shop",
+    siteName: "milbe",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "milbe",
+    description: "Share and discover books in your community",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "milbe",
+  url: "https://milbe.shop",
+  description: "Share and discover books in your community",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://milbe.shop?search={search_term_string}",
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default async function RootLayout({
@@ -37,6 +71,12 @@ export default async function RootLayout({
       lang="en"
       className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <Header />
         {children}

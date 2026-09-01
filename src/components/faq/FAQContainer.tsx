@@ -28,20 +28,20 @@ const FAQ_DATA: FAQItem[] = [
     {
         id: "1",
         category: "General",
-        question: "What is BookBridge?",
-        answer: "BookBridge is a dedicated peer-to-peer marketplace designed specifically for students to buy, sell, exchange, or donate used academic books. Our primary goal is to make educational materials more affordable and accessible while promoting a sustainable learning lifecycle.",
+        question: "What is Milbe?",
+        answer: "Milbe is a dedicated peer-to-peer marketplace designed specifically for students to buy, sell, exchange, or donate used academic books. Our primary goal is to make educational materials more affordable and accessible while promoting a sustainable learning lifecycle.",
     },
     {
         id: "2",
         category: "General",
-        question: "Is BookBridge free to use?",
-        answer: "Yes, using BookBridge is completely free. There are no registration fees, listing charges, or hidden transaction success fees. If a book is listed for sale, the financial transaction happens directly between the buyer and the seller during their offline meetup.",
+        question: "Is Milbe free to use?",
+        answer: "Yes, using Milbe is completely free. There are no registration fees, listing charges, or hidden transaction success fees. If a book is listed for sale, the financial transaction happens directly between the buyer and the seller during their offline meetup.",
     },
     {
         id: "3",
         category: "General",
-        question: "Who can use BookBridge?",
-        answer: "While anyone looking for academic literature can browse the platform, BookBridge is meticulously engineered and optimized for school, college, and university students across Bangladesh to optimize their textbook management.",
+        question: "Who can use Milbe?",
+        answer: "While anyone looking for academic literature can browse the platform, Milbe is meticulously engineered and optimized for school, college, and university students across Bangladesh to optimize their textbook management.",
     },
     {
         id: "4",
@@ -53,7 +53,7 @@ const FAQ_DATA: FAQItem[] = [
         id: "5",
         category: "Buying",
         question: "Can I buy books from another district?",
-        answer: "Yes. Although BookBridge is optimized for secure, face-to-face on-campus handovers, you can contact the book owner via their accepted details and mutually agree on utilizing reliable courier services at your own discretion.",
+        answer: "Yes. Although Milbe is optimized for secure, face-to-face on-campus handovers, you can contact the book owner via their accepted details and mutually agree on utilizing reliable courier services at your own discretion.",
     },
     {
         id: "6",
@@ -118,7 +118,7 @@ const FAQ_DATA: FAQItem[] = [
     {
         id: "16",
         category: "Safety",
-        question: "Does BookBridge verify every listing?",
+        question: "Does Milbe verify every listing?",
         answer: "Yes. Every newly published book listing goes through our real-time internal automated and manual moderation pipeline to filter out irrelevant text documents, commercial store operations, or inappropriate media uploads."
     }
 ];

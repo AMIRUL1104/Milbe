@@ -1,10 +1,10 @@
 # AI\_CONTEXT.md
 
-This document serves as the **Single Source of Truth (SSoT)** for AI coding assistants. It contains the technical specifications, architectural constraints, and business logic required to implement the **BookBridge Academic Marketplace** MVP.
+This document serves as the **Single Source of Truth (SSoT)** for AI coding assistants. It contains the technical specifications, architectural constraints, and business logic required to implement the **Milbe Academic Marketplace** MVP.
 
 ## 1\. Project Summary
 
-**BookBridge** is a Full-Stack academic book matching platform designed for students in Bangladesh to sell or donate used books.
+**Milbe** is a Full-Stack academic book matching platform designed for students in Bangladesh to sell or donate used books.
 
 * **Core Purpose:** Facilitate discovery and buyer-seller connection. 1  
 * **Explicit Exclusions:** No internal payment processing, no delivery/courier tracking, and no live chat in the MVP. 1, 2  

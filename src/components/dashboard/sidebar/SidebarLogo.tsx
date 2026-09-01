@@ -12,7 +12,7 @@ export default function SidebarLogo({ isCollapsed }: SidebarLogoProps) {
       </div>
       {!isCollapsed && (
         <span className="text-lg font-bold text-text-primary whitespace-nowrap">
-          BookBridge
+          Milbe
         </span>
       )}
     </div>

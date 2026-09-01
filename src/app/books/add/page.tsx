@@ -4,8 +4,8 @@ import { getUserSession } from "@/services/core/session";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Add Post | BookBridge",
-  description: "List your academic books for sale or donation on BookBridge.",
+  title: "Add Post | Milbe",
+  description: "List your academic books for sale or donation on Milbe.",
 };
 
 // Server Component — no client-side state lives here. All interactivity is

@@ -1,8 +1,8 @@
-### Product Requirements Document (PRD): BookBridge Academic MVP
+### Product Requirements Document (PRD): Milbe Academic MVP
 
 #### 1\. Project Overview
 
-**BookBridge** is a responsive web application designed as a matching platform for students in Bangladesh to sell or donate used academic books 1, 2\. The platform facilitates **book discoverability** and **buyer-seller connection** without handling payments, shipping, or courier services 1, 2\.
+**Milbe** is a responsive web application designed as a matching platform for students in Bangladesh to sell or donate used academic books 1, 2\. The platform facilitates **book discoverability** and **buyer-seller connection** without handling payments, shipping, or courier services 1, 2\.
 
 #### 2\. Assignment Goal
 

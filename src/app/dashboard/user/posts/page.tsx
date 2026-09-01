@@ -8,7 +8,7 @@ import { MyPost } from "@/components/dashboard/user/my-posts/my-post";
 
 
 export const metadata: Metadata = {
-  title: "My Posts | BookBridge",
+  title: "My Posts | Milbe",
 };
 
 export default async function MyPostsPage() {

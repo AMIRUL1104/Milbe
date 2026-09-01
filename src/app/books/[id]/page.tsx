@@ -12,7 +12,7 @@ import { getPostById } from "@/services/features/posts";
 
 // let bookName ;
 export const metadata: Metadata = {
-  title: "Post Details | BookBridge",
+  title: "Post Details | Milbe",
   description: "View books bundle shared by students.",
 };
 

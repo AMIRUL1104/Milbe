@@ -17,8 +17,8 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "Privacy Policy | BookBridge",
-    description: "Learn how BookBridge collects, protects, and uses your information responsibly within our academic marketplace.",
+    title: "Privacy Policy | Milbe",
+    description: "Learn how Milbe collects, protects, and uses your information responsibly within our academic marketplace.",
 };
 
 const NAVIGATION_ITEMS = [
@@ -55,7 +55,7 @@ export default function PrivacyPolicyPage() {
                         Privacy Policy
                     </h1>
                     <p className="text-base md:text-lg text-slate-500 max-w-2xl leading-relaxed">
-                        At BookBridge, we value your privacy and are committed to protecting your personal information. This policy transparently breaks down our data routines.
+                        At Milbe, we value your privacy and are committed to protecting your personal information. This policy transparently breaks down our data routines.
                     </p>
                     <div className="mt-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-600">
                         <span className="w-2 h-2 rounded-full bg-[#35858E] animate-pulse" />
@@ -80,17 +80,17 @@ export default function PrivacyPolicyPage() {
                         {/* Introduction */}
                         <SectionCard id="introduction" icon={<UserCheck />} title="1. Introduction">
                             <p>
-                                Welcome to BookBridge. This Privacy Policy governs the data collection and processing methods utilized across our marketplace application. By registering an account, uploading academic book listings, or initiating request interactions, you explicitly acknowledge and agree to the framework outlined herein.
+                                Welcome to Milbe. This Privacy Policy governs the data collection and processing methods utilized across our marketplace application. By registering an account, uploading academic book listings, or initiating request interactions, you explicitly acknowledge and agree to the framework outlined herein.
                             </p>
                             <p>
-                                This policy applies natively to all registered accounts, visiting students, and individuals operating within the peer-to-peer structure of BookBridge.
+                                This policy applies natively to all registered accounts, visiting students, and individuals operating within the peer-to-peer structure of Milbe.
                             </p>
                         </SectionCard>
 
                         {/* Information We Collect */}
                         <SectionCard id="collection" icon={<Database />} title="2. Information We Collect">
                             <p>
-                                BookBridge strictly limits data procurement to actionable parameters essential for verifying academic status and completing safe handovers. We collect:
+                                Milbe strictly limits data procurement to actionable parameters essential for verifying academic status and completing safe handovers. We collect:
                             </p>
                             <ul className="list-disc pl-5 space-y-2 mt-2 text-slate-600">
                                 <li><strong>Account Credentials:</strong> Full Name, verified Email Address, and cryptographic tokens generated via Better Auth integrations.</li>
@@ -117,7 +117,7 @@ export default function PrivacyPolicyPage() {
                         {/* Sharing Information */}
                         <SectionCard id="sharing" icon={<Share2 />} title="4. Sharing Your Information">
                             <p className="font-semibold text-slate-900">
-                                BookBridge fundamentally guarantees that we never sell, lease, or monetize user data profiles to external advertisement agencies.
+                                Milbe fundamentally guarantees that we never sell, lease, or monetize user data profiles to external advertisement agencies.
                             </p>
                             <p>
                                 Data distribution occurs strictly under the following isolated conditions:
@@ -132,7 +132,7 @@ export default function PrivacyPolicyPage() {
                         {/* Cookies */}
                         <SectionCard id="cookies" icon={<Cookie />} title="5. Cookies Policy">
                             <p>
-                                BookBridge utilizes minimal, highly secure cookies to retain operational consistency. These include:
+                                Milbe utilizes minimal, highly secure cookies to retain operational consistency. These include:
                             </p>
                             <ul className="list-disc pl-5 space-y-2 mt-2 text-slate-600">
                                 <li><strong>Authentication Cookies:</strong> Administered securely to track current student log states without asking for redundant credentials.</li>
@@ -168,7 +168,7 @@ export default function PrivacyPolicyPage() {
                         {/* Children's Privacy */}
                         <SectionCard id="children" icon={<Users />} title="8. Children's Privacy">
                             <p>
-                                BookBridge is explicitly structured to facilitate secondary and tertiary education textbooks for young adults and university level students. We do not intentionally compile or target operations towards minors under the legal age of academic maturity without supervisor oversight.
+                                Milbe is explicitly structured to facilitate secondary and tertiary education textbooks for young adults and university level students. We do not intentionally compile or target operations towards minors under the legal age of academic maturity without supervisor oversight.
                             </p>
                         </SectionCard>
 
@@ -185,8 +185,8 @@ export default function PrivacyPolicyPage() {
                                 For direct security reviews, legal concerns, or technical support requests, feel free to reach out to our administration desk:
                             </p>
                             <div className="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200/60 inline-block space-y-1 text-sm">
-                                <p><strong>Email:</strong> <span className="text-[#35858E]">support@bookbridge.com</span></p>
-                                <p><strong>Platform Operations:</strong> BookBridge Core Network</p>
+                                <p><strong>Email:</strong> <span className="text-[#35858E]">support@milbe.shop</span></p>
+                                <p><strong>Platform Operations:</strong> Milbe</p>
                             </div>
                         </SectionCard>
 
@@ -198,7 +198,7 @@ export default function PrivacyPolicyPage() {
                             <div className="space-y-2">
                                 <h4 className="text-lg font-bold">Your Privacy Matters</h4>
                                 <p className="text-slate-400 text-sm leading-relaxed">
-                                    BookBridge is built upon peer trust and student collaboration. We dedicate our structural resources toward protecting your details while creating an accessible, eco-friendly framework for circular textbook utilization across universities.
+                                    Milbe is built upon peer trust and student collaboration. We dedicate our structural resources toward protecting your details while creating an accessible, eco-friendly framework for circular textbook utilization across universities.
                                 </p>
                             </div>
                         </div>

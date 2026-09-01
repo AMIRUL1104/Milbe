@@ -18,8 +18,8 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "Terms & Conditions | BookBridge",
-    description: "Read the official user agreements, rules, and responsibilities for using the BookBridge academic marketplace.",
+    title: "Terms & Conditions | Milbe",
+    description: "Read the official user agreements, rules, and responsibilities for using the Milbe academic marketplace.",
 };
 
 const NAVIGATION_ITEMS = [
@@ -58,7 +58,7 @@ export default function TermsAndConditionsPage() {
                         Terms & Conditions
                     </h1>
                     <p className="text-base md:text-lg text-slate-500 max-w-2xl leading-relaxed">
-                        These terms govern the use of the BookBridge platform. Please review these rules thoroughly before accessing our community services.
+                        These terms govern the use of the Milbe platform. Please review these rules thoroughly before accessing our community services.
                     </p>
                     <div className="mt-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-600">
                         <span className="w-2 h-2 rounded-full bg-[#35858E] animate-pulse" />
@@ -86,14 +86,14 @@ export default function TermsAndConditionsPage() {
                                 By completing your profile registration, authenticating through our application portal, or interacting with peer listings, you confirm that you have read, understood, and unreservedly agree to be bound by these Terms & Conditions.
                             </p>
                             <p>
-                                If you do not explicitly accept these legal terms, you are restricted from creating listings or establishing communication loops on BookBridge.
+                                If you do not explicitly accept these legal terms, you are restricted from creating listings or establishing communication loops on Milbe.
                             </p>
                         </TermsCard>
 
                         {/* 2. Eligibility */}
                         <TermsCard id="eligibility" icon={<ShieldAlert />} title="2. Eligibility">
                             <p>
-                                BookBridge is explicitly built to support academic workflows. To remain eligible to participate on the platform, you must meet the following parameters:
+                                Milbe is explicitly built to support academic workflows. To remain eligible to participate on the platform, you must meet the following parameters:
                             </p>
                             <ul className="list-disc pl-5 space-y-2 mt-2 text-slate-600">
                                 <li>You must provide authentic personal information during the profile compilation step.</li>
@@ -133,14 +133,14 @@ export default function TermsAndConditionsPage() {
                                 Students can dynamically register requests on available listings. However, the book seller holds full, absolute autonomy to accept or decline any inbound request based on their preferences.
                             </p>
                             <p>
-                                <strong>Important:</strong> Contact pathways (such as personal phone links) remain locked and securely masked until the owner explicitly marks a request as accepted. BookBridge cannot guarantee request acceptances or match completions.
+                                <strong>Important:</strong> Contact pathways (such as personal phone links) remain locked and securely masked until the owner explicitly marks a request as accepted. Milbe cannot guarantee request acceptances or match completions.
                             </p>
                         </TermsCard>
 
                         {/* 6. User Responsibilities */}
                         <TermsCard id="responsibilities" icon={<Layers />} title="6. User Responsibilities">
                             <p>
-                                When utilizing BookBridge, you pledge to interact safely and maturely. You are expected to keep conversations professional, communicate truthfully regarding textbook data, and behave respectfully toward fellow students during offline campus meetups.
+                                When utilizing Milbe, you pledge to interact safely and maturely. You are expected to keep conversations professional, communicate truthfully regarding textbook data, and behave respectfully toward fellow students during offline campus meetups.
                             </p>
                         </TermsCard>
 
@@ -165,17 +165,17 @@ export default function TermsAndConditionsPage() {
                                 You maintain complete, original copyright ownership over any text logs or textbook snapshots you upload to the platform.
                             </p>
                             <p>
-                                However, by adding data profiles to the live directory, you grant BookBridge a non-exclusive, royalty-free, global license to display, host, and index the item content across our ecosystem structures.
+                                However, by adding data profiles to the live directory, you grant Milbe a non-exclusive, royalty-free, global license to display, host, and index the item content across our ecosystem structures.
                             </p>
                         </TermsCard>
 
                         {/* 9. Limitation of Liability */}
                         <TermsCard id="liability" icon={<AlertTriangle />} title="9. Limitation of Liability">
                             <p className="font-semibold text-slate-900">
-                                BookBridge operates strictly as a peer-to-peer connection platform. We do not manage physical assets, handle currencies, or control offline interactions.
+                                Milbe operates strictly as a peer-to-peer connection platform. We do not manage physical assets, handle currencies, or control offline interactions.
                             </p>
                             <p>
-                                Accordingly, BookBridge shall not be held liable or accountable for:
+                                Accordingly, Milbe shall not be held liable or accountable for:
                             </p>
                             <ul className="list-disc pl-5 space-y-2 text-slate-600">
                                 <li>Direct transactional agreements or disputes occurring between buyers and sellers.</li>
@@ -187,7 +187,7 @@ export default function TermsAndConditionsPage() {
                         {/* 10. Account Suspension */}
                         <TermsCard id="suspension" icon={<UserX />} title="10. Account Suspension">
                             <p>
-                                BookBridge administration maintains complete executive authority to temporarily freeze accounts, permanently terminate profiles, or strip problematic book items from the live view immediately without warning if a user breaches these community conditions.
+                                Milbe administration maintains complete executive authority to temporarily freeze accounts, permanently terminate profiles, or strip problematic book items from the live view immediately without warning if a user breaches these community conditions.
                             </p>
                         </TermsCard>
 
@@ -205,7 +205,7 @@ export default function TermsAndConditionsPage() {
                             </p>
                             <div className="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200/60 inline-block space-y-1 text-sm">
                                 <p><strong>Email:</strong> <span className="text-[#35858E]">amirulislam9.e@gmail.com</span></p>
-                                <p><strong>Operations Desk:</strong> BookBridge Core Network</p>
+                                <p><strong>Operations Desk:</strong> Milbe</p>
                             </div>
                         </TermsCard>
 
@@ -217,7 +217,7 @@ export default function TermsAndConditionsPage() {
                             <div className="space-y-2">
                                 <h4 className="text-lg font-bold">Fair Use & Community Respect</h4>
                                 <p className="text-slate-400 text-sm leading-relaxed">
-                                    BookBridge exists to help students buy, sell, and donate academic books in a safe and respectful community. Every user is expected to act honestly, responsibly, and respectfully to ensure a healthy educational marketplace for all.
+                                    Milbe exists to help students buy, sell, and donate academic books in a safe and respectful community. Every user is expected to act honestly, responsibly, and respectfully to ensure a healthy educational marketplace for all.
                                 </p>
                             </div>
                         </div>

@@ -57,7 +57,7 @@ export default function LoginForm() {
       }
 
       if (data?.user) {
-        toast.success("Welcome to BookBridge.");
+        toast.success("Welcome to Milbe.");
         setIsLoading(false);
         router.push(searchParams.get("redirect") || "/");
         router.refresh();

@@ -118,7 +118,7 @@ export const adminActivities: ActivityItemData[] = [
   {
     id: "1",
     title: "New user registered",
-    description: "Farhana Akter joined BookBridge",
+    description: "Farhana Akter joined Milbe",
     timestamp: "1h ago",
     icon: Users,
   },

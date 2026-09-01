@@ -1,8 +1,8 @@
-### Functional Requirement Specification (FRS): BookBridge Academic MVP
+### Functional Requirement Specification (FRS): Milbe Academic MVP
 
 ### 1\. System Overview
 
-**BookBridge** is a full-stack academic book matching platform for students in Bangladesh. It enables users to sell or donate used books. The system facilitates discovery and connection but explicitly **excludes** internal payments, delivery, or courier services 1, 2\.
+**Milbe** is a full-stack academic book matching platform for students in Bangladesh. It enables users to sell or donate used books. The system facilitates discovery and connection but explicitly **excludes** internal payments, delivery, or courier services 1, 2\.
 
 ### 2\. Functional Modules
 

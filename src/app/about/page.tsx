@@ -26,8 +26,8 @@ interface StatCardProps {
 }
 
 export const metadata = {
-    title: "About Us | BookBridge",
-    description: "Learn more about BookBridge, Bangladesh's leading student-to-student academic book marketplace.",
+    title: "About Us | Milbe",
+    description: "Learn more about Milbe, Bangladesh's leading student-to-student academic book marketplace.",
 };
 
 export default function AboutUsPage() {
@@ -38,14 +38,14 @@ export default function AboutUsPage() {
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div className="space-y-6">
                     <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#35858E]">
-                        About BookBridge
+                        About Milbe
                     </h1>
                     <div className="text-base md:text-lg text-slate-600 space-y-4 leading-relaxed">
                         <p>
-                            BookBridge is a dedicated student-to-student marketplace designed to make educational resources more affordable and accessible. We bridge the gap between students who have completed their courses and those who need academic books for their next journey.
+                            Milbe is a dedicated student-to-student marketplace designed to make educational resources more affordable and accessible. We bridge the gap between students who have completed their courses and those who need academic books for their next journey.
                         </p>
                         <p>
-                            By fostering a peer-to-peer sharing ecosystem, we help students reduce their academic expenses significantly. Whether you want to sell, buy, exchange, or donate, BookBridge provides a structured and transparent environment tailored specifically for the student community.
+                            By fostering a peer-to-peer sharing ecosystem, we help students reduce their academic expenses significantly. Whether you want to sell, buy, exchange, or donate, Milbe provides a structured and transparent environment tailored specifically for the student community.
                         </p>
                         <p>
                             Beyond the financial benefits, our platform champions sustainable learning. Giving a book a second life reduces paper waste and environmental impact, driving Bangladesh towards a smarter, eco-friendly future of education.
@@ -85,11 +85,11 @@ export default function AboutUsPage() {
                 </div>
             </section>
 
-            {/* 4. How BookBridge Works */}
+            {/* 4. How Milbe Works */}
             <section className="bg-slate-50 border-y border-slate-100 py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center max-w-3xl mx-auto mb-12">
-                        <h2 className="text-3xl font-bold text-slate-900">How BookBridge Works</h2>
+                        <h2 className="text-3xl font-bold text-slate-900">How Milbe Works</h2>
                         <p className="text-slate-500 mt-2">Four simple steps to buy, sell, or donate academic books instantly.</p>
                     </div>
 
@@ -122,10 +122,10 @@ export default function AboutUsPage() {
                 </div>
             </section>
 
-            {/* 5. Why Choose BookBridge */}
+            {/* 5. Why Choose Milbe */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div className="text-center max-w-3xl mx-auto mb-12">
-                    <h2 className="text-3xl font-bold text-slate-900">Why Choose BookBridge</h2>
+                    <h2 className="text-3xl font-bold text-slate-900">Why Choose Milbe</h2>
                     <p className="text-slate-500 mt-2">A platform optimized systematically to serve the everyday academic lifecycle of students.</p>
                 </div>
 
