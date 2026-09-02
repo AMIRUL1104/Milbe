@@ -1,4 +1,5 @@
 import type { RoleFilter, StatusFilter } from "@/interface/dashboard/manageUsers";
+import type { SortOption } from "@/interface/dashboard/request";
 import { ManageUsersClient } from "@/components/dashboard/admin/manage-users/ManageUsersClient";
 import { UsersStatsCards } from "@/components/dashboard/admin/manage-users/UsersStatsCards";
 import { UsersErrorFallback } from "@/components/dashboard/admin/manage-users/UsersErrorFallback";

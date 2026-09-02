@@ -1,8 +1,6 @@
-import { protectedFetch, unwrapResponse } from "@/services/core/serverFetch";
-import { UserDashboardResponse, AdminDashboardResponse } from "@/interface/dashboard/dashboard";
+import { protectedFetch } from "@/services/core/serverFetch";
+import { UserDashboardResponse, AdminDashboardData, UserDashboardData } from "@/interface/dashboard/dashboard";
 
 export async function getUserDashboard(): Promise<UserDashboardResponse> {
-  return unwrapResponse<UserDashboardResponse>(
-    await protectedFetch<UserDashboardResponse>("/api/dashboard/user")
-  );
+  return protectedFetch<UserDashboardData>("/api/dashboard/user");
 }

@@ -2,7 +2,7 @@
 import { Check, X } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import { acceptBookRequest, cancelBookRequest, rejectBookRequest } from '@/services';
+import { acceptBookRequest, cancelBookRequest, rejectBookRequest } from '@/services/features/bookRequests';
 
 interface ReceiveRequestActionsProps {
   status: string;

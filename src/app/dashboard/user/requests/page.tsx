@@ -6,7 +6,7 @@ import type { BookRequest } from "@/interface/bookRequest/checkRequest";
 import type { PostSummary, ReceivedRequest, SentRequest } from "@/interface/dashboard/request";
 import type { BookItem } from "@/interface/post related/postDetails";
 import { getUserSession } from "@/services/core/session";
-import { getMyPosts, getReceivedRequests, getSentRequests } from "@/services/features/posts";
+import { getMyPosts } from "@/services/features/posts";
 import { getSentRequests as getSentBookRequests, getReceivedRequests as getReceivedBookRequests } from "@/services/features/bookRequests";
 
 function toIsoDate(value: Date | string | undefined): string {

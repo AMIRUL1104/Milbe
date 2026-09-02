@@ -3,7 +3,7 @@
 import { Search } from "lucide-react";
 import type { RoleFilter, StatusFilter } from "@/interface/dashboard/manageUsers";
 import type { GetUsersParams } from "@/services/features/admin";
-type SortOption = GetUsersParams["sort"];
+type SortOption = NonNullable<GetUsersParams["sort"]>;
 
 interface UsersToolbarProps {
   search: string;

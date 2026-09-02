@@ -16,9 +16,9 @@ export default async function MyPostsPage() {
 
   if (!response.success || !response.data) {
     return (
-      <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
+      <div className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
         <p className="text-red-500 font-bold">My Posts not found or data error!</p>
-      </main>
+      </div>
     );
   }
 
@@ -26,7 +26,7 @@ export default async function MyPostsPage() {
   const posts = (response.data.books ?? []) as MyPost[];
 
   return (
-    <main className="p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-800">My Posts</h1>
         <p className="text-sm text-gray-500 mt-1">
@@ -36,6 +36,6 @@ export default async function MyPostsPage() {
 
       {/* এখন আর কোনো টাইপ এরর থাকবে না */}
       <MyPostsClient initialPosts={posts} />
-    </main>
+    </div>
   );
 }

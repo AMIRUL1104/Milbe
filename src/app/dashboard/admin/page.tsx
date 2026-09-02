@@ -11,15 +11,15 @@ import {
 } from "lucide-react";
 import type {
   ActivityItemData,
-  AdminDashboardResponse,
+  AdminDashboardData,
   ApiActivity,
   QuickActionData,
   StatCardData,
 } from "@/interface/dashboard/dashboard";
 
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
-import { getAdminDashboard } from "@/services/features/dashboard";
 import { formatRelativeTime } from "@/lib/formatRelativeTime";
+import { getAdminDashboard } from "@/services/features/admin";
 
 
 // ─── Static quick actions ─────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ const adminQuickActions: QuickActionData[] = [
 
 // ─── Mappers ──────────────────────────────────────────────────────────────────
 
-function mapAdminStats(data: AdminDashboardResponse): StatCardData[] {
+function mapAdminStats(data: AdminDashboardData): StatCardData[] {
   return [
     {
       label: "মোট ব্যবহারকারী",
@@ -89,9 +89,9 @@ export default async function AdminDashboardPage() {
 
   if (!data.success || !data.data) {
     return (
-      <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
+      <div className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
         <p className="text-red-500 font-bold">Admin ড্যাশবোর্ড তথ্য পাওয়া যায়নি!</p>
-      </main>
+      </div>
     );
   }
 

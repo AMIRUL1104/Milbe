@@ -1,7 +1,10 @@
-import { protectedFetch, unwrapResponse } from "@/services/core/serverFetch";
+import { protectedFetch } from "@/services/core/serverFetch";
 
 import { BookRequestResponse } from "@/interface/bookRequest/bookRequest";
-import { AdminDashboardResponse } from "@/interface/dashboard/dashboard";
+import { BookRequest } from "@/interface/bookRequest/checkRequest";
+import { ApiResponse } from "@/interface/apiResponse";
+import { AdminDashboardResponse, AdminDashboardData } from "@/interface/dashboard/dashboard";
+import { GetUsersResponse, ManagedUser } from "@/interface/dashboard/manageUsers";
 import { BookItem } from "@/interface/post related/postDetails";
 
 export interface GetUsersParams {
@@ -20,7 +23,7 @@ export async function getAllUsers({
   sort = "newest",
   page = 1,
   limit = 10,
-}: GetUsersParams = {}): Promise<BookItem[]> {
+}: GetUsersParams = {}): Promise<GetUsersResponse> {
   const params = new URLSearchParams();
 
   if (search) params.set("search", search);
@@ -30,25 +33,22 @@ export async function getAllUsers({
   params.set("page", String(page));
   params.set("limit", String(limit));
 
-  return unwrapResponse<BookItem[]>(
-    await protectedFetch<BookItem[]>(`/api/users/admin?${params.toString()}`),
+  const res = await protectedFetch<ManagedUser[]>(
+    `/api/users/admin?${params.toString()}`,
   );
+  return res as GetUsersResponse;
 }
 
 export async function getAllBookRequests(): Promise<BookRequestResponse> {
-  return unwrapResponse<BookRequestResponse>(
-    await protectedFetch<BookRequestResponse>("/api/admin/book-requests"),
-  );
+  return protectedFetch<BookRequest[]>("/api/admin/book-requests");
 }
 
 export async function getAdminDashboard(): Promise<AdminDashboardResponse> {
-  return unwrapResponse<AdminDashboardResponse>(
-    await protectedFetch<AdminDashboardResponse>("/api/dashboard/admin"),
-  );
+  return protectedFetch<AdminDashboardData>("/api/dashboard/admin");
 }
 
-export async function getAllPosts(): Promise<BookItem[]> {
-  return unwrapResponse<BookItem[]>(
-    await protectedFetch<BookItem[]>("/api/posts/admin"),
-  );
+export type GetAllPostsResponse = ApiResponse<{ data: BookItem[] }>;
+
+export async function getAllPosts(): Promise<GetAllPostsResponse> {
+  return protectedFetch<{ data: BookItem[] }>("/api/posts/admin");
 }

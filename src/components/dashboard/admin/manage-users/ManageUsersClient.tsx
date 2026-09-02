@@ -10,7 +10,7 @@ import { UserMobileCard } from "./UserMobileCard";
 import { UsersEmptyState } from "./UsersEmptyState";
 import { UsersPagination } from "./UsersPagination";
 import type { GetUsersParams } from "@/services/features/admin";
-type SortOption = GetUsersParams["sort"];
+type SortOption = NonNullable<GetUsersParams["sort"]>;
 
 interface ManageUsersClientProps {
   users: UserProfile[];

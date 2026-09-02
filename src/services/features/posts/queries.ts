@@ -7,6 +7,7 @@ import { GetPostsParams } from "@/interface/post related/getPostsParams";
 import { BookItem } from "@/interface/post related/postDetails";
 import { BooksResponse } from "@/interface/post related/booksResponse";
 import { PostResponse } from "@/interface/post related/postResponse";
+import { ApiResponse } from "@/interface/apiResponse";
 
 export async function getPosts(
   params: GetPostsParams = {},
@@ -55,8 +56,8 @@ export async function getFeaturedPosts(): Promise<BookItem[]> {
   );
 }
 
-export async function getMyPosts(): Promise<BookItem[]> {
-  return unwrapResponse<BookItem[]>(
-    await protectedFetch<BookItem[]>("/api/posts/my"),
-  );
+export interface MyPostsResponse extends ApiResponse<{ books: BookItem[] }> {}
+
+export async function getMyPosts(): Promise<MyPostsResponse> {
+  return protectedFetch<{ books: BookItem[] }>("/api/posts/my");
 }

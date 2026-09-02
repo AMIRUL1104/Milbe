@@ -32,11 +32,11 @@ export const serverMutation = async <TData, TResponse = unknown>(
     });
 
     const responseData = await handleMutationResponse<TResponse>(response);
-    
+
     if (options?.unwrap) {
       return responseData.data as TResponse;
     }
-    
+
     return responseData;
   } catch (error) {
     if (error instanceof ApiError) {
@@ -50,7 +50,7 @@ export const serverMutation = async <TData, TResponse = unknown>(
         statusCode: 0,
         message: "Something went wrong!",
       },
-      0
+      0,
     );
   }
 };

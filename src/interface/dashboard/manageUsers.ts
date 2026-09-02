@@ -10,6 +10,7 @@ export type UserRole = "admin" | "user";
 export type RoleFilter = "all" | UserRole;
 export type StatusFilter = "all" | "active" | "suspended";
 
-export interface GetUsersResponse extends ApiResponse<ManagedUser[]> {
+export interface GetUsersResponse
+  extends Omit<ApiResponse<ManagedUser[]>, "meta"> {
   meta?: PaginatedMeta;
 }

@@ -12,7 +12,7 @@ import {
 
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
 
-import { ActivityItemData, ApiActivity, QuickActionData, StatCardData, UserDashboardResponse } from "@/interface/dashboard/dashboard";
+import { ActivityItemData, ApiActivity, QuickActionData, StatCardData, UserDashboardData } from "@/interface/dashboard/dashboard";
 import { formatRelativeTime } from "@/lib/formatRelativeTime";
 import { getUserDashboard } from "@/services/features/dashboard";
 
@@ -27,7 +27,7 @@ const userQuickActions: QuickActionData[] = [
 
 // ─── Mappers ──────────────────────────────────────────────────────────────────
 
-function mapUserStats(data: UserDashboardResponse): StatCardData[] {
+function mapUserStats(data: UserDashboardData): StatCardData[] {
   return [
     {
       label: "সক্রিয় পোস্ট",
@@ -79,9 +79,9 @@ export default async function UserDashboardPage() {
 
   if (!data.success || !data.data) {
     return (
-      <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
+      <div className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
         <p className="text-red-500 font-bold">ড্যাশবোর্ড তথ্য পাওয়া যায়নি!</p>
-      </main>
+      </div>
     );
   }
 
