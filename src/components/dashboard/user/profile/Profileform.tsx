@@ -10,21 +10,21 @@ interface ProfileFormProps {
 }
 
 const DISTRICTS = [
-    "Dhaka",
-    "Chittagong",
-    "Sylhet",
-    "Rajshahi",
-    "Khulna",
-    "Barishal",
-    "Rangpur",
-    "Mymensingh",
-    "Comilla",
-    "Narayanganj",
-    "Gazipur",
-    "Bogura",
-    "Jessore",
-    "Dinajpur",
-    "Cox's Bazar",
+    "ঢাকা",
+    "চট্টগ্রাম",
+    "সিলেট",
+    "রাজশাহী",
+    "খুলনা",
+    "বরিশাল",
+    "রংপুর",
+    "ময়মনসিংহ",
+    "কুমিল্লা",
+    "নারায়ণগঞ্জ",
+    "গাজীপুর",
+    "বগুড়া",
+    "যশোর",
+    "দিনাজপুর",
+    "কক্সবাজার",
 ];
 
 const inputBase =
@@ -45,18 +45,18 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
     return (
         <div className="rounded-card border border-border-light shadow-sm bg-surface p-6">
             <h2 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-5">
-                Edit Details
+                বিস্তারিত সম্পাদনা
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="sm:col-span-2">
                     <label className={labelClass} htmlFor="fullName">
-                        Full Name
+                        পুরো নাম
                     </label>
                     <input
                         id="fullName"
                         type="text"
-                        placeholder="Your full name"
+                        placeholder="আপনার পুরো নাম"
                         className={`${inputBase} ${errors.fullName ? inputError : ""}`}
                         {...register("fullName")}
                     />
@@ -67,9 +67,9 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
 
                 <div className="sm:col-span-2">
                     <label className={labelClass} htmlFor="email">
-                        Email Address
+                        Email
                         <span className="ml-1.5 text-[10px] font-semibold text-text-muted normal-case tracking-normal">
-                            (locked)
+                            (লক করা)
                         </span>
                     </label>
                     <div className="relative">
@@ -88,7 +88,7 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
 
                 <div>
                     <label className={labelClass} htmlFor="phoneNumber">
-                        Phone Number
+                        ফোন নম্বর
                     </label>
                     <input
                         id="phoneNumber"
@@ -104,14 +104,14 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
 
                 <div>
                     <label className={labelClass} htmlFor="district">
-                        District
+                        জেলা
                     </label>
                     <select
                         id="district"
                         className={`${inputBase} ${errors.district ? inputError : ""} cursor-pointer bg-surface`}
                         {...register("district")}
                     >
-                        <option value="">Select district</option>
+                         <option value="">জেলা বেছে নিন</option>
                         {DISTRICTS.map((d) => (
                             <option key={d} value={d}>
                                 {d}
@@ -125,12 +125,12 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
 
                 <div className="sm:col-span-2">
                     <label className={labelClass} htmlFor="area">
-                        Area
+                        এলাকা
                     </label>
                     <input
                         id="area"
                         type="text"
-                        placeholder="e.g. Mirpur 10, Gulshan 2…"
+                        placeholder="যেমন: মিরপুর ১০, গুলশান ২…"
                         className={`${inputBase} ${errors.area ? inputError : ""}`}
                         {...register("area")}
                     />

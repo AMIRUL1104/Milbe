@@ -13,15 +13,15 @@ import { useSearchParams } from "next/navigation";
 import { createUserProfile } from "@/services/features/userProfile";
 
 const registerSchema = z.object({
-  fullName: z.string().min(1, "Full Name is required"),
-  email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string().min(1, "Confirm Password is required"),
+  fullName: z.string().min(1, "পুরো নাম দিন"),
+  email: z.string().min(1, "ইমেইল দিন").email("সঠিক ইমেইল ঠিকানা দিন"),
+  password: z.string().min(8, "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে"),
+  confirmPassword: z.string().min(1, "পাসওয়ার্ড নিশ্চিত করুন"),
   terms: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions",
+    message: "শর্তাবলী মেনে নিন",
   }),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
+  message: "পাসওয়ার্ড মিলছে না",
   path: ["confirmPassword"],
 });
 
@@ -62,21 +62,21 @@ export default function RegisterForm() {
 
       if (error) {
         console.error("[RegisterForm] Better Auth error:", error.message);
-        toast.error(error.message || "Something went wrong during registration.");
+        toast.error(error.message || "রেজিস্ট্রেশনে সমস্যা হয়েছে।");
         setIsLoading(false);
         return;
       }
 
       if (data?.user) {
         await createUserProfile();
-        toast.success("Registration successful! Welcome to Milbe.");
+        toast.success("রেজিস্ট্রেশন সফল! মিলবেতে স্বাগতম।");
         setIsLoading(false);
         router.push(redirectUrl);
         router.refresh();
       }
     } catch (err) {
       console.error("[RegisterForm] Unexpected network error:", err);
-      toast.error("Network error. Please check your connection and try again.");
+      toast.error("ইন্টারনেট সংযোগ চেক করুন এবং আবার চেষ্টা করুন।");
       setIsLoading(false);
     }
   };
@@ -92,14 +92,14 @@ export default function RegisterForm() {
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="fullName" className={labelBase}>
-            Full Name
+            পুরো নাম
           </label>
           <div className="relative">
             <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               id="fullName"
               type="text"
-              placeholder="Amirul Islam"
+              placeholder="আমিরুল ইসলাম"
               {...register("fullName")}
               className={`${inputBase} ${errors.fullName ? "border-danger focus:border-danger focus-visible:outline-danger" : "border-border focus:border-border-focus focus-visible:outline-primary-focus"}`}
             />
@@ -111,7 +111,7 @@ export default function RegisterForm() {
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="email" className={labelBase}>
-            Email Address
+            Email
           </label>
           <div className="relative">
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -156,7 +156,7 @@ export default function RegisterForm() {
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="confirmPassword" className={labelBase}>
-            Confirm Password
+            Password নিশ্চিত করুন
           </label>
           <div className="relative">
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -181,10 +181,10 @@ export default function RegisterForm() {
               className="w-4 h-4 rounded-sm border-border text-primary focus:ring-primary mt-0.5"
             />
             <span className="text-xs sm:text-sm leading-tight">
-              I agree to the{" "}
-              <span className="text-primary font-semibold hover:underline">Terms of Service</span>{" "}
-              and{" "}
-              <span className="text-primary font-semibold hover:underline">Privacy Policy</span>.
+              আমি{" "}
+              <span className="text-primary font-semibold hover:underline">সার্ভিস শর্তাবলী</span>{" "}
+              এবং{" "}
+              <span className="text-primary font-semibold hover:underline">গোপনীয়তা নীতি</span> মেনে নিচ্ছি।
             </span>
           </label>
           {errors.terms && (
@@ -200,14 +200,14 @@ export default function RegisterForm() {
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
-            <span>Create Account</span>
+            <span>একাউন্ট তৈরি করুন</span>
           )}
         </button>
       </form>
 
       <div className="flex items-center my-1">
         <div className="flex-1 border-t border-border"></div>
-        <span className="px-3 text-xs font-bold text-text-muted uppercase tracking-wider">OR</span>
+        <span className="px-3 text-xs font-bold text-text-muted uppercase tracking-wider">অথবা</span>
         <div className="flex-1 border-t border-border"></div>
       </div>
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono, Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/navbar/Header";
 import Footer from "@/components/layout/Footer/Footer";
@@ -17,6 +17,13 @@ const inter = Inter({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const hindSiliguri = Hind_Siliguri({
+  variable: "--font-hind-siliguri",
+  subsets: ["bengali", "latin"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -68,8 +75,8 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="en"
-      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+      lang="bn"
+      className={`${inter.variable} ${geistMono.variable} ${hindSiliguri.variable} h-full antialiased`}
     >
       <head>
         <script
@@ -77,7 +84,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col font-sans" style={{ fontFamily: 'var(--font-hind-siliguri), var(--font-inter), sans-serif' }}>
         <Header />
         {children}
         <BottomNav />

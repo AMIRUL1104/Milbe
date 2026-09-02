@@ -8,17 +8,16 @@ export function NoPostsEmptyState() {
         <PlusCircle className="h-7 w-7 text-secondary" />
       </div>
       <h3 className="text-lg font-bold text-text-primary">
-        You haven&apos;t posted any books yet
+        আপনি এখনো কোনো বই পোস্ট করেননি
       </h3>
       <p className="max-w-sm text-sm text-text-muted">
-        Create your first post to start receiving requests from other
-        students.
+        অন্য শিক্ষার্থীদের কাছ থেকে রিকোয়েস্ট পেতে আপনার প্রথম পোস্ট তৈরি করুন।
       </p>
       <Link
         href="/posts/add"
         className="mt-2 rounded-btn bg-primary px-5 py-2.5 text-sm font-bold text-text-inverse shadow-md transition-colors hover:bg-primary-hover"
       >
-        Create a Post
+        পোস্ট তৈরি করুন
       </Link>
     </div>
   );
@@ -30,9 +29,9 @@ export function NoRequestsForPostEmptyState() {
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light">
         <Inbox className="h-7 w-7 text-primary" />
       </div>
-      <h3 className="text-lg font-bold text-text-primary">No requests yet</h3>
+      <h3 className="text-lg font-bold text-text-primary">এখনো কোনো রিকোয়েস্ট নেই</h3>
       <p className="max-w-sm text-sm text-text-muted">
-        This post hasn&apos;t received any requests yet. Check back later!
+        এই পোস্টে এখনো কোনো রিকোয়েস্ট আসেনি। পরে আবার চেক করুন!
       </p>
     </div>
   );
@@ -44,10 +43,9 @@ export function NoMatchingRequestsEmptyState() {
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-background">
         <FileQuestion className="h-7 w-7 text-text-muted" />
       </div>
-      <h3 className="text-lg font-bold text-text-primary">No matching requests</h3>
+      <h3 className="text-lg font-bold text-text-primary">কোনো মিল রিকোয়েস্ট নেই</h3>
       <p className="max-w-sm text-sm text-text-muted">
-        Try adjusting your search or filter to find what you&apos;re looking
-        for.
+        সার্চ বা ফিল্টার পরিবর্তন করে চেষ্টা করুন।
       </p>
     </div>
   );

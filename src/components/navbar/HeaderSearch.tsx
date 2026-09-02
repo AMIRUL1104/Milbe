@@ -58,14 +58,14 @@ export function HeaderSearch() {
     <form onSubmit={handleSearchSubmit} className="flex max-w-xl md:mx-4   items-center gap-2">
       <div className="relative flex-1">
         <label htmlFor="header-search" className="sr-only">
-          Search books
+          বই খুঁজুন
         </label>
         <input
           id="header-search"
           type="search"
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
-          placeholder="Search books, authors, ISBN..."
+          placeholder="বই, লেখক, ISBN খুঁজুন..."
           className="w-full px-4 py-2 pl-10 text-sm text-text-primary bg-surface border border-border rounded-btn focus:outline-none focus:ring-2 focus:ring-primary-focus focus:border-transparent placeholder:text-text-placeholder transition-base"
         />
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none" />
@@ -80,7 +80,7 @@ export function HeaderSearch() {
           <div className="flex items-center gap-2 truncate">
             <MapPin className="w-4 h-4 text-text-muted shrink-0 max-sm:hidden" />
             <span className="truncate text-sm">
-              {selectedLocation || "Location"}
+              {selectedLocation || "এলাকা"}
             </span>
           </div>
           {selectedLocation && (
@@ -90,7 +90,7 @@ export function HeaderSearch() {
                 handleClearLocation();
               }}
               className="text-text-muted hover:text-text-primary transition-colors cursor-pointer"
-              aria-label="Clear location selection"
+              aria-label="এলাকা মুছুন"
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {

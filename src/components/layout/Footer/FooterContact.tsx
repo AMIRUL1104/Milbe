@@ -5,13 +5,13 @@ export default function FooterContact() {
   return (
     <div className="flex flex-col gap-4">
       <h3 className="text-text-inverse font-semibold text-lg tracking-wide">
-        Contact
+        যোগাযোগ
       </h3>
 
       <ul className="flex flex-col gap-3 text-accent-muted text-sm">
         <li className="flex items-center gap-2.5">
           <MapPin className="w-4 h-4 text-accent shrink-0" />
-          <span>Bangladesh</span>
+          <span>বাংলাদেশ</span>
         </li>
         <li className="flex items-center gap-2.5">
           <Mail className="w-4 h-4 text-accent shrink-0" />

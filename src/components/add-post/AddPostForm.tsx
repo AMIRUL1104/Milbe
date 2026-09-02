@@ -110,16 +110,16 @@ export default function AddPostForm({ user }: { user: { id: string; name: string
       const response = await addNewPost(payload as unknown as BookItem);
 
       if (response?.success) {
-        toast.success("Post published successfully!");
+        toast.success("পোস্ট সফলভাবে প্রকাশিত হয়েছে!");
         reset(defaultValues);
       } else {
-        toast.error(response?.message ?? "Failed to publish post.");
+        toast.error(response?.message ?? "পোস্ট প্রকাশ করা যায়নি।");
       }
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
-          : "Something went wrong. Please try again.";
+          : "কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন।";
       toast.error(message);
     }
   };

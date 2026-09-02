@@ -18,7 +18,7 @@ export default function BookCard({ book }: BookCardProps) {
       <div className="relative aspect-[3/4] w-full bg-background overflow-hidden">
         <img
           src={book.image || "/placeholder-book.jpg"}
-          alt={primaryBook?.bookName || "Book Post"}
+          alt={primaryBook?.bookName || "বই পোস্ট"}
           className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
           loading="lazy"
         />
@@ -34,12 +34,12 @@ export default function BookCard({ book }: BookCardProps) {
           <BookOpen className="w-3 h-3" />
           <span>
             {primaryBook?.publisherName}
-            {totalBooks > 1 && ` (+${totalBooks - 1} more)`}
+            {totalBooks > 1 && ` (+${totalBooks - 1}টি আরো)`}
           </span>
         </div>
 
         <h3 className="font-bold text-text-primary text-sm sm:text-base line-clamp-1 group-hover:text-primary transition-colors">
-          {primaryBook?.bookName || "No Title Available"}
+          {primaryBook?.bookName || "শিরোনাম নেই"}
         </h3>
 
         <div className="flex flex-col gap-1 text-xs text-text-muted mt-auto">
@@ -50,7 +50,7 @@ export default function BookCard({ book }: BookCardProps) {
           <div className="flex items-center gap-1">
             <Tag className="w-3.5 h-3.5 text-text-muted shrink-0" />
             <span className="truncate">
-              Cond: <span className="text-text-secondary font-medium capitalize">{primaryBook?.condition?.replace("_", " ")}</span>
+              অবস্থা: <span className="text-text-secondary font-medium capitalize">{primaryBook?.condition?.replace("_", " ")}</span>
             </span>
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function BookCard({ book }: BookCardProps) {
         <div className="border-t border-border pt-2.5 mt-1 flex items-center justify-between gap-2">
           <div className="text-sm sm:text-base font-black text-text-primary">
             {book.type === "donate" ? (
-              <span className="text-secondary font-bold">Free</span>
+              <span className="text-secondary font-bold">বিনামূল্যে</span>
             ) : (
               <span>৳{totalPrice}</span>
             )}
@@ -67,7 +67,7 @@ export default function BookCard({ book }: BookCardProps) {
             href={`/books/${book._id}`}
             className="text-[11px] font-bold text-text-inverse bg-primary hover:bg-primary-hover px-3 py-1.5 rounded-btn transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
           >
-            Details
+            বিস্তারিত
           </Link>
         </div>
       </div>

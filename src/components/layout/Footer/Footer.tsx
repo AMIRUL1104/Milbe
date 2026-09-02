@@ -4,16 +4,16 @@ import FooterContact from "./FooterContact";
 
 export default function Footer() {
   const quickLinks = [
-    { label: "Home", href: "/" },
-    { label: "Browse Books", href: "/" },
-    { label: "Add Book", href: "/books/add" },
+    { label: "হোম", href: "/" },
+    { label: "বই দেখুন", href: "/" },
+    { label: "বই যোগ করুন", href: "/books/add" },
   ];
 
   const resourcesLinks = [
-    { label: "About", href: "/about" },
+    { label: "আমাদের সম্পর্কে", href: "/about" },
     { label: "FAQ", href: "/faq" },
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms & Conditions", href: "/terms" },
+    { label: "গোপনীয়তা নীতি", href: "/privacy" },
+    { label: "শর্তাবলী", href: "/terms" },
   ];
 
   return (
@@ -23,9 +23,9 @@ export default function Footer() {
 
           <FooterBrand />
 
-          <FooterLinks title="Quick Links" links={quickLinks} />
+          <FooterLinks title="দ্রুত লিংক" links={quickLinks} />
 
-          <FooterLinks title="Resources" links={resourcesLinks} />
+          <FooterLinks title="রিসোর্স" links={resourcesLinks} />
 
           <FooterContact />
 

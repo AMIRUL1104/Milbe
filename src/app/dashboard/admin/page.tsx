@@ -25,10 +25,10 @@ import { formatRelativeTime } from "@/lib/formatRelativeTime";
 // ─── Static quick actions ─────────────────────────────────────────────────────
 
 const adminQuickActions: QuickActionData[] = [
-  { label: "Manage Users", href: "/dashboard/admin/users", icon: Users },
-  { label: "Manage Posts", href: "/dashboard/admin/posts", icon: FileStack },
+  { label: "ব্যবহারকারী ব্যবস্থাপনা", href: "/dashboard/admin/users", icon: Users },
+  { label: "পোস্ট ব্যবস্থাপনা", href: "/dashboard/admin/posts", icon: FileStack },
   {
-    label: "Review Knowledge Base",
+    label: "Knowledge Base পর্যালোচনা",
     href: "/dashboard/admin/knowledge-base",
     icon: Library,
   },
@@ -40,25 +40,25 @@ const adminQuickActions: QuickActionData[] = [
 function mapAdminStats(data: AdminDashboardResponse): StatCardData[] {
   return [
     {
-      label: "Total Users",
+      label: "মোট ব্যবহারকারী",
       value: data.totalUsers.toLocaleString(),
       icon: Users,
       trend: "up",
     },
     {
-      label: "Active Posts",
+      label: "সক্রিয় পোস্ট",
       value: data.activePosts.toLocaleString(),
       icon: BookOpen,
       trend: "up",
     },
     {
-      label: "Pending Reviews",
+      label: "মুলতুবি পর্যালোচনা",
       value: data.pendingReviews.toLocaleString(),
       icon: ShieldCheck,
       trend: "neutral",
     },
     {
-      label: "Books in Knowledge Base",
+      label: "Knowledge Base-এ বই",
       value: data.knowledgeBaseCount.toLocaleString(),
       icon: Library,
       trend: "neutral",
@@ -90,7 +90,7 @@ export default async function AdminDashboardPage() {
   if (!data.success || !data.data) {
     return (
       <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
-        <p className="text-red-500 font-bold">Admin Dashboard not found or data error!</p>
+        <p className="text-red-500 font-bold">Admin ড্যাশবোর্ড তথ্য পাওয়া যায়নি!</p>
       </main>
     );
   }
@@ -98,7 +98,7 @@ export default async function AdminDashboardPage() {
   return (
     <DashboardOverview
       title="Admin Overview"
-      subtitle="Monitor platform activity and manage the community."
+      subtitle="প্ল্যাটফর্মের কার্যকলাপ পর্যবেক্ষণ করুন।"
       stats={mapAdminStats(data.data)}
       activities={mapActivities(data.data?.recentActivities)}
       actions={adminQuickActions}

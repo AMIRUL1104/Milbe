@@ -22,7 +22,7 @@ export function RequestsTabs({
             className="flex h-12 max-w-fit items-center gap-2 px-1 text-sm font-semibold text-text-muted data-[selected=true]:font-bold data-[selected=true]:text-primary"
           >
             <Send className="h-4 w-4" />
-            <span>Sent Requests</span>
+            <span>পাঠানো রিকোয়েস্ট</span>
             <Tabs.Indicator className="bg-primary" />
           </Tabs.Tab>
           <Tabs.Tab
@@ -30,7 +30,7 @@ export function RequestsTabs({
             className="flex h-12 max-w-fit items-center gap-2 px-1 text-sm font-semibold text-text-muted data-[selected=true]:font-bold data-[selected=true]:text-primary"
           >
             <Inbox className="h-4 w-4" />
-            <span>Received Requests</span>
+            <span>প্রাপ্ত রিকোয়েস্ট</span>
             <Tabs.Indicator className="bg-primary" />
           </Tabs.Tab>
         </Tabs.List>

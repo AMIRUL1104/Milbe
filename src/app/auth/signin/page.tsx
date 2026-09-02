@@ -18,17 +18,17 @@ export default function LoginPage() {
             <BookOpen className="w-6 h-6" />
           </div>
           <Link href="/" className="text-xl font-black text-gray-900 tracking-tight">
-            Book<span className="text-[#35858E]">Bridge</span>
+            Milbe
           </Link>
         </div>
 
         {/* হেডার টেক্সট */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">
-            Welcome Back
+            আবার স্বাগতম
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Access your student dashboard and explore resources.
+            আপনার ড্যাশবোর্ডে অ্যাক্সেস পান এবং রিসোর্স দেখুন।
           </p>
         </div>
 
@@ -43,12 +43,12 @@ export default function LoginPage() {
 
         {/* রেজিস্ট্রেশন রিডাইরেক্ট লিঙ্ক */}
         <p className="text-sm text-gray-500 text-center mt-6">
-          Don&apos;t have an account?{" "}
+          একাউন্ট নেই?{" "}
           <Link
             href="/auth/signup"
             className="font-bold text-[#35858E] hover:text-[#35858E]/80 transition-colors focus-visible:outline-2 focus-visible:outline-[#35858E] rounded"
           >
-            Register here
+            এখানে রেজিস্টার করুন
           </Link>
         </p>
 

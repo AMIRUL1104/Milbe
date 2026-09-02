@@ -3,11 +3,11 @@ import { z } from "zod";
 export const bookEntrySchema = z.object({
   bookId: z.string().optional().default(""),
   publisherId: z.string().optional().default(""),
-  bookName: z.string().min(1, "Book name is required"),
-  publisherName: z.string().min(1, "Publisher name is required"),
+  bookName: z.string().min(1, "বইয়ের নাম দিন"),
+  publisherName: z.string().min(1, "পাবলিশারের নাম দিন"),
   image: z.string().nullable().default(null),
   condition: z.enum(["new", "excellent", "good", "fair"], {
-    error: "Select a condition",
+    error: "অবস্থা বেছে নিন",
   }),
   price: z
     .union([z.number(), z.nan(), z.null()])

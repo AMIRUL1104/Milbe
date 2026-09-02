@@ -20,17 +20,17 @@ export default function RegisterPage() {
             href="/"
             className="text-xl font-black text-gray-900 tracking-tight"
           >
-            Book<span className="text-[#35858E]">Bridge</span>
+            Milbe
           </Link>
         </div>
 
         {/* হেডিং টেক্সট */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">
-            Join Milbe
+            মিলবেতে যোগ দিন
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Create an account to start sharing and discovering academic books.
+            একাউন্ট তৈরি করুন এবং বই শেয়ার করা শুরু করুন।
           </p>
         </div>
 
@@ -47,12 +47,12 @@ export default function RegisterPage() {
 
         {/* লগইন পেজে ব্যাক করার লিঙ্ক */}
         <p className="text-sm text-gray-500 text-center mt-6">
-          Already have an account?{" "}
+          ইতিমধ্যে একাউন্ট আছে?{" "}
           <Link
             href="/auth/signin"
             className="font-bold text-[#35858E] hover:text-[#35858E]/80 transition-colors focus-visible:outline-2 focus-visible:outline-[#35858E] rounded"
           >
-            Sign In
+            সাইন ইন
           </Link>
         </p>
       </div>

@@ -11,7 +11,7 @@ export default function FooterBrand() {
         Milbe
       </Link>
       <p className="text-accent-muted text-sm leading-relaxed">
-        Milbe helps students buy, sell, and donate academic books across Bangladesh through a simple and reliable platform.
+        মিলবে বাংলাদেশের শিক্ষার্থীদের জন্য বই কেনাবেচা ও দানের একটি নির্ভরযোগ্য প্ল্যাটফর্ম।
       </p>
     </div>
   );

@@ -19,19 +19,19 @@ export default function BasicInfoSection() {
 
   return (
     <section className="space-y-4">
-      <h2 className="text-base font-semibold text-text-secondary">Basic Info</h2>
+      <h2 className="text-base font-semibold text-text-secondary">মূল তথ্য</h2>
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="title" className={labelBase}>
-          Post Title
+          পোস্টের শিরোনাম
         </label>
         <p className="text-xs text-text-muted -mt-0.5">
-          Auto-generated from your books — edit anytime.
+          বই থেকে স্বয়ংক্রিয়ভাবে তৈরি — পরে সম্পাদনা করতে পারবেন।
         </p>
         <input
           id="title"
           type="text"
-          placeholder="e.g. HSC Science Books"
+          placeholder="যেমন: এইচএসসি সায়েন্স বই"
           {...register("title")}
           className={`${inputBase} pl-4 ${
             errors.title
@@ -45,7 +45,7 @@ export default function BasicInfoSection() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="category" className={labelBase}>
-            Category
+            ক্যাটাগরি
           </label>
           <div className="relative">
             <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -60,7 +60,7 @@ export default function BasicInfoSection() {
               }`}
             >
               <option value="" disabled>
-                Select category
+                ক্যাটাগরি বেছে নিন
               </option>
               {BOOK_CATEGORIES.map((category) => (
                 <option key={category} value={category}>
@@ -75,7 +75,7 @@ export default function BasicInfoSection() {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className={labelBase}>Listing Type</label>
+          <label className={labelBase}>পোস্টের ধরন</label>
           <Controller
             control={control}
             name="type"
@@ -89,7 +89,7 @@ export default function BasicInfoSection() {
                     onChange={() => field.onChange("sell")}
                     className="w-4 h-4 text-primary focus:ring-primary"
                   />
-                  Sell
+                  বিক্রি
                 </label>
                 <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
                   <input
@@ -99,7 +99,7 @@ export default function BasicInfoSection() {
                     onChange={() => field.onChange("donate")}
                     className="w-4 h-4 text-primary focus:ring-primary"
                   />
-                  Donate
+                  দান
                 </label>
               </div>
             )}

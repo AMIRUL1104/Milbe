@@ -14,12 +14,12 @@ export default function EmptyState({
         <BookOpen className="w-8 h-8" />
       </div>
       <h2 className="text-lg font-bold text-text-primary">
-        {hasActiveFilters ? "No posts match your search" : "No posts yet"}
+        {hasActiveFilters ? "কোনো পোস্ট খুঁজে পাওয়া যায়নি" : "এখনো কোনো পোস্ট নেই"}
       </h2>
       <p className="text-sm text-text-muted mt-1.5 max-w-sm">
         {hasActiveFilters
-          ? "Try adjusting your search, filter, or sort options."
-          : "Start sharing your academic books with students who need them — sell or donate in just a few steps."}
+          ? "সার্চ বা ফিল্টার পরিবর্তন করে চেষ্টা করুন।"
+          : "আপনার একাডেমিক বই অন্য শিক্ষার্থীদের সাথে শেয়ার করা শুরু করুন — মাত্র কয়েক ধাপে বিক্রি বা দান করুন।"}
       </p>
       {!hasActiveFilters && (
         <Link
@@ -27,7 +27,7 @@ export default function EmptyState({
           className="inline-flex items-center gap-2 mt-6 bg-primary hover:bg-primary-hover text-text-inverse font-bold text-sm py-2.5 px-5 rounded-btn transition-base shadow-md"
         >
           <PlusCircle className="w-4 h-4" />
-          Create Your First Post
+          প্রথম পোস্ট তৈরি করুন
         </Link>
       )}
     </div>

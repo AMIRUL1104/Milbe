@@ -22,12 +22,12 @@ export default function ContactSection() {
 
   return (
     <section className="space-y-4">
-      <h2 className="text-base font-semibold text-text-secondary">Contact</h2>
+      <h2 className="text-base font-semibold text-text-secondary">যোগাযোগ</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="phone" className={labelBase}>
-            Phone Number
+            ফোন নম্বর
           </label>
           <div className="relative">
             <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -44,14 +44,14 @@ export default function ContactSection() {
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="messenger" className={labelBase}>
-            Messenger (optional)
+            Messenger (ঐচ্ছিক)
           </label>
           <div className="relative">
             <MessageCircle className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
               id="messenger"
               type="text"
-              placeholder="Facebook Messenger username or link"
+              placeholder="Facebook Messenger ইউজারনেম বা লিংক"
               {...register("messenger")}
               className={`${inputBase} ${borderClass(!!errors.messenger)}`}
             />
@@ -68,7 +68,7 @@ export default function ContactSection() {
           {...register("whatsappOnly")}
           className="w-4 h-4 rounded-sm border-border text-primary focus:ring-primary"
         />
-        Reachable on WhatsApp only
+        শুধু WhatsAppে যোগাযোগ করুন
       </label>
     </section>
   );

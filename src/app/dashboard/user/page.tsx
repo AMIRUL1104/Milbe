@@ -19,9 +19,9 @@ import { getUserDashboard } from "@/services/features/dashboard";
 // ─── Static quick actions ─────────────────────────────────────────────────────
 
 const userQuickActions: QuickActionData[] = [
-  { label: "My Posts", href: "/dashboard/user/posts", icon: PlusCircle },
-  { label: "View Requests", href: "/dashboard/user/requests", icon: Inbox },
-  { label: "Browse Books", href: "/", icon: BookOpen },
+  { label: "আমার পোস্ট", href: "/dashboard/user/posts", icon: PlusCircle },
+  { label: "রিকোয়েস্ট দেখুন", href: "/dashboard/user/requests", icon: Inbox },
+  { label: "বই ব্রাউজ করুন", href: "/", icon: BookOpen },
   { label: "Profile", href: "/profile", icon: UserCog },
 ];
 
@@ -30,25 +30,25 @@ const userQuickActions: QuickActionData[] = [
 function mapUserStats(data: UserDashboardResponse): StatCardData[] {
   return [
     {
-      label: "Active Posts",
+      label: "সক্রিয় পোস্ট",
       value: data.activePosts.toLocaleString(),
       icon: BookOpen,
       trend: "up",
     },
     {
-      label: "Pending Requests",
+      label: "মুলতুবি রিকোয়েস্ট",
       value: data.pendingRequests.toLocaleString(),
       icon: Inbox,
       trend: "up",
     },
     {
-      label: "Books Sold",
+      label: "বিক্রিত বই",
       value: data.booksSold.toLocaleString(),
       icon: Handshake,
       trend: "up",
     },
     {
-      label: "Books Donated",
+      label: "দান করা বই",
       value: data.booksDonated.toLocaleString(),
       icon: ClipboardCheck,
       trend: "neutral",
@@ -80,15 +80,15 @@ export default async function UserDashboardPage() {
   if (!data.success || !data.data) {
     return (
       <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
-        <p className="text-red-500 font-bold">User Dashboard not found or data error!</p>
+        <p className="text-red-500 font-bold">ড্যাশবোর্ড তথ্য পাওয়া যায়নি!</p>
       </main>
     );
   }
 
   return (
     <DashboardOverview
-      title="Welcome back 👋"
-      subtitle="Here's what's happening with your books today."
+      title="স্বাগতম 👋"
+      subtitle="আজ আপনার বইগুলোর খবর এখানে।"
       stats={mapUserStats(data.data)}
       activities={mapActivities(data.data?.recentActivities)}
       actions={userQuickActions}

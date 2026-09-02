@@ -22,8 +22,8 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
       <section className="py-8 lg:py-12 bg-background">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <SectionHeading
-            title="Books Near You"
-            subtitle="Sign in to see books available near you."
+            title="আপনার কাছাকাছি বই"
+            subtitle="সাইন ইন করুন আপনার কাছাকাছি বই দেখতে।"
           />
           <div className="text-center py-12 bg-surface border border-border rounded-card">
             <div className="flex flex-col items-center gap-4">
@@ -31,18 +31,16 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
                 <LogIn className="w-6 h-6 text-primary" />
               </div>
               <p className="text-text-muted">
-                You need to be logged in to see personalized book recommendations
-                near you.
+                আপনার কাছাকাছি বই দেখতে সাইন ইন করতে হবে।
               </p>
               <p className="text-sm text-text-muted">
-                You can also select a district from the search bar above to
-                browse books instantly.
+                অথবা সার্চ বার থেকে এলাকা নির্বাচন করে বই দেখুন।
               </p>
               <Link
                 href="/auth/signin"
                 className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-text-inverse bg-primary hover:bg-primary-hover rounded-btn transition-base shadow-sm focus-visible:outline-2 focus-visible:outline-primary-focus"
               >
-                Sign In
+                সাইন ইন
               </Link>
             </div>
           </div>
@@ -56,8 +54,8 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
       <section className="py-8 lg:py-12 bg-background">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <SectionHeading
-            title="Books Near You"
-            subtitle="Update your profile to see books in your area."
+            title="আপনার কাছাকাছি বই"
+            subtitle="প্রোফাইল আপডেট করুন আপনার এলাকার বই দেখতে।"
           />
           <div className="text-center py-12 bg-surface border border-border rounded-card">
             <div className="flex flex-col items-center gap-4">
@@ -65,18 +63,16 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
                 <User className="w-6 h-6 text-primary" />
               </div>
               <p className="text-text-muted">
-                You need to set your district in your profile to see books
-                available near you.
+                আপনার এলাকার বই দেখতে প্রোফাইল আপডেট করতে হবে।
               </p>
               <p className="text-sm text-text-muted">
-                You can also select a district from the search bar above to
-                browse books instantly.
+                অথবা সার্চ বার থেকে এলাকা নির্বাচন করে বই দেখুন।
               </p>
               <Link
                 href="/profile"
                 className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-text-inverse bg-primary hover:bg-primary-hover rounded-btn transition-base shadow-sm focus-visible:outline-2 focus-visible:outline-primary-focus"
               >
-                Update Profile
+                প্রোফাইল আপডেট
               </Link>
             </div>
           </div>
@@ -90,17 +86,17 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
       <section className="py-8 lg:py-12 bg-background">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <SectionHeading
-            title="Books Near You"
+            title="আপনার কাছাকাছি বই"
             subtitle={
               district
-                ? `Showing books in ${district} district`
+                ? `${district} এলাকার বই দেখানো হচ্ছে`
                 : undefined
             }
           />
           <div className="text-center py-12 bg-surface border border-border rounded-card">
-            <p className="text-text-muted">No books found in your area</p>
+            <p className="text-text-muted">আপনার এলাকায় কোনো বই পাওয়া যায়নি</p>
             <p className="text-sm text-text-muted mt-1">
-              Try a different location or check back later
+              ভিন্ন এলাকা বেছে নিন বা পরে আবার দেখুন
             </p>
           </div>
         </div>
@@ -112,9 +108,9 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
     <section className="py-8 lg:py-12 bg-background">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHeading
-          title="Books Near You"
+          title="আপনার কাছাকাছি বই"
           subtitle={
-            district ? `Showing books in ${district} district` : undefined
+            district ? `${district} এলাকার বই দেখানো হচ্ছে` : undefined
           }
         />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

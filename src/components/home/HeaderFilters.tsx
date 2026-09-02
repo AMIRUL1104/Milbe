@@ -56,9 +56,9 @@ export default function HeaderFilters({
   };
 
   const tabs = [
-    { type: "", label: "All Books" },
-    { type: "sell", label: "For Sale" },
-    { type: "donate", label: "Donate" },
+    { type: "", label: "সব বই" },
+    { type: "sell", label: "বিক্রির জন্য" },
+    { type: "donate", label: "দান" },
   ];
 
   const Tabs = (
@@ -93,15 +93,15 @@ export default function HeaderFilters({
               onChange={(e) => updateQueryParams("category", e.target.value)}
               className="bg-background border border-border text-text-secondary text-sm rounded-input pl-9 pr-8 py-2.5 appearance-none focus:outline-primary-focus cursor-pointer"
             >
-              <option value="">Categories</option>
-              <option value="science">Science</option>
-              <option value="commerce">Commerce</option>
-              <option value="arts">Arts</option>
-              <option value="admission">Admission</option>
-              <option value="buisness">Buisness</option>
-              <option value="engineering">Engineering</option>
-              <option value="medical">Medical</option>
-              <option value="others">Others</option>
+              <option value="">ক্যাটাগরি</option>
+              <option value="science">বিজ্ঞান</option>
+              <option value="commerce">বাণিজ্য</option>
+              <option value="arts">কলা</option>
+              <option value="admission">ভর্তি</option>
+              <option value="buisness">বিজনেস</option>
+              <option value="engineering">ইঞ্জিনিয়ারিং</option>
+              <option value="medical">মেডিকেল</option>
+              <option value="others">অন্যান্য</option>
             </select>
           </div>
 
@@ -112,10 +112,10 @@ export default function HeaderFilters({
               onChange={(e) => updateQueryParams("condition", e.target.value)}
               className="bg-background border border-border text-text-secondary text-sm rounded-input pl-9 pr-8 py-2.5 appearance-none focus:outline-primary-focus cursor-pointer"
             >
-              <option value="">Condition</option>
-              <option value="like_new">Like New</option>
-              <option value="good">Good</option>
-              <option value="fair">Fair</option>
+              <option value="">অবস্থা</option>
+              <option value="like_new">নতুনের মতো</option>
+              <option value="good">ভালো</option>
+              <option value="fair">গ্রহণযোগ্য</option>
             </select>
           </div>
 
@@ -133,7 +133,7 @@ export default function HeaderFilters({
             aria-controls="mobile-filter-panel"
             className="inline-flex shrink-0 items-center gap-1.5 px-3 py-2 rounded-btn bg-surface border border-border text-sm font-medium text-text-secondary hover:bg-primary hover:text-text-inverse transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
           >
-            <Filter className="w-4 h-4" /> Filter
+            <Filter className="w-4 h-4" /> ফিল্টার
           </button>
         </div>
 

@@ -1,10 +1,10 @@
 import type { NavItem } from "@/interface/dashboard/dashboard";
 
 export const userNavItems: NavItem[] = [
-  { label: "Overview", href: "/dashboard/user", icon: "LayoutDashboard" },
-  { label: "My Posts", href: "/dashboard/user/posts", icon: "BookOpen" },
+  { label: "ওভারভিউ", href: "/dashboard/user", icon: "LayoutDashboard" },
+  { label: "আমার পোস্ট", href: "/dashboard/user/posts", icon: "BookOpen" },
   {
-    label: "Requests",
+    label: "রিকোয়েস্ট",
     href: "/dashboard/user/requests",
     icon: "ClipboardList",
   },
@@ -12,9 +12,9 @@ export const userNavItems: NavItem[] = [
 ];
 
 export const adminNavItems: NavItem[] = [
-  { label: "Overview", href: "/dashboard/admin", icon: "LayoutDashboard" },
-  { label: "Manage Users", href: "/dashboard/admin/users", icon: "Users" },
-  { label: "Manage Posts", href: "/dashboard/admin/posts", icon: "FileStack" },
+  { label: "ওভারভিউ", href: "/dashboard/admin", icon: "LayoutDashboard" },
+  { label: "ইউজার ম্যানেজমেন্ট", href: "/dashboard/admin/users", icon: "Users" },
+  { label: "পোস্ট ম্যানেজমেন্ট", href: "/dashboard/admin/posts", icon: "FileStack" },
   {
     label: "Knowledge Base",
     href: "/dashboard/admin/knowledge-base",

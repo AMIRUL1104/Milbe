@@ -23,18 +23,18 @@ export const metadata: Metadata = {
 };
 
 const NAVIGATION_ITEMS = [
-    { id: "acceptance", label: "1. Acceptance of Terms" },
-    { id: "eligibility", label: "2. Eligibility" },
-    { id: "accounts", label: "3. User Accounts" },
-    { id: "listings", label: "4. Book Listings" },
-    { id: "requests", label: "5. Book Requests" },
-    { id: "responsibilities", label: "6. User Responsibilities" },
-    { id: "prohibited", label: "7. Prohibited Activities" },
-    { id: "ownership", label: "8. Content Ownership" },
-    { id: "liability", label: "9. Limitation of Liability" },
-    { id: "suspension", label: "10. Account Suspension" },
-    { id: "changes", label: "11. Changes to Terms" },
-    { id: "contact", label: "12. Contact Us" },
+    { id: "acceptance", label: "১. শর্তাবলী গ্রহণ" },
+    { id: "eligibility", label: "২. যোগ্যতা" },
+    { id: "accounts", label: "৩. ব্যবহারকারী অ্যাকাউন্ট" },
+    { id: "listings", label: "৪. বই লিস্টিং" },
+    { id: "requests", label: "৫. বই রিকোয়েস্ট" },
+    { id: "responsibilities", label: "৬. ব্যবহারকারীর দায়িত্ব" },
+    { id: "prohibited", label: "৭. নিষিদ্ধ কার্যকলাপ" },
+    { id: "ownership", label: "৮. কন্টেন্ট মালিকানা" },
+    { id: "liability", label: "৯. দায় সীমাবদ্ধতা" },
+    { id: "suspension", label: "১০. Account স্থগিতাবস্থা" },
+    { id: "changes", label: "১১. শর্তাবলী পরিবর্তন" },
+    { id: "contact", label: "১২. যোগাযোগ" },
 ];
 
 export default function TermsAndConditionsPage() {
@@ -52,17 +52,17 @@ export default function TermsAndConditionsPage() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-3 text-[#35858E] font-bold text-sm uppercase tracking-wider mb-3">
                         <FileText className="w-5 h-5" />
-                        <span>Legal Framework</span>
+                        <span>আইনি কাঠামো</span>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
-                        Terms & Conditions
+                        শর্তাবলী
                     </h1>
                     <p className="text-base md:text-lg text-slate-500 max-w-2xl leading-relaxed">
-                        These terms govern the use of the Milbe platform. Please review these rules thoroughly before accessing our community services.
+                        এই শর্তাবলী মিলবে প্ল্যাটফর্মের ব্যবহার নিয়ন্ত্রণ করে। আমাদের সম্প্রদায় সেবা অ্যাক্সেস করার আগে দয়া করে এই নিয়মগুলি ভালোভাবে পর্যালোচনা করুন।
                     </p>
                     <div className="mt-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-600">
                         <span className="w-2 h-2 rounded-full bg-[#35858E] animate-pulse" />
-                        <span>Last Updated: {currentFormattedDate}</span>
+                        <span>সর্বশেষ আপডেট: {currentFormattedDate}</span>
                     </div>
                 </div>
             </header>
@@ -73,7 +73,7 @@ export default function TermsAndConditionsPage() {
 
                     {/* Sticky Sidebar (Desktop Only) */}
                     <aside className="hidden lg:block lg:col-span-1 sticky top-28 border border-slate-200/60 rounded-2xl p-4 bg-white shadow-sm">
-                        <p className="text-xs font-bold uppercase tracking-wider text-slate-400 px-4 mb-3">Sections</p>
+                        <p className="text-xs font-bold uppercase tracking-wider text-slate-400 px-4 mb-3">বিভাগসমূহ</p>
                         <TermsNavigation items={NAVIGATION_ITEMS} />
                     </aside>
 
@@ -81,131 +81,131 @@ export default function TermsAndConditionsPage() {
                     <div className="col-span-1 lg:col-span-3 space-y-8">
 
                         {/* 1. Acceptance of Terms */}
-                        <TermsCard id="acceptance" icon={<UserCheck />} title="1. Acceptance of Terms">
+                        <TermsCard id="acceptance" icon={<UserCheck />} label="১. শর্তাবলী গ্রহণ">
                             <p>
-                                By completing your profile registration, authenticating through our application portal, or interacting with peer listings, you confirm that you have read, understood, and unreservedly agree to be bound by these Terms & Conditions.
+                                আপনার প্রোফাইল রেজিস্ট্রেশন সম্পন্ন করে, আমাদের অ্যাপ্লিকেশন পোর্টালের মাধ্যমে প্রমাণীকরণ করে, বা পিয়ার লিস্টিংয়ের সাথে ইন্টারঅ্যাক্ট করে, আপনি নিশ্চিত করেন যে আপনি এই শর্তাবলী পড়েছেন, বুঝেছেন এবং সম্পূর্ণ মনোযোগের সাথে এতে সম্মত হন।
                             </p>
                             <p>
-                                If you do not explicitly accept these legal terms, you are restricted from creating listings or establishing communication loops on Milbe.
+                                আপনি যদি স্পষ্টভাবে এই আইনি শর্তাবলী গ্রহণ না করেন, তাহলে আপনি মিলবেতে লিস্টিং তৈরি করতে বা যোগাযোগ লুপ স্থাপন করতে সীমাবদ্ধ।
                             </p>
                         </TermsCard>
 
                         {/* 2. Eligibility */}
-                        <TermsCard id="eligibility" icon={<ShieldAlert />} title="2. Eligibility">
+                        <TermsCard id="eligibility" icon={<ShieldAlert />} label="২. যোগ্যতা">
                             <p>
-                                Milbe is explicitly built to support academic workflows. To remain eligible to participate on the platform, you must meet the following parameters:
+                                মিলবে স্পষ্টভাবে একাডেমিক ওয়ার্কফ্লো সমর্থন করতে নির্মিত। প্ল্যাটফর্মে অংশগ্রহণের জন্য যোগ্য থাকতে, আপনাকে অবশ্যই নিম্নলিখিত প্যারামিটারগুলি পূরণ করতে হবে:
                             </p>
                             <ul className="list-disc pl-5 space-y-2 mt-2 text-slate-600">
-                                <li>You must provide authentic personal information during the profile compilation step.</li>
-                                <li>The service is fundamentally intended for active students pursuing secondary, higher secondary, or university-level education.</li>
-                                <li>You maintain full personal responsibility for tracking and shielding all cryptographic account tokens and authorization parameters.</li>
+                                <li>প্রোফাইল সংকলন ধাপের সময় আপনাকে অবশ্যই প্রকৃত ব্যক্তিগত তথ্য প্রদান করতে হবে।</li>
+                                <li>এই সেবা মূলত মাধ্যমিক, উচ্চমাধ্যমিক বা বিশ্ববিদ্যা�লয় স্তরের শিক্ষায় নিয়োজিত সক্রিয় শিক্ষার্থীদের জন্য।</li>
+                                <li>আপনি সমস্ত ক্রিপ্টোগ্রাফিক Account টোকেন এবং অনুমোদন প্যারামিটার ট্র্যাক এবং সুরক্ষিত রাখার জন্য সম্পূর্ণ ব্যক্তিগত দায়িত্ব বহন করেন।</li>
                             </ul>
                         </TermsCard>
 
                         {/* 3. User Accounts */}
-                        <TermsCard id="accounts" icon={<Award />} title="3. User Accounts">
+                        <TermsCard id="accounts" icon={<Award />} label="৩. ব্যবহারকারী অ্যাকাউন্ট">
                             <p>
-                                To preserve data safety, each unique identity is restricted to exactly **one individual account**. Creating redundant duplicate profiles or secondary dummy records to bypass moderation parameters is strictly prohibited.
+                                ডেটা সুরক্ষা বজায় রাখতে, প্রতিটি অনন্য পরিচয় ঠিক **একটি ব্যক্তিগত অ্যাকাউন্ট**-এ সীমাবদ্ধ। মডারেশন প্যারামিটার বাইপাস করতে পুনরাবৃত্তি ডুপ্লিকেট প্রোফাইল বা মাধ্যমিক ডামি রেকর্ড তৈরি করা কঠোরভাবে নিষিদ্ধ।
                             </p>
                             <p>
-                                You are entirely liable for all activities, book updates, and request logs initiated from your validated account layout.
+                                আপনার যাচাইকৃত লেআউট থেকে শুরু হওয়া সমস্ত কার্যকলাপ, বই আপডেট এবং রিকোয়েস্ট লগগুলির জন্য আপনি সম্পূর্ণভাবে দায়ী।
                             </p>
                         </TermsCard>
 
                         {/* 4. Book Listings */}
-                        <TermsCard id="listings" icon={<BookOpen />} title="4. Book Listings">
+                        <TermsCard id="listings" icon={<BookOpen />} label="৪. বই লিস্টিং">
                             <p>
-                                Users who publish academic listings assume complete, singular accountability for the validity of the parameters submitted. Every single entry must guarantee:
+                                একাডেমিক লিস্টিং প্রকাশকারী ব্যবহারকারীরা জমা দেওয়া প্যারামিটারগুলির বৈধতার জন্য সম্পূর্ণ, একক দায়িত্ব গ্রহণ করেন। প্রতিটি এন্ট্রি অবশ্যই গ্যারান্টি দিতে হবে:
                             </p>
                             <ul className="list-disc pl-5 space-y-2 mt-2 text-slate-600">
-                                <li><strong>Correct Title:</strong> The precise metadata matching the book cover text.</li>
-                                <li><strong>Honest Condition:</strong> Accurate representation of physical decay, notes, or highlighting.</li>
-                                <li><strong>Real Images:</strong> Genuine captures of the actual physical copy, rather than stock marketing visuals.</li>
+                                <li><strong>সঠিক শিরোনাম:</strong> বইয়ের কভার টেক্সটের সাথে মিলিয়ে সুনির্দিষ্ট মেটাডেটা।</li>
+                                <li><strong>সৎ অবস্থা:</strong> শারীরিক ক্ষয়, নোট বা হাইলাইটিংয়ের সঠিক উপস্থাপনা।</li>
+                                <li><strong>প্রকৃত চিত্র:</strong> স্টোক মার্কেটিং ভিজ্যুয়ালের পরিবর্তে প্রকৃত ভৌত কপির প্রকৃত ক্যাপচার।</li>
                             </ul>
                             <p>
-                                Publishing highly misleading item descriptions or commercial shop inventory lists is a violation of platform guidelines.
+                                অত্যন্ত বিভ্রান্তিকর আইটেম বিবরণ বা বাণিজ্যিক স্টোর ইনভেন্টরি তালিকা প্রকাশ করা প্ল্যাটফর্ম নির্দেশিকা লঙ্ঘন।
                             </p>
                         </TermsCard>
 
                         {/* 5. Book Requests */}
-                        <TermsCard id="requests" icon={<Send />} title="5. Book Requests">
+                        <TermsCard id="requests" icon={<Send />} label="৫. বই রিকোয়েস্ট">
                             <p>
-                                Students can dynamically register requests on available listings. However, the book seller holds full, absolute autonomy to accept or decline any inbound request based on their preferences.
+                                শিক্ষার্থীরা উপলব্ধ লিস্টিংয়ে ডায়নামিকভাবে রিকোয়েস্ট নিবন্ধন করতে পারেন। তবে, বই বিক্রেতা তাদের পছন্দ অনুযায়ী যেকোনো ইনবাউন্ড রিকোয়েস্ট গ্রহণ বা প্রত্যাখ্যান করার সম্পূর্ণ, সম্পূর্ণ স্বায়ত্তশাসন রাখেন।
                             </p>
                             <p>
-                                <strong>Important:</strong> Contact pathways (such as personal phone links) remain locked and securely masked until the owner explicitly marks a request as accepted. Milbe cannot guarantee request acceptances or match completions.
+                                <strong>গুরুত্বপূর্ণ:</strong> যোগাযোগ পথ (যেমন ব্যক্তিগত ফোন লিংক) লক থাকে এবং নিরাপদে মাস্ক থাকে যতক্ষণ না মালিক স্পষ্টভাবে একটি রিকোয়েস্ট গৃহীত হিসেবে চিহ্নিত করেন। মিলবে রিকোয়েস্ট গ্রহণ বা ম্যাচ সম্পন্ন করার গ্যারান্টি দিতে পারে না।
                             </p>
                         </TermsCard>
 
                         {/* 6. User Responsibilities */}
-                        <TermsCard id="responsibilities" icon={<Layers />} title="6. User Responsibilities">
+                        <TermsCard id="responsibilities" icon={<Layers />} label="৬. ব্যবহারকারীর দায়িত্ব">
                             <p>
-                                When utilizing Milbe, you pledge to interact safely and maturely. You are expected to keep conversations professional, communicate truthfully regarding textbook data, and behave respectfully toward fellow students during offline campus meetups.
+                                মিলবে ব্যবহার করার সময়, আপনি নিরাপদে এবং পরিপক্বভাবে ইন্টারঅ্যাক্ট করতে প্রতিশ্রুতি দেন। আপনাকে পেশাদারীভাবে কথোপকথন রাখতে, পাঠ্যবই ডেটা সম্পর্কে সত্যভাবে যোগাযোগ করতে এবং অফলাইন ক্যাম্পাস মিটআপের সময় সহশিক্ষার্থীদের প্রতি সম্মানজনকভাবে আচরণ করতে আশা করা হয়।
                             </p>
                         </TermsCard>
 
                         {/* 7. Prohibited Activities */}
-                        <TermsCard id="prohibited" icon={<AlertOctagon />} title="7. Prohibited Activities">
+                        <TermsCard id="prohibited" icon={<AlertOctagon />} label="৭. নিষিদ্ধ কার্যকলাপ">
                             <p>
-                                To maintain a safe academic environment, engaging in any of the following prohibited behaviors will result in instant corrective measures:
+                                একটি নিরাপদ একাডেমিক পরিবেশ বজায় রাখতে, নিম্নলিখিত নিষিদ্ধ আচরণগুলির মধ্যে যেকোনোতে জড়িত হলে তাৎক্ষণিক সংশোধনমূলক ব্যবস্থা নেওয়া হবে:
                             </p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                                <ProhibitedItem label="Uploading copyrighted or illegal media" />
-                                <ProhibitedItem label="Posting fake listings or phantom books" />
-                                <ProhibitedItem label="Harassing or stalking community members" />
-                                <ProhibitedItem label="Spamming peer request notification arrays" />
-                                <ProhibitedItem label="Exploiting student numbers for commercial marketing" />
-                                <ProhibitedItem label="Hacking or destabilizing platform architecture" />
+                                <ProhibitedItem label="কপিরাইটযুক্ত বা বেআইনি মিডিয়া আপলোড করা" />
+                                <ProhibitedItem label="ভুয়া লিস্টিং বা প্রতাণ বই পোস্ট করা" />
+                                <ProhibitedItem label="সম্প্রদায়ের সদস্যদের হয়রানি বা স্টকিং করা" />
+                                <ProhibitedItem label="পিয়ার রিকোয়েস্ট নোটিফিকেশন অ্যারে স্প্যাম করা" />
+                                <ProhibitedItem label="বাণিজ্যিক মার্কেটিংয়ের জন্য শিক্ষার্থী নম্বর শোষণ করা" />
+                                <ProhibitedItem label="প্ল্যাটফর্ম আর্কিটেকচর হ্যাকিং বা অস্থিতিশীল করা" />
                             </div>
                         </TermsCard>
 
                         {/* 8. Content Ownership */}
-                        <TermsCard id="ownership" icon={<FileText />} title="8. Content Ownership">
+                        <TermsCard id="ownership" icon={<FileText />} label="৮. কন্টেন্ট মালিকানা">
                             <p>
-                                You maintain complete, original copyright ownership over any text logs or textbook snapshots you upload to the platform.
+                                আপনি প্ল্যাটফর্মে আপলোড করা যেকোনো টেক্সট লগ বা পাঠ্যবই স্ন্যাপশটের উপর সম্পূর্ণ, মূল কপিরাইট মালিকানা বজায় রাখেন।
                             </p>
                             <p>
-                                However, by adding data profiles to the live directory, you grant Milbe a non-exclusive, royalty-free, global license to display, host, and index the item content across our ecosystem structures.
+                                তবে, লাইভ ডিরেক্টরিতে ডেটা প্রোফাইল যোগ করে, আপনি মিলবেকে একটি অনন্য, নন-এক্সক্লুসিভ, বিশ্বব্যাপ৲াইসেন্স প্রদান করেন যা আমাদের ইকোসিস্টেম কাঠামো জুড়ে আইটেম কন্টেন্ট প্রদর্শন, হোস্ট এবং সূচীবদ্ধ করার অনুমতি দেয়।
                             </p>
                         </TermsCard>
 
                         {/* 9. Limitation of Liability */}
-                        <TermsCard id="liability" icon={<AlertTriangle />} title="9. Limitation of Liability">
+                        <TermsCard id="liability" icon={<AlertTriangle />} label="৯. দায় সীমাবদ্ধতা">
                             <p className="font-semibold text-slate-900">
-                                Milbe operates strictly as a peer-to-peer connection platform. We do not manage physical assets, handle currencies, or control offline interactions.
+                                মিলবে কেবল একটি পিয়ার-টু-পিয়ার সংযোগ প্ল্যাটফর্ম হিসেবে কাজ করে। আমরা ভৌত সম্পদ পরিচালনা করি না, মুদ্রা পরিচালনা করি না বা অফলাইন ইন্টারঅ্যাকশন নিয়ন্ত্রণ করি না।
                             </p>
                             <p>
-                                Accordingly, Milbe shall not be held liable or accountable for:
+                                তদনুসারে, মিলবে দায়ী বা জবাবদিহি হবে না:
                             </p>
                             <ul className="list-disc pl-5 space-y-2 text-slate-600">
-                                <li>Direct transactional agreements or disputes occurring between buyers and sellers.</li>
-                                <li>The physical legibility, missing pages, or condition variance of distributed books.</li>
-                                <li>Personal safety, conduct anomalies, or logistical failures encountered during offline on-campus meetups.</li>
+                                <li>ক্রেতা এবং বিক্রেতার মধ্যে সংঘটিত সরাসরি লেনদেনমূলক চুক্তি বা বিরোধ।</li>
+                                <li>বিতরিত বইয়ের শারীরিক পাঠযোগ্যতা, হারানো পৃষ্ঠা বা অবস্থা বৈচিত্র্য।</li>
+                                <li>অফলাইন ক্যাম্পাস মিটআপের সময় সম্মুখীন হওয়া ব্যক্তিগত নিরাপত্তা, আচরণ বৈপরীত্য বা লজিস্টিক ব্যর্থতা।</li>
                             </ul>
                         </TermsCard>
 
                         {/* 10. Account Suspension */}
-                        <TermsCard id="suspension" icon={<UserX />} title="10. Account Suspension">
+                        <TermsCard id="suspension" icon={<UserX />} label="১০. Account স্থগিতাবস্থা">
                             <p>
-                                Milbe administration maintains complete executive authority to temporarily freeze accounts, permanently terminate profiles, or strip problematic book items from the live view immediately without warning if a user breaches these community conditions.
+                                মিলবে প্রশাসন একজন ব্যবহারকারী এই সম্প্রদায় শর্তাবলী লঙ্ঘন করলে সতর্কতা ছাড়াই তাৎক্ষণিকভাবে Account স্থয়ীভাবে ফ্রিজ করার, প্রোফাইল স্থায়ীভাবে বন্ধ করার বা লাইভ ভিউ থেকে সমস্যাযুক্ত বই আইটেম অপসারণ করার সম্পূর্ণ নির্বাহী ক্ষমতা বজায় রাখে।
                             </p>
                         </TermsCard>
 
                         {/* 11. Changes to Terms */}
-                        <TermsCard id="changes" icon={<RefreshCw />} title="11. Changes to Terms">
+                        <TermsCard id="changes" icon={<RefreshCw />} label="১১. শর্তাবলী পরিবর্তন">
                             <p>
-                                We reserve the operational privilege to adjust these Terms & Conditions to reflect system improvements or compliance protocols. Continued utilization of the application following the broadcast of updated terms indicates clear legal consent to the changes.
+                                সিস্টেম উন্নতি বা সম্মতি প্রোটোকল প্রতিফলিত করতে এই শর্তাবলী সামঞ্জস্য করার অপারেশনাল বিশেষাধিকার আমরা সংরক্ষণ করি। আপডেট শর্তাবলী সম্প্রচার করার পর অ্যাপ্লিকেশন ব্যবহার চালিয়ে যাওয়া পরিবর্তনগুলিতে স্পষ্ট আইনি সম্মতি নির্দেশ করে।
                             </p>
                         </TermsCard>
 
                         {/* 12. Contact Us */}
-                        <TermsCard id="contact" icon={<Mail />} title="12. Contact Us">
+                        <TermsCard id="contact" icon={<Mail />} label="১২. যোগাযোগ">
                             <p>
-                                If you need clarification regarding platform guidelines, or wish to report systemic rule violations, contact our support team:
+                                প্ল্যাটফর্ম নির্দেশিকা সম্পর্কে স্পষ্টীকরণ প্রয়োজন হলে, বা সিস্টেমিক নিয়ম লঙ্ঘন রিপোর্ট করতে চাইলে, আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন:
                             </p>
                             <div className="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200/60 inline-block space-y-1 text-sm">
                                 <p><strong>Email:</strong> <span className="text-[#35858E]">amirulislam9.e@gmail.com</span></p>
-                                <p><strong>Operations Desk:</strong> Milbe</p>
+                                <p><strong>অপারেশন ডেস্ক:</strong> মিলবে</p>
                             </div>
                         </TermsCard>
 
@@ -215,9 +215,9 @@ export default function TermsAndConditionsPage() {
                                 <Heart className="w-6 h-6" />
                             </div>
                             <div className="space-y-2">
-                                <h4 className="text-lg font-bold">Fair Use & Community Respect</h4>
+                                <h4 className="text-lg font-bold">ন্যায্য ব্যবহার ও সম্প্রদায় সম্মান</h4>
                                 <p className="text-slate-400 text-sm leading-relaxed">
-                                    Milbe exists to help students buy, sell, and donate academic books in a safe and respectful community. Every user is expected to act honestly, responsibly, and respectfully to ensure a healthy educational marketplace for all.
+                                    মিলবে শিক্ষার্থীদের একটি নিরাপদ এবং সম্মানজনক সম্প্রদায়ে একাডেমিক বই কেনা, বিক্রি এবং দান করতে সাহায্য করতে বিদ্যমান। সবার জন্য একটি স্বাস্থ্যকর শিক্ষামূলক মার্কেটপ্লেস নিশ্চিত করতে প্রত্যেক ব্যবহারকারী সৎভাবে, দায়িত্বশীলভাবে এবং সম্মানজনকভাবে অভ্যন্তরীণ আচরণ করা আশা করা হয়।
                                 </p>
                             </div>
                         </div>
@@ -235,24 +235,21 @@ export default function TermsAndConditionsPage() {
 interface TermsCardProps {
     id: string;
     icon: React.ReactNode;
-    title: string;
+    label: string;
     children: React.ReactNode;
 }
 
-function TermsCard({ id, icon, title, children }: TermsCardProps) {
+function TermsCard({ id, icon, label, children }: TermsCardProps) {
     return (
         <section
             id={id}
             className="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 space-y-4 hover:border-[#35858E]/40 hover:shadow-sm transition-all duration-200 scroll-mt-6"
         >
             <div className="flex items-center gap-3.5 pb-3 border-b border-slate-100">
-                {/* [&_svg]:w-5 [&_svg]:h-5 ক্লাসটি চাইল্ড আইকনের 
-                  উইডথ ও হাইট অটোমেটিক সেট করে দিবে কোনো টাইপ এরর ছাড়াই।
-                */}
                 <div className="w-9 h-9 rounded-lg bg-[#35858E]/10 text-[#35858E] flex items-center justify-center shrink-0 [&_svg]:w-5 [&_svg]:h-5">
                     {icon}
                 </div>
-                <h2 className="text-xl font-bold text-slate-900">{title}</h2>
+                <h2 className="text-xl font-bold text-slate-900">{label}</h2>
             </div>
             <div className="text-sm md:text-base text-slate-600 space-y-3 leading-relaxed">
                 {children}

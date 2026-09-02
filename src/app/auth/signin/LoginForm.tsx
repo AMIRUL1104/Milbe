@@ -13,8 +13,8 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
 const loginSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  email: z.string().min(1, "ইমেইল দিন").email("সঠিক ইমেইল ঠিকানা দিন"),
+  password: z.string().min(1, "পাসওয়ার্ড দিন"),
   rememberMe: z.boolean().optional(),
 });
 
@@ -51,20 +51,20 @@ export default function LoginForm() {
 
       if (error) {
         console.error("[LoginForm] Better Auth error:", error.message);
-        toast.error(error.message || "Something went wrong during sign in.");
+        toast.error(error.message || "সাইন ইনে সমস্যা হয়েছে।");
         setIsLoading(false);
         return;
       }
 
       if (data?.user) {
-        toast.success("Welcome to Milbe.");
+        toast.success("মিলবেতে স্বাগতম।");
         setIsLoading(false);
         router.push(searchParams.get("redirect") || "/");
         router.refresh();
       }
     } catch (err) {
       console.error("[LoginForm] Unexpected network error:", err);
-      toast.error("Network error. Please check your connection and try again.");
+      toast.error("ইন্টারনেট সংযোগ চেক করুন এবং আবার চেষ্টা করুন।");
       setIsLoading(false);
     }
     setIsLoading(false);
@@ -81,7 +81,7 @@ export default function LoginForm() {
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="email" className={labelBase}>
-            Email Address
+            Email
           </label>
           <div className="relative">
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -131,13 +131,13 @@ export default function LoginForm() {
               {...register("rememberMe")}
               className="w-4 h-4 rounded-sm border-border text-primary focus:ring-primary"
             />
-            <span>Remember Me</span>
+            <span>মনে রাখুন</span>
           </label>
           <Link
             href="/forgot-password"
             className="font-semibold text-primary hover:text-primary-hover transition-colors"
           >
-            Forgot Password?
+            পাসওয়ার্ড ভুলে গেছেন?
           </Link>
         </div>
 
@@ -149,14 +149,14 @@ export default function LoginForm() {
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
-            <span>Sign In</span>
+            <span>সাইন ইন</span>
           )}
         </button>
       </form>
 
       <div className="flex items-center my-1">
         <div className="flex-1 border-t border-border"></div>
-        <span className="px-3 text-xs font-bold text-text-muted uppercase tracking-wider">OR</span>
+        <span className="px-3 text-xs font-bold text-text-muted uppercase tracking-wider">অথবা</span>
         <div className="flex-1 border-t border-border"></div>
       </div>
 
