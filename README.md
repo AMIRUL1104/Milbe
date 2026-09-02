@@ -1,322 +1,255 @@
-## Backend Repository
-
-[View Backend Repository](https://github.com/AMIRUL1104/Milbe-Server)
-
----
-
 # Milbe
 
-### Live Link --- [View Live Application](https://milbe.shop)
+A peer-to-peer marketplace where students in Bangladesh buy, sell, and donate used academic textbooks.
 
-A student-to-student academic book marketplace for Bangladesh — enabling students to buy, sell, and donate used textbooks through a peer-to-peer platform.
-
-## Project Overview
-
-Milbe addresses the high cost of academic materials by connecting students who have completed courses with those who need books for upcoming semesters. The platform reduces financial barriers to education while promoting sustainability through book reuse.
-
-**Problem Solved:** Students in Bangladesh often struggle with expensive textbooks. Milbe creates a structured marketplace where students can list books they no longer need and find affordable alternatives from peers.
-
-**Target Users:** University and college students across Bangladesh looking to buy, sell, or donate academic books.
-
-**Core Value:** Affordable access to educational resources through community-driven exchange.
+[![Live Demo](https://img.shields.io/badge/Live-milbe%2Evercel.app-35858E)](https://milbe.vercel.app)
+[![Frontend](https://img.shields.io/badge/Frontend-Milbe-35858E?logo=nextdotjs)](https://github.com/AMIRUL1104/Milbe)
+[![Backend](https://img.shields.io/badge/Backend-Milbe--Server-35858E?logo=express)](https://github.com/AMIRUL1104/Milbe-Server)
 
 ---
 
-## Features
+## Overview
+
+**Milbe** is a student-to-student academic book marketplace built for Bangladesh. It connects students who have completed a course with those who need textbooks for upcoming semesters, reducing the cost of educational materials and extending the life of used books through reuse.
+
+- **For:** University and college students across Bangladesh.
+- **Value:** Affordable access to textbooks; sustainability through book reuse; a trusted, peer-driven exchange.
+- **Live application:** [https://milbe.vercel.app](https://milbe.vercel.app)
+
+### Architecture at a glance
+
+Milbe is split across two repositories that communicate over HTTP:
+
+1. **Frontend (this repo)** — a Next.js 16 application. It owns the UI, the static pages, and **authentication** (Better Auth with a MongoDB adapter, running as a route handler at `/api/auth/[...all]`).
+2. **Backend** — a separate Express.js + MongoDB REST API (`[Milbe-Server](https://github.com/AMIRUL1104/Milbe-Server)`, deployed on Render) that stores and serves domain data (posts, book requests, users, and dashboard statistics).
+
+The frontend calls the backend REST API using server-side `fetch` (`cache: "no-store"` for dynamic data) and attaches a Bearer token from the Better Auth session to every protected request.
+
+---
+
+## Key Features
 
 ### Authentication
 
-- Secure authentication via **Better Auth** (email/password)
-- User registration and login
-- Protected routes with role-based access control (User / Admin)
-- Session management with Better Auth tokens
+- Email & password sign-up / sign-in with **Better Auth** (MongoDB adapter).
+- On registration, a user profile record is created automatically.
+- Session management via Better Auth (HTTP-only cookies, JWT-backed session token).
+- Role-based access control — **`user`** and **`admin`** — enforced with `requireRole()` in the dashboard layouts and per-page session guards on protected routes (`/books/add`, `/profile`).
+- Protected API calls carry an `Authorization: Bearer <token>` header.
 
-### Book Management
+### Book Listings
 
-- Create book listings with multiple books per post
-- Edit and delete own listings
-- Image upload via ImgBB integration
-- Detailed book information display (condition, price, category, location)
+- Create listings that bundle **multiple books** in a single post (a "bundle").
+- Single cover image per post, uploaded via **ImgBB** (`next/image` optimized from `i.ibb.co`).
+- Rich post data: category, listing type (sell / donate), condition (new / excellent / good / fair), price, location (district + area), description, and seller contact (phone / WhatsApp / messenger).
+- Delete your own listings.
 
-### Browse & Discovery
+### Browse & Discover (home page)
 
-- Search books by title, author, or keywords
-- Filter by category, condition (like_new / good / fair), listing type (sell / donate)
-- Sort by newest, oldest, price
-- Pagination support
+- Keyword search across title, author, and ISBN.
+- Filter by category, condition, listing type, district, and area.
+- Sort by newest, oldest, title A–Z, or title Z–A.
+- Server-side pagination with "nearby books" personalized to the logged-in user's district (or a selected location).
+- Public listing is available without signing in; nearby personalization requires a profile.
 
 ### Book Request System
 
-- Send purchase/donation requests to sellers
-- Duplicate request prevention
-- Seller can accept requests — accepted books marked as sold
-- Remaining pending requests automatically cancelled
-- Availability restored if accepted request is cancelled
+- Send a purchase/donation request directly from a book's detail page.
+- Duplicate-request prevention — the platform refuses requests from the owner or from a requester who already has a pending request.
+- Sellers can **accept** or **reject** a request (an accepted request marks the post as sold); requesters can **cancel**.
+- Request lifecycle tracked through `pending`, `accepted`, `rejected`, and `cancelled` states.
 
-### User Dashboard
+### User Dashboard (`/dashboard/user`)
 
-- Overview with stats (active posts, pending requests, books sold, books donated)
-- Manage own posts (edit, delete, view requests)
-- View sent requests with status tracking
-- View received requests with accept/decline actions
-- Profile management
+- Overview with stats: active posts, pending requests, books sold, books donated.
+- Recent activity feed and quick actions.
+- **My Posts** — list and delete your own listings.
+- **Requests** — view sent requests (with status tracking) and received requests (accept/decline).
+- **Profile** — manage full name, phone, district, area, and avatar.
 
-### Admin Dashboard
+### Admin Dashboard (`/dashboard/admin`)
 
-- Platform overview (total users, active posts, pending reviews, knowledge base count)
-- User management (search, filter, paginate, role/status updates)
-- Post management with soft-delete capability
-- Knowledge base review queue
+- Overview with platform stats: total users, active posts, pending reviews, and knowledge-base count.
+- Recent activity feed.
+- **User management** — search, filter by role/status, and paginate registered users.
+- **Post management** — browse all listings and remove them.
+- **Knowledge Base** — admin review section (currently a placeholder until resources are curated).
 
 ### Responsive Design
 
-- Mobile-first layout with Tailwind CSS
-- Tablet and desktop optimized breakpoints
-- Collapsible sidebar navigation on dashboard
-- Touch-friendly interactive elements
+- Mobile-first styling with **Tailwind CSS v4** and a custom token system (CSS variables for brand, status, and spacing).
+- **HeroUI** components for UI primitives.
+- Collapsible dashboard sidebar; a bottom navigation bar on mobile.
+- Touch-friendly controls across all breakpoints.
 
 ---
 
-## Tech Stack
+## Core User Flow
 
-| Category               | Technologies                                            |
-| ---------------------- | ------------------------------------------------------- |
-| **Framework**          | Next.js 16 (App Router)                                 |
-| **Language**           | TypeScript                                              |
-| **Styling**            | Tailwind CSS v4, HeroUI v3                              |
-| **Forms & Validation** | React Hook Form, Zod                                    |
-| **Authentication**     | Better Auth (React client + MongoDB adapter)            |
-| **Data Fetching**      | Server Components with native `fetch`, custom API layer |
-| **State/Session**      | Server-side session via Better Auth, client hooks       |
-| **Notifications**      | React Toastify                                          |
-| **Charts**             | Recharts (dashboard statistics)                         |
-| **Animation**          | Framer Motion                                           |
-| **Icons**              | Lucide React                                            |
-| **Image Hosting**      | ImgBB                                                   |
-| **Deployment**         | Vercel (frontend), Render (backend)                     |
-| **Linting**            | ESLint (Next.js config)                                 |
-| **Package Manager**    | npm                                                     |
+1. **Browse** — Land on the home page, search or filter by category / location / type, and page through results.
+2. **Request** — Open a listing, then send a book request (sign-in required). Contact details are visible only to the seller.
+3. **List** — Sign in, click **Sell / Donate**, fill the multi-book form, upload an image (ImgBB), and publish.
+4. **Transact** — Sellers accept requests from the dashboard; accepted requests mark the post as sold and close out pending requests.
+5. **Manage** — Use the dashboard to track your posts and requests, or edit your profile.
 
 ---
 
-## Authentication
+## Technology Stack
 
-Milbe uses **Better Auth** for authentication with a MongoDB adapter.
+| Category           | Technologies                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| Framework          | Next.js 16.2.10 (App Router, Turbopack dev server)                                                                 |
+| Language           | TypeScript 5                                                                                                       |
+| Runtime            | React 19.2.4 / React DOM 19.2.4                                                                                    |
+| Styling            | Tailwind CSS v4 (PostCSS), HeroUI v3                                                                               |
+| Forms & Validation | React Hook Form, Zod v4, @hookform/resolvers                                                                       |
+| Authentication     | Better Auth v1.6.23 (`@better-auth/mongo-adapter`), MongoDB driver                                                 |
+| Data Layer         | Server Components + native `fetch`; `src/services/` API client (`serverFetch`, `protectedFetch`, `serverMutation`) |
+| Session            | Server-side `getUserSession()`; client `useSession()` hook                                                         |
+| Notifications      | React Toastify                                                                                                     |
+| Icons              | Lucide React                                                                                                       |
+| Image Hosting      | ImgBB (`next/image` optimized)                                                                                     |
+| Linting            | ESLint (`eslint-config-next`, core-web-vitals)                                                                     |
+| Package Manager    | npm                                                                                                                |
 
-### Flow
-
-1. **Registration** — Email/password signup via `/auth/signup`
-2. **Login** — Email/password signin via `/auth/signin`
-3. **Session** — JWT-based sessions stored in HTTP-only cookies
-4. **Protected Routes** — Middleware validates session on dashboard routes
-5. **Role-Based Access** — `user` or `admin` role determines dashboard layout and permissions
-
-### Implementation Details
-
-- **Server-side session retrieval**: `auth.api.getSession()` in Server Components
-- **Client-side session**: `useSession()` hook from `better-auth/react`
-- **API Authentication**: Bearer token attached via `Authorization` header for protected backend calls
-- **Route Protection**: `requireRole()` utility redirects unauthorized users to `/unauthorized`
-
----
-
-## Application Structure / Major Sections
-
-| Route                             | Description                                                          | Access        |
-| --------------------------------- | -------------------------------------------------------------------- | ------------- |
-| `/`                               | Home page — hero, featured books, how it works, categories, FAQ, CTA | Public        |
-| `/books`                          | Browse all books with search, filters, pagination                    | Public        |
-| `/books/[id]`                     | Book detail page — images, metadata, seller info, request button     | Public        |
-| `/books/add`                      | Create new book listing (multi-book post)                            | Authenticated |
-| `/auth/signin`                    | Login page                                                           | Public        |
-| `/auth/signup`                    | Registration page                                                    | Public        |
-| `/dashboard/user`                 | User dashboard — stats, recent activity, quick actions               | User          |
-| `/dashboard/user/posts`           | Manage own listings (edit/delete)                                    | User          |
-| `/dashboard/user/requests`        | Sent & received request management                                   | User          |
-| `/dashboard/admin`                | Admin overview — platform stats, recent activity                     | Admin         |
-| `/dashboard/admin/users`          | User management table (search, filter, paginate)                     | Admin         |
-| `/dashboard/admin/posts`          | Post management with soft-delete                                     | Admin         |
-| `/dashboard/admin/knowledge-base` | Knowledge base review queue                                          | Admin         |
-| `/profile`                        | User profile management                                              | Authenticated |
-| `/about`                          | Platform mission, vision, values, statistics                         | Public        |
-| `/faq`                            | Frequently asked questions (accordion)                               | Public        |
-| `/privacy`                        | Privacy policy                                                       | Public        |
-| `/terms`                          | Terms & conditions                                                   | Public        |
-| `/unauthorized`                   | Access denied page with redirect options                             | Public        |
+> Note: `recharts` and `framer-motion` are listed in `package.json` but are not currently imported by the application.
 
 ---
 
-## Backend & API Integration
+## Project Structure
 
-The frontend communicates with a REST API (Express.js + MongoDB) deployed separately.
-
-### API Communication
-
-- **Base URL**: `NEXT_PUBLIC_API_URL` environment variable
-- **Method**: Server-side `fetch` with `cache: 'no-store'` for dynamic data
-- **Authentication**: Bearer token from Better Auth session attached to protected requests
-- **Error Handling**: Failed requests return `null`; UI renders fallback states
-
-### API Client Layer
-
-Located in `src/services/server/`:
-
-- `api.ts` — Public & protected endpoints (posts, requests, user dashboard, profile)
-- `adminApi.ts` — Admin-only endpoints (users, posts, dashboard, book requests)
-- `core/serverFetch.ts` — Shared fetch utilities (`serverFetch`, `protectedFetch`, `authHeader`)
-- `core/session.ts` — Server-side session & token retrieval
-
-### Main API Categories
-
-| Category            | Endpoints (Frontend)                                                                                                             |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| **Posts**           | `GET /api/posts`, `GET /api/posts/[id]`, `GET /api/posts/my`, `GET /api/posts/featured`, `GET /api/posts/admin`                  |
-| **Book Requests**   | `GET /api/book-requests/check`, `GET /api/book-requests/sent`, `GET /api/book-requests/received`, `GET /api/admin/book-requests` |
-| **User Dashboard**  | `GET /api/dashboard/user`                                                                                                        |
-| **Admin Dashboard** | `GET /api/dashboard/admin`                                                                                                       |
-| **Users**           | `GET /api/users`, `GET /api/users/admin`                                                                                         |
-| **Auth**            | Handled via Better Auth at `/api/auth/[...all]`                                                                                  |
+```
+src/
+├── app/                         # Next.js App Router (pages, layouts, route handlers)
+│   ├── (auth)/                  # /auth/signin, /auth/signup
+│   ├── books/[id]/              # Book detail page
+│   ├── books/add/               # Create-listing form
+│   ├── dashboard/user/          # User dashboard (overview, posts, requests)
+│   ├── dashboard/admin/         # Admin dashboard (overview, users, posts, knowledge base)
+│   ├── about/  faq/  privacy/  terms/  profile/  # Static & account pages
+│   ├── api/auth/[...all]/        # Better Auth route handler
+│   ├── layout.tsx, globals.css, page.tsx (home)
+│   └── sitemap.ts, robots.ts
+├── components/                  # UI components (layout, home, book-details, dashboard, add-post, shared)
+├── services/                    # Server-side API client layer
+│   ├── core/                    # serverFetch, serverMutation, session helpers
+│   └── features/                # posts, bookRequests, userProfile, dashboard, admin
+├── lib/                         # auth config, validation schemas (Zod), dashboard nav/filters
+├── interface/                   # TypeScript data models
+└── public/                      # Static assets
+```
 
 ---
 
-## Responsive Design
+## Important Engineering Highlights
 
-Built with **Tailwind CSS v4** using a mobile-first approach:
-
-- **Mobile** (< 640px): Single-column layouts, collapsible navigation, stacked cards
-- **Tablet** (640px–1024px): Two-column grids, sidebar navigation
-- **Desktop** (> 1024px): Multi-column layouts, full sidebar, expanded grids
-
-All dashboard pages, book grids, forms, and navigation components adapt fluidly across breakpoints.
+- **Server Components first** — data is fetched at the route level (`async` Server Components); Client Components are used only where interaction is required.
+- **API abstraction** — all backend communication flows through `src/services/core/serverFetch.ts` and `server.ts`, which centralize base-URL handling, `no-store` caching, Bearer-token injection, and typed `ApiResponse` / `ApiError` handling.
+- **Type safety end-to-end** — TypeScript interfaces model every backend response, and every form is validated with Zod schemas (`src/lib/validaions/`).
+- **Bundled listings** — a single post carries a `books[]` array, so one listing can advertise an entire course's textbooks.
+- **Guarded routes without middleware** — access control is declarative: dashboard layouts call `requireRole(...)`, and gated pages call `getUserSession()` then `redirect()`.
+- **Environment-driven config** — all external URLs and keys come from environment variables; the only exception is the database name hard-coded for the Better Auth MongoDB adapter in `src/lib/auth.ts` (a candidate for later externalization).
 
 ---
 
-## Getting Started
+## Screenshots
 
-### Prerequisites
+> Screenshots are not yet committed to the repository. Add them under `public/screenshots/` and update the paths below.
 
-- Node.js 18+
-- npm (project uses npm)
-- Backend API running (see backend repository)
+| Screen                       | Path                               |
+| ---------------------------- | ---------------------------------- |
+| Home (browse + nearby books) | `/screenshots/home.png`            |
+| Book detail + request        | `/screenshots/book-detail.png`     |
+| Create listing form          | `/screenshots/add-post.png`        |
+| User dashboard               | `/screenshots/user-dashboard.png`  |
+| Requests (sent & received)   | `/screenshots/requests.png`        |
+| Admin dashboard              | `/screenshots/admin-dashboard.png` |
 
-### Installation
+---
+
+## Local Development Setup
+
+> The Express backend ([Milbe-Server](https://github.com/AMIRUL1104/Milbe-Server)) must be running locally before the frontend can fetch domain data. Authentication runs in this Next.js app and needs a MongoDB connection of its own.
 
 ```bash
-# Clone the repository
+# Clone this frontend repo
 git clone https://github.com/AMIRUL1104/Milbe.git
-
-# Navigate to project
 cd Milbe
 
 # Install dependencies
 npm install
+
+# Create a .env.local with the required values (see Environment Variables below)
 ```
 
-### Environment Variables
-
-Create a `.env.local` file in the project root:
-
-```env
-NEXT_PUBLIC_BASE_URL=
-NEXT_PUBLIC_API_URL=
-BETTER_AUTH_URL=
-CLIENT_URL=
-```
-
-| Variable               | Description                                          |
-| ---------------------- | ---------------------------------------------------- |
-| `NEXT_PUBLIC_BASE_URL` | Frontend URL (e.g., `http://localhost:3000`)         |
-| `NEXT_PUBLIC_API_URL`  | Backend API base URL (e.g., `http://localhost:5000`) |
-| `BETTER_AUTH_URL`      | Better Auth callback URL                             |
-| `CLIENT_URL`           | Frontend origin for CORS                             |
-
-### Development
+Run the backend (Express / MongoDB) from the `Milbe-Server` repo, then:
 
 ```bash
-# Start development server
-npm run dev
-```
-
-Open `http://localhost:3000`
-
-### Production Build
-
-```bash
-# Build for production
-npm run build
-
-# Run production server
-npm start
+npm run dev     # http://localhost:3000  (Next.js + Turbopack)
+npm run lint    # ESLint (core-web-vitals)
+npm run build   # production build
+npm start       # production server
 ```
 
 ---
 
-## Available Commands
+## Environment Variables
 
-| Command         | Description                             |
-| --------------- | --------------------------------------- |
-| `npm run dev`   | Start development server with Turbopack |
-| `npm run build` | Build production bundle                 |
-| `npm start`     | Run production server                   |
-| `npm run lint`  | Run ESLint                              |
+Create a `.env.local` (never commit it — `.env*` is gitignored). The values below are **placeholders only**; generate a real `BETTER_AUTH_SECRET`, a MongoDB Atlas connection string, and an ImgBB API key.
 
----
+| Variable                    | Purpose                                               | Local example                         |
+| --------------------------- | ----------------------------------------------------- | ------------------------------------- |
+| `NEXT_PUBLIC_BASE_URL`      | Frontend origin (Better Auth callback base)           | `http://localhost:3000`               |
+| `NEXT_PUBLIC_API_URL`       | Backend Express REST API base URL                     | `http://localhost:4000`               |
+| `BETTER_AUTH_SECRET`        | Secret used to sign Better Auth sessions/tokens       | `a-random-32+-char-string`            |
+| `MONGODB_URI`               | MongoDB connection string for the Better Auth adapter | `mongodb+srv://USER:PASS@cluster0...` |
+| `NEXT_PUBLIC_IMGBB_API_KEY` | ImgBB API key for image uploads                       | your-imgbb-key                        |
 
-## Project Structure (Key Directories)
-
-```
-src/
-├── app/                    # Next.js App Router pages & layouts
-│   ├── auth/               # Sign in / sign up pages
-│   ├── books/              # Browse, detail, add post
-│   ├── dashboard/          # User & admin dashboards
-│   ├── api/auth/           # Better Auth route handler
-│   └── (static pages)      # about, faq, privacy, terms
-├── components/
-│   ├── layout/             # Navbar, Footer, Sidebar
-│   ├── home/               # Home page sections
-│   ├── browse-books/       # Book grid, filters, pagination
-│   ├── book-details/       # Detail view, request modal
-│   ├── dashboard/          # Dashboard overview, stats, tables
-│   ├── add-post/           # Multi-step post creation form
-│   └── shared/             # Reusable UI components
-├── services/
-│   ├── server/             # Server-side API client (api.ts, adminApi.ts)
-│   └── core/               # Shared fetch, session utilities
-├── lib/
-│   ├── auth.ts             # Better Auth server config
-│   ├── auth-client.ts      # Better Auth React client
-│   ├── dashboard/          # Nav config, filters
-│   └── validations/        # Zod schemas
-├── interface/              # TypeScript interfaces
-└── public/                 # Static assets
-```
+In production, `NEXT_PUBLIC_API_URL` points to the hosted Express backend (deployed on Render).
 
 ---
 
-## Engineering Highlights
+## API / Backend
 
-- **Server Components First** — Data fetching at the route level, minimal client JS
-- **Component-Based Architecture** — Reusable, composable UI components with clear separation
-- **Type Safety** — End-to-end TypeScript with Zod validation schemas
-- **Protected Routes** — Role-based access at layout and page level
-- **API Abstraction Layer** — Centralized fetch utilities with auth header injection
-- **Form Validation** — React Hook Form + Zod for type-safe validation
-- **Error Boundaries** — Graceful fallbacks for failed API calls
-- **Loading States** — Next.js `loading.tsx` for route-level streaming
-- **Responsive Design** — Tailwind CSS with mobile-first breakpoints
-- **Environment-Based Config** — All external URLs via environment variables
-- **Production Deployment** — Configured for Vercel with proper metadata/SEO
+The frontend is a typed client of the `Milbe-Server` Express API. All requests go through the helper layer in `src/services/core/` and return a uniform `ApiResponse<T>` shape (`{ success, statusCode, message, data, meta }`).
+
+| Category      | Endpoints (from `src/services/features`)                                                                                                                                                                                                                                         |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Posts         | `GET /api/posts`, `GET /api/posts/:id`, `GET /api/posts/my`, `GET /api/posts/featured`, `GET /api/posts/admin`, `POST /api/posts`, `DELETE /api/posts/:id`                                                                                                                       |
+| Book Requests | `POST /api/book-requests`, `GET /api/book-requests/check`, `GET /api/book-requests/sent`, `GET /api/book-requests/received`, `GET /api/admin/book-requests`, `PATCH /api/book-requests/:id/accept`, `PATCH /api/book-requests/:id/reject`, `PATCH /api/book-requests/:id/cancel` |
+| Users         | `GET /api/users` (profile), `POST /api/users` (create profile), `PATCH /api/users` (update profile), `GET /api/users/admin` (admin list)                                                                                                                                         |
+| Dashboards    | `GET /api/dashboard/user`, `GET /api/dashboard/admin`                                                                                                                                                                                                                            |
+| Auth          | Better Auth route handler at `/api/auth/[...all]` (email/password sign-in/up, session)                                                                                                                                                                                           |
+
+Authentication for protected endpoints uses a session token issued by Better Auth; `protectedFetch` attaches it as an `Authorization: Bearer <token>` header.
 
 ---
 
-## Repository Links
+## Deployment
 
-- **Frontend**: https://github.com/AMIRUL1104/Milbe
-- **Backend**: https://github.com/AMIRUL1104/Milbe-Server
+- **Frontend** — Next.js production build, deployed at [https://milbe.vercel.app](https://milbe.vercel.app) (Vercel).
+- **Backend** — Express.js + MongoDB REST API hosted on Render.
+- **Data** — MongoDB (Atlas) for both the Better Auth adapter and the backend's domain store.
+
+---
+
+## Future Improvements
+
+- Enable real social/OAuth sign-in (a Google UI stub exists in `SocialAuth.tsx`).
+- Add the ability to **edit** existing listings (currently create/delete only).
+- Ship a multi-image gallery for posts (a per-book image field already exists).
+- Implement hard/soft-delete controls and a restore UI in the admin post manager.
+- Add user ratings/reviews for completed transactions.
+- Replace the Knowledge Base placeholder with a live review queue.
+
+---
+
+## Author
+
+Built by [AMIRUL1104](https://github.com/AMIRUL1104) — Frontend: [`Milbe`](https://github.com/AMIRUL1104/Milbe) · Backend: [`Milbe-Server`](https://github.com/AMIRUL1104/Milbe-Server)
 
 ---
 
 ## License
 
-This project is created for educational purposes.
+This project is built for educational purposes.
