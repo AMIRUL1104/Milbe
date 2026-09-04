@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { UserSession } from "@/interface/user/userSession";
 
-
 // ১. ইউজার সেশন পাওয়ার ফাংশন
 export async function getUserSession(): Promise<UserSession | null> {
   const session = await auth.api.getSession({
@@ -24,12 +23,14 @@ export const getUserToken = async (): Promise<string | null> => {
   const sessionData = await auth.api.getSession({
     headers: await headers(),
   });
+  console.log(sessionData);
   return sessionData?.session?.token || null;
 };
 
 // ৩. রোল চেক করার ফাংশন (টাইপ ফিক্সড)
 export const requireRole = async (allowedRole: "user" | "admin") => {
   const user = await getUserSession();
+  console.log(user);
 
   // যদি ইউজার লগইন করা না থাকে অথবা রোল না মিলে, তবে রিডাইরেক্ট হবে
   if (!user || user.role !== allowedRole) {

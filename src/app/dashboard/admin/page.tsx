@@ -86,6 +86,7 @@ function mapActivities(raw: ApiActivity[]): ActivityItemData[] {
 
 export default async function AdminDashboardPage() {
   const data = await getAdminDashboard();
+  console.log("Admin Dashboard Data:", data);
 
   if (!data.success || !data.data) {
     return (

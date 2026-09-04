@@ -4,9 +4,7 @@ import "./globals.css";
 import Header from "@/components/navbar/Header";
 import Footer from "@/components/layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
-import { getUserSession } from "@/services/core/session";
 import { BottomNav } from "@/components/navbar/BottomNav";
-import { UserSession } from "@/interface/user/userSession";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -71,8 +69,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUserSession() as UserSession;
-
   return (
     <html
       lang="bn"
@@ -86,7 +82,9 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full flex flex-col font-sans" style={{ fontFamily: 'var(--font-hind-siliguri), var(--font-inter), sans-serif' }}>
         <Header />
-        {children}
+        <div className="flex-1 pt-16">
+          {children}
+        </div>
         <BottomNav />
         <Footer />
 

@@ -12,7 +12,7 @@ interface HeaderAuthProps {
     email: string;
     name?: string | null;
     image?: string | null;
-    role: "user" | "admin" | null;
+    role?: "user" | "admin" | null;
   } | null;
   isLoggedIn: boolean;
 }
