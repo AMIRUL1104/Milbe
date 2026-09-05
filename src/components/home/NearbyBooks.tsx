@@ -1,12 +1,15 @@
+"use client";
+
 import { BookItem } from "@/interface/post related/postDetails";
+import { useState } from "react";
 import SectionHeading from "../shared/SectionHeading";
 import BookCard from "../shared/BookCard";
-import Link from "next/link";
-import { User, LogIn } from "lucide-react";
+import LocationWarning from "./LocationWarning";
 
 export type NearbyBooksState =
   | "loaded"
   | "empty"
+  | "error"
   | "needs-login"
   | "needs-profile";
 
@@ -14,36 +17,61 @@ interface NearbyBooksProps {
   state: NearbyBooksState;
   books: BookItem[];
   district?: string;
+  totalPages?: number;
 }
 
-export default function NearbyBooks({ state, books, district }: NearbyBooksProps) {
+export default function NearbyBooks({
+  state,
+  books: initialBooks,
+  district,
+  totalPages = 1,
+}: NearbyBooksProps) {
+  const [books, setBooks] = useState(initialBooks);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+
+  const loadMore = async () => {
+    if (!district || isLoadingMore || currentPage >= totalPages) return;
+
+    setIsLoadingMore(true);
+    setLoadError(false);
+    try {
+      const params = new URLSearchParams({
+        district,
+        page: String(currentPage + 1),
+        limit: "10",
+      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/posts?${params.toString()}`,
+      );
+      if (!response.ok) throw new Error("Location books request failed");
+
+      const result = (await response.json()) as {
+        data?: BookItem[];
+        meta?: { currentPage?: number; totalPages?: number };
+      };
+      const nextBooks = result.data || [];
+      setBooks((previousBooks) => {
+        const existingIds = new Set(previousBooks.map((book) => book._id));
+        return [...previousBooks, ...nextBooks.filter((book) => !existingIds.has(book._id))];
+      });
+      setCurrentPage(result.meta?.currentPage || currentPage + 1);
+    } catch {
+      setLoadError(true);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
   if (state === "needs-login") {
     return (
-      <section className="py-8 lg:py-12 bg-background">
+      <section className="bg-background py-4 lg:py-5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <SectionHeading
-            title="আপনার কাছাকাছি বই"
-            subtitle="সাইন ইন করুন আপনার কাছাকাছি বই দেখতে।"
+          <LocationWarning
+            title="⚠️ আপনার এলাকা নির্বাচন করুন"
+            actionLabel="এলাকা নির্বাচন করুন"
           />
-          <div className="text-center py-12 bg-surface border border-border rounded-card">
-            <div className="flex flex-col items-center gap-4">
-              <div className="p-3 bg-primary-light rounded-full">
-                <LogIn className="w-6 h-6 text-primary" />
-              </div>
-              <p className="text-text-muted">
-                আপনার কাছাকাছি বই দেখতে সাইন ইন করতে হবে।
-              </p>
-              <p className="text-sm text-text-muted">
-                অথবা সার্চ বার থেকে এলাকা নির্বাচন করে বই দেখুন।
-              </p>
-              <Link
-                href="/auth/signin"
-                className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-text-inverse bg-primary hover:bg-primary-hover rounded-btn transition-base shadow-sm focus-visible:outline-2 focus-visible:outline-primary-focus"
-              >
-                সাইন ইন
-              </Link>
-            </div>
-          </div>
         </div>
       </section>
     );
@@ -51,31 +79,13 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
 
   if (state === "needs-profile") {
     return (
-      <section className="py-8 lg:py-12 bg-background">
+      <section className="bg-background py-4 lg:py-5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <SectionHeading
-            title="আপনার কাছাকাছি বই"
-            subtitle="প্রোফাইল আপডেট করুন আপনার এলাকার বই দেখতে।"
+          <LocationWarning
+            title="⚠️ আপনার প্রোফাইলে এলাকা যোগ করুন"
+            actionLabel="এলাকা যোগ করুন"
+            actionHref="/profile"
           />
-          <div className="text-center py-12 bg-surface border border-border rounded-card">
-            <div className="flex flex-col items-center gap-4">
-              <div className="p-3 bg-primary-light rounded-full">
-                <User className="w-6 h-6 text-primary" />
-              </div>
-              <p className="text-text-muted">
-                আপনার এলাকার বই দেখতে প্রোফাইল আপডেট করতে হবে।
-              </p>
-              <p className="text-sm text-text-muted">
-                অথবা সার্চ বার থেকে এলাকা নির্বাচন করে বই দেখুন।
-              </p>
-              <Link
-                href="/profile"
-                className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-text-inverse bg-primary hover:bg-primary-hover rounded-btn transition-base shadow-sm focus-visible:outline-2 focus-visible:outline-primary-focus"
-              >
-                প্রোফাইল আপডেট
-              </Link>
-            </div>
-          </div>
         </div>
       </section>
     );
@@ -83,21 +93,41 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
 
   if (state === "empty") {
     return (
-      <section className="py-8 lg:py-12 bg-background">
+      <section className="bg-background py-4 lg:py-5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <SectionHeading
-            title="আপনার কাছাকাছি বই"
-            subtitle={
-              district
-                ? `${district} এলাকার বই দেখানো হচ্ছে`
-                : undefined
-            }
-          />
-          <div className="text-center py-12 bg-surface border border-border rounded-card">
-            <p className="text-text-muted">আপনার এলাকায় কোনো বই পাওয়া যায়নি</p>
-            <p className="text-sm text-text-muted mt-1">
-              ভিন্ন এলাকা বেছে নিন বা পরে আবার দেখুন
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-btn border border-border bg-surface px-4 py-3">
+            <p className="text-sm text-text-muted">
+              📍 {district} এলাকায় এখনো কোনো বই পাওয়া যায়নি।
             </p>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent("open-location-selector"))}
+              className="text-sm font-semibold text-primary hover:underline"
+            >
+              এলাকা পরিবর্তন করুন
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (state === "error") {
+    return (
+      <section className="bg-background py-4 lg:py-5">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-btn border border-danger/30 bg-surface px-4 py-3">
+            <div>
+              <p className="text-sm font-semibold text-text-primary">Location Books</p>
+              <p className="text-sm text-text-muted">Unable to load books right now.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="rounded-btn border border-border px-3 py-2 text-sm font-semibold text-primary hover:bg-background"
+            >
+              Retry
+            </button>
           </div>
         </div>
       </section>
@@ -110,7 +140,7 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
         <SectionHeading
           title="আপনার কাছাকাছি বই"
           subtitle={
-            district ? `${district} এলাকার বই দেখানো হচ্ছে` : undefined
+            district ? `${district} এলাকায় পাওয়া বই` : undefined
           }
         />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -118,6 +148,23 @@ export default function NearbyBooks({ state, books, district }: NearbyBooksProps
             <BookCard key={book._id} book={book} />
           ))}
         </div>
+        {loadError && (
+          <p className="mt-4 text-center text-sm text-danger">
+            Unable to load books right now.
+          </p>
+        )}
+        {currentPage < totalPages && (
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={loadMore}
+              disabled={isLoadingMore}
+              className="rounded-btn bg-primary px-4 py-2.5 text-sm font-semibold text-text-inverse hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isLoadingMore ? "লোড হচ্ছে..." : "আরো ১০টি বই দেখুন"}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

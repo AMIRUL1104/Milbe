@@ -40,9 +40,12 @@ export default function HeaderFilters({
   const buildHref = (type: string) => {
     const params = new URLSearchParams();
     if (search) params.set("search", search);
+    const location = searchParams.get("location");
+    if (location) params.set("location", location);
     if (category) params.set("category", category);
     if (condition) params.set("condition", condition);
     if (type) params.set("type", type);
+    params.set("page", "1");
     return `/?${params.toString()}`;
   };
 
@@ -53,7 +56,7 @@ export default function HeaderFilters({
   ];
 
   const Tabs = (
-    <div className="flex gap-1 bg-background rounded-btn p-1 border border-border">
+    <div className="flex gap-1                             bg-background rounded-btn p-1 border border-border">
       {tabs.map((tab) => {
         const isActive = activeType === tab.type;
         return (
@@ -74,7 +77,7 @@ export default function HeaderFilters({
   );
 
   return (
-    <div className="w-full bg-[#F5F7F8]/90 backdrop-blur border-b border-border">
+    <div id="filter-controls" className="w-full bg-[#F5F7F8]/90 backdrop-blur border-b border-border">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="hidden lg:flex items-center gap-3 bg-surface border border-border rounded-btn p-2 my-3">
           <div className="relative flex items-center">

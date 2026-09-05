@@ -26,6 +26,12 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
     }
   }, [mode]);
 
+  useEffect(() => {
+    const openLocationSelector = () => setIsLocationOpen(true);
+    window.addEventListener("open-location-selector", openLocationSelector);
+    return () => window.removeEventListener("open-location-selector", openLocationSelector);
+  }, []);
+
   const updateSearchParams = useCallback(
     (updates: Record<string, string | undefined>) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -36,6 +42,7 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
           params.delete(key);
         }
       });
+      params.set("page", "1");
       router.push(`?${params.toString()}`, { scroll: false });
     },
     [router, searchParams]
@@ -119,11 +126,10 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
                   key={district}
                   type="button"
                   onClick={() => handleLocationSelect(district)}
-                  className={`w-full px-3 py-2 text-left text-sm transition-colors ${
-                    selectedLocation === district
+                  className={`w-full px-3 py-2 text-left text-sm transition-colors ${selectedLocation === district
                       ? "bg-primary-light text-primary"
                       : "text-text-primary hover:bg-surface-hover"
-                  }`}
+                    }`}
                 >
                   {district}
                 </button>
@@ -184,11 +190,10 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
                 key={district}
                 type="button"
                 onClick={() => handleLocationSelect(district)}
-                className={`w-full px-3 py-2 text-left text-sm transition-colors ${
-                  selectedLocation === district
+                className={`w-full px-3 py-2 text-left text-sm transition-colors ${selectedLocation === district
                     ? "bg-primary-light text-primary"
                     : "text-text-primary hover:bg-surface-hover"
-                }`}
+                  }`}
               >
                 {district}
               </button>

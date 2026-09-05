@@ -68,48 +68,68 @@ export default async function HomePage({
   }>;
 }) {
   const { search, location, category, type, condition, page } = await searchParams;
+  const currentPage = Number(page) || 1;
+  const hasActiveFilters = Boolean(
+    search?.trim() ||
+    category?.trim() ||
+    condition?.trim() ||
+    type === "sell" ||
+    type === "donate",
+  );
 
   // --- Nearby Books: user-centric logic ---
   const session = await getUserSession();
+  let profileDistrict: string | undefined;
+  if (session && !location) {
+    const profile = await getUserProfile();
+    profileDistrict = profile?.district?.trim() || undefined;
+  }
+  const selectedDistrict = location || profileDistrict;
 
   let nearbyState: NearbyBooksState = "needs-login";
   let nearbyBooks: BookItem[] = [];
   let nearbyDistrict: string | undefined;
+  let nearbyTotalPages = 1;
 
-  if (location) {
-    const nearbyResponse = await getPosts({ district: location, limit: 50 });
-    nearbyBooks = nearbyResponse.data || [];
-    nearbyDistrict = location;
-    nearbyState = nearbyBooks.length > 0 ? "loaded" : "empty";
-  } else if (session) {
-    const profile = await getUserProfile();
-    const profileDistrict = profile?.district?.trim();
-    if (profileDistrict) {
+  if (!hasActiveFilters && selectedDistrict) {
+    try {
       const nearbyResponse = await getPosts({
-        district: profileDistrict,
-        limit: 50,
+        district: selectedDistrict,
+        page: 1,
+        limit: 10,
       });
       nearbyBooks = nearbyResponse.data || [];
-      nearbyDistrict = profileDistrict;
+      nearbyTotalPages = nearbyResponse.meta?.totalPages || 1;
+      nearbyDistrict = selectedDistrict;
       nearbyState = nearbyBooks.length > 0 ? "loaded" : "empty";
-    } else {
-      nearbyState = "needs-profile";
+    } catch {
+      nearbyDistrict = selectedDistrict;
+      nearbyState = "error";
     }
+  } else if (!hasActiveFilters && session && !selectedDistrict) {
+    nearbyState = "needs-profile";
   }
 
-  // Filtered books for All Books section (with pagination metadata)
-  const paginatedResponse = await getPosts({
-    search,
-    category,
-    type: (type || "") as "sell" | "donate" | "",
-    condition,
-    sort: "newest",
-    page: Number(page) || 1,
-    limit: 20,
-  });
-
-  const books = paginatedResponse.data || [];
-  const totalPages = paginatedResponse.meta?.totalPages || 1;
+  // Global books remain unscoped by location and power both default and unified views.
+  let books: BookItem[] = [];
+  let totalPages = 1;
+  let allBooksError = false;
+  try {
+    const paginatedResponse = await getPosts({
+      search,
+      category,
+      district: hasActiveFilters ? selectedDistrict : undefined,
+      type: (type || "") as "sell" | "donate" | "",
+      condition,
+      sort: "newest",
+      page: currentPage,
+      limit: 20,
+    });
+    books = paginatedResponse.data || [];
+    totalPages = paginatedResponse.meta?.totalPages || 1;
+  } catch {
+    allBooksError = true;
+  }
 
   return (
     <div className="w-full min-h-screen bg-[#F5F7F8] font-sans antialiased overflow-x-hidden">
@@ -120,11 +140,27 @@ export default async function HomePage({
           condition={condition}
           search={search}
         />
-        <NearbyBooks state={nearbyState} books={nearbyBooks} district={nearbyDistrict} />
+        {!hasActiveFilters && (
+          <NearbyBooks
+            key={nearbyDistrict || nearbyState}
+            state={nearbyState}
+            books={nearbyBooks}
+            district={nearbyDistrict}
+            totalPages={nearbyTotalPages}
+          />
+        )}
 
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <BooksGrid books={books} />
+          <BooksGrid
+            books={books}
+            error={allBooksError}
+            isFiltered={hasActiveFilters}
+            search={search}
+            category={category}
+            condition={condition}
+            type={type || ""}
+          />
           <div className="flex justify-center mt-6">
             <BooksPagination totalPages={totalPages} />
           </div>

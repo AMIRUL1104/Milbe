@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X, GripHorizontal } from "lucide-react";
 
@@ -10,15 +11,14 @@ interface FilterBottomSheetProps {
 }
 
 const CATEGORIES = [
-  "All",
-  "Science",
-  "Commerce",
-  "Arts",
-  "Admission",
-  "Buisness",
-  "Engineering",
-  "Medical",
-  "Others",
+  { label: "Science", value: "science" },
+  { label: "Commerce", value: "commerce" },
+  { label: "Arts", value: "arts" },
+  { label: "Admission", value: "admission" },
+  { label: "Buisness", value: "buisness" },
+  { label: "Engineering", value: "engineering" },
+  { label: "Medical", value: "medical" },
+  { label: "Others", value: "others" },
 ] as const;
 
 const CONDITIONS = [
@@ -77,8 +77,8 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-60">
+  return createPortal(
+    <div className="fixed inset-0 z-[60]">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
@@ -87,7 +87,7 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
 
       <div
         ref={sheetRef}
-        className="absolute inset-x-0 bottom-0 bg-surface border-t border-border rounded-t-3xl shadow-2xl flex flex-col h-[85vh] translate-y-0 transition-transform duration-300 ease-out" role="dialog"
+        className="absolute inset-x-0 bottom-0 bg-surface border-t border-border rounded-t-3xl shadow-2xl flex flex-col h-[85vh] animate-in slide-in-from-bottom duration-300 ease-out"
         aria-modal="true"
         aria-label="Filters"
       >
@@ -116,9 +116,9 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
               className="w-full bg-background border border-border text-text-primary text-sm rounded-input px-3 py-2.5 appearance-none focus:outline-primary-focus cursor-pointer"
             >
               <option value="">All Categories</option>
-              {CATEGORIES.slice(1).map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
+              {CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
                 </option>
               ))}
             </select>
@@ -180,11 +180,8 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
             Apply Filters {activeCount > 0 && `(${activeCount})`}
           </button>
         </div>
-
       </div>
-    </div>
+    </div>,
+    document.body
   );
-
-
 }
-
