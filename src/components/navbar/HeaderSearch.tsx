@@ -89,12 +89,12 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
           <button
             type="button"
             onClick={() => setIsLocationOpen(!isLocationOpen)}
-            className="flex items-center justify-between gap-2 px-3 py-2 bg-surface border border-border rounded-btn text-text-primary hover:border-primary transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
+            className="flex items-center justify-between gap-2 px-1.5 py-0.5 sm:px-3 sm:py-2 bg-surface border border-border rounded-btn text-text-primary hover:border-primary transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
           >
             <div className="flex items-center gap-2 truncate">
               <MapPin className="w-4 h-4 text-text-muted shrink-0" />
               <span className="truncate text-sm">
-                {selectedLocation || "এলাকা"}
+                {selectedLocation || "Location"}
               </span>
             </div>
             {selectedLocation && (
@@ -127,8 +127,8 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
                   type="button"
                   onClick={() => handleLocationSelect(district)}
                   className={`w-full px-3 py-2 text-left text-sm transition-colors ${selectedLocation === district
-                      ? "bg-primary-light text-primary"
-                      : "text-text-primary hover:bg-surface-hover"
+                    ? "bg-primary-light text-primary"
+                    : "text-text-primary hover:bg-surface-hover"
                     }`}
                 >
                   {district}
@@ -173,12 +173,12 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
         <button
           type="button"
           onClick={() => setIsLocationOpen(!isLocationOpen)}
-          className="flex items-center justify-between gap-2 px-3 py-2 bg-surface border border-border rounded-btn text-text-primary hover:border-primary transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
+          className="flex items-center justify-between gap-2  sm:px-3 py-2 px-1  bg-surface border border-border rounded-btn text-text-primary hover:border-primary transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
         >
           <div className="flex items-center gap-2 truncate">
             <MapPin className="w-4 h-4 text-text-muted shrink-0" />
             <span className="truncate text-sm">
-              {selectedLocation || "এলাকা"}
+              {selectedLocation || "Location"}
             </span>
           </div>
         </button>
@@ -191,8 +191,8 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
                 type="button"
                 onClick={() => handleLocationSelect(district)}
                 className={`w-full px-3 py-2 text-left text-sm transition-colors ${selectedLocation === district
-                    ? "bg-primary-light text-primary"
-                    : "text-text-primary hover:bg-surface-hover"
+                  ? "bg-primary-light text-primary"
+                  : "text-text-primary hover:bg-surface-hover"
                   }`}
               >
                 {district}

@@ -69,7 +69,7 @@ export default function NearbyBooks({
       <section className="bg-background py-4 lg:py-5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <LocationWarning
-            title="⚠️ আপনার এলাকা নির্বাচন করুন"
+            title="⚠️ আপনার লোকেশন নির্বাচন করুন"
             actionLabel="এলাকা নির্বাচন করুন"
           />
         </div>

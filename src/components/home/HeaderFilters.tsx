@@ -50,13 +50,13 @@ export default function HeaderFilters({
   };
 
   const tabs = [
-    { type: "", label: "সব বই" },
-    { type: "sell", label: "বিক্রির জন্য" },
-    { type: "donate", label: "দান" },
+    { type: "", label: "All" },
+    { type: "sell", label: "Sale" },
+    { type: "donate", label: "Donate" },
   ];
 
   const Tabs = (
-    <div className="flex gap-1                             bg-background rounded-btn p-1 border border-border">
+    <div className="flex gap-1 bg-background rounded-btn p-1 ">
       {tabs.map((tab) => {
         const isActive = activeType === tab.type;
         return (
@@ -77,8 +77,8 @@ export default function HeaderFilters({
   );
 
   return (
-    <div id="filter-controls" className="w-full bg-[#F5F7F8]/90 backdrop-blur border-b border-border">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+    <div id="filter-controls" className="w-full bg-[#F5F7F8]/90 backdrop-blur border-b border-border px-3">
+      <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8">
         <div className="hidden lg:flex items-center gap-3 bg-surface border border-border rounded-btn p-2 my-3">
           <div className="relative flex items-center">
             <BookOpen className="absolute left-3 w-4 h-4 text-text-muted pointer-events-none" />
@@ -114,9 +114,10 @@ export default function HeaderFilters({
           </div>
 
           <div className="ml-auto">{Tabs}</div>
+
         </div>
 
-        <div className="lg:hidden flex items-center justify-between gap-2 py-2">
+        <div className="lg:hidden flex items-center justify-between gap-2 ">
           <div className="flex-1 min-w-0 overflow-x-auto">
             <div className="inline-flex">{Tabs}</div>
           </div>
@@ -124,9 +125,9 @@ export default function HeaderFilters({
             type="button"
             onClick={() => setIsFilterOpen(true)}
             aria-expanded={isFilterOpen}
-            className="inline-flex shrink-0 items-center gap-1.5 px-3 py-2 rounded-btn bg-surface border border-border text-sm font-medium text-text-secondary hover:bg-primary hover:text-text-inverse transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
+            className="inline-flex shrink-0 items-center gap-1.5 px-2 py-1 rounded-btn bg-surface border border-border text-sm font-medium text-text-secondary hover:bg-primary hover:text-text-inverse transition-base focus-visible:outline-2 focus-visible:outline-primary-focus"
           >
-            <Filter className="w-4 h-4" /> ফিল্টার
+            <Filter className="w-4 h-4" /> Filter
           </button>
         </div>
       </div>

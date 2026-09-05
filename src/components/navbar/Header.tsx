@@ -22,7 +22,7 @@ export default function Header() {
 
   return (<>
     <header className="fixed top-0 left-0 right-0 z-60 w-full bg-primary border-b border-white-10 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
         {!isSearchOpen && (
           <Link
             href="/"
@@ -30,7 +30,7 @@ export default function Header() {
             aria-label="milbe Home"
           >
             <span className="text-2xl font-black tracking-tight text-text-inverse">
-              milbe
+              মিলবে
             </span>
           </Link>
         )}

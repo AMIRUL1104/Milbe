@@ -11,11 +11,11 @@ interface ActiveFilterChipsProps {
 }
 
 const FILTER_LABELS: Record<string, string> = {
-    sell: "বিক্রির জন্য",
-    donate: "দান",
-    like_new: "নতুনের মতো",
-    good: "ভালো",
-    fair: "গ্রহণযোগ্য",
+    sell: "for sale",
+    donate: "donate",
+    like_new: "like new",
+    good: "good",
+    fair: "fair",
 };
 
 export default function ActiveFilterChips({
@@ -52,13 +52,13 @@ export default function ActiveFilterChips({
     };
 
     return (
-        <div className="mb-6 flex flex-wrap items-center gap-2">
+        <div className="mb-6 flex flex-wrap items-center gap-1 ">
             {filters.map((filter) => (
                 <button
                     key={filter.key}
                     type="button"
                     onClick={() => removeFilter(filter.key)}
-                    className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-text-primary hover:border-primary focus-visible:outline-2 focus-visible:outline-primary-focus"
+                    className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-1.5 py-1 text-xs text-text-primary hover:border-primary focus-visible:outline-2 focus-visible:outline-primary-focus"
                     aria-label={`${filter.label} ফিল্টার সরান`}
                 >
                     {filter.label}
@@ -68,9 +68,9 @@ export default function ActiveFilterChips({
             <button
                 type="button"
                 onClick={clearFilters}
-                className="ml-auto text-sm font-semibold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary-focus"
+                className="inline-flex items-center gap-1 ml-auto text-xs font-semibold text-primary hover:scale-95 duration-300 focus-visible:outline-2 focus-visible:outline-primary-focus border rounded-2xl px-1.5"
             >
-                সব Filter পরিষ্কার করুন
+                Clear All <X className="h-3.5 w-3.5" />
             </button>
         </div>
     );
