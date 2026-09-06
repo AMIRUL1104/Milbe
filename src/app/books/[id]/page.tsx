@@ -7,6 +7,7 @@ import BookInformation from "@/components/book-details/BookInformation";
 import SellerCard from "@/components/book-details/SellerCard";
 import BookMetaCard from "@/components/book-details/BookMetaCard";
 import BookHero from "@/components/book-details/BookHero";
+import type { PostDetailData } from "@/interface/post/postDetail";
 import { getPostById } from "@/services/features/posts";
 
 
@@ -15,38 +16,6 @@ export const metadata: Metadata = {
   title: "Post Details | Milbe",
   description: "View books bundle shared by students.",
 };
-
-// টাইপ ডেফিনিশন (তোমার ব্যাকএন্ড রেসপন্স অনুসারে)
-export interface BackendBookItem {
-  bookId: string;
-  publisherId: string;
-  bookName: string;
-  publisherName: string;
-  image: string | null;
-  condition: "like_new" | "good" | "fair";
-  price: number;
-}
-
-export interface PostDetailData {
-  _id: string;
-  title: string;
-  category: string;
-  sellerId: string;
-  sellerName: string;
-  type: "sell" | "donate";
-  image: string;
-  district: string;
-  area: string;
-  phone: string;
-  messenger: string;
-  whatsappOnly: boolean;
-  description: string;
-  status: "available" | "requested" | "accepted";
-  acceptedRequestId: string | null;
-  isDeleted: boolean;
-  publishedAt: string;
-  books: BackendBookItem[];
-}
 
 // ১. প্রথমে params এর টাইপ ডিফাইন করো (এটি একটি Promise হবে)
 type Params = Promise<{ id: string }>;

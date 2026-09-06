@@ -2,8 +2,8 @@
 
 import { useFormContext } from "react-hook-form";
 import { Trash2, BookOpen, Building2, ShieldCheck, Tag } from "lucide-react";
-import { AddPostFormValues } from "@/lib/validaions/add-post-schema";
-import { BOOK_CONDITIONS } from "./post";
+import { AddPostFormValues } from "@/lib/validations/add-post-schema";
+import { BOOK_CONDITIONS } from "../constants";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";

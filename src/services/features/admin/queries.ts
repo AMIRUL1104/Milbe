@@ -5,7 +5,7 @@ import { BookRequest } from "@/interface/bookRequest/checkRequest";
 import { ApiResponse } from "@/interface/apiResponse";
 import { AdminDashboardResponse, AdminDashboardData } from "@/interface/dashboard/dashboard";
 import { GetUsersResponse, ManagedUser } from "@/interface/dashboard/manageUsers";
-import { BookItem } from "@/interface/post related/postDetails";
+import { BookItem } from "@/interface/post/postDetails";
 
 export interface GetUsersParams {
   search?: string;

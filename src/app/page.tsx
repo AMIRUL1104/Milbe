@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { getPosts } from "@/services/features/posts";
 import { getUserSession } from "@/services/core/session";
 import { getUserProfile } from "@/services/features/userProfile";
-import { BookItem } from "@/interface/post related/postDetails";
+import { BookItem } from "@/interface/post/postDetails";
 import type { NearbyBooksState } from "@/components/home/NearbyBooks";
 import NearbyBooks from "@/components/home/NearbyBooks";
 import BooksGrid from "@/components/home/BooksGrid";

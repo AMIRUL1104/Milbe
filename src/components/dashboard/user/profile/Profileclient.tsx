@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import { UpdateProfilePayload, UserProfile } from "@/interface/user/userProfile";
-import { ProfileFormValues, profileSchema } from "@/lib/validaions/profile-schema";
+import { ProfileFormValues, profileSchema } from "@/lib/validations/profile-schema";
 import { ProfileAvatar } from "./Profileavatar";
 import { ProfileHeader } from "./Profileheader";
 import { ProfileForm } from "./Profileform";

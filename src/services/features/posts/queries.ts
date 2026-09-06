@@ -3,10 +3,10 @@ import {
   protectedFetch,
   unwrapResponse,
 } from "@/services/core/serverFetch";
-import { GetPostsParams } from "@/interface/post related/getPostsParams";
-import { BookItem } from "@/interface/post related/postDetails";
-import { BooksResponse } from "@/interface/post related/booksResponse";
-import { PostResponse } from "@/interface/post related/postResponse";
+import { GetPostsParams } from "@/interface/post/getPostsParams";
+import { BookItem } from "@/interface/post/postDetails";
+import { BooksResponse } from "@/interface/post/booksResponse";
+import { PostResponse } from "@/interface/post/postResponse";
 import { ApiResponse } from "@/interface/apiResponse";
 
 export async function getPosts(
@@ -56,7 +56,7 @@ export async function getFeaturedPosts(): Promise<BookItem[]> {
   );
 }
 
-export interface MyPostsResponse extends ApiResponse<{ books: BookItem[] }> {}
+export type MyPostsResponse = ApiResponse<{ books: BookItem[] }>;
 
 export async function getMyPosts(): Promise<MyPostsResponse> {
   return protectedFetch<{ books: BookItem[] }>("/api/posts/my");

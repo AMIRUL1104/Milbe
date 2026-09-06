@@ -1,5 +1,5 @@
 import { serverMutation } from "@/services/core/server";
-import { BookItem } from "@/interface/post related/postDetails";
+import { BookItem } from "@/interface/post/postDetails";
 import { ApiResponse } from "@/interface/apiResponse";
 
 export async function addNewPost(data: BookItem): Promise<ApiResponse<{ insertedId: string; createdAt: string }>> {

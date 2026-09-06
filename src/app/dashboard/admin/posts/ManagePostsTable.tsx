@@ -5,7 +5,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Trash2, X, BookOpen } from "lucide-react";
-import { BookItem } from "@/interface/post related/postDetails";
+import { BookItem } from "@/interface/post/postDetails";
 import { deletePost } from "@/services/features/posts";
 
 

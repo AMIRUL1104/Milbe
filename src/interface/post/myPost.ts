@@ -1,4 +1,4 @@
-export type PostType = "sell" | "donate";
+import type { PostType } from "./types";
 
 export interface MyPostBookEntry {
   bookId: string;
@@ -15,7 +15,7 @@ export interface MyPost {
   sellerId: string;
   sellerName: string;
   sellerEmail: string;
-  status: string; // e.g. "available" | "requested" | "sold" | "donated"
+  status: string;
   acceptedRequestId: string | null;
   isDeleted: boolean;
   updatedAt: string;

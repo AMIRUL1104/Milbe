@@ -1,6 +1,6 @@
 "use client";
 
-import { BookItem } from "@/interface/post related/postDetails";
+import { BookItem } from "@/interface/post/postDetails";
 import { useState } from "react";
 import SectionHeading from "../shared/SectionHeading";
 import BookCard from "../shared/BookCard";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { MyPost, MyPostsFilter, MyPostsSort } from "./my-post";
+import type { MyPost, MyPostsFilter, MyPostsSort } from "@/interface/post/myPost";
 import { filterPosts, sortPosts } from "./filters";
 import MyPostsToolbar from "./MyPostsToolbar";
 import MyPostsGrid from "./MyPostsGrid";

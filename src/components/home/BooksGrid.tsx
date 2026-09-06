@@ -1,4 +1,4 @@
-import { BookItem } from "@/interface/post related/postDetails";
+import { BookItem } from "@/interface/post/postDetails";
 import BookCard from "@/components/shared/BookCard";
 import SectionHeading from "../shared/SectionHeading";
 import ActiveFilterChips from "./ActiveFilterChips";

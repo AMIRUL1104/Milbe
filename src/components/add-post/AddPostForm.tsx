@@ -6,15 +6,15 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 
-import BasicInfoSection from "./BasicInfoSection";
-import ImageUpload from "./ImageUpload";
-import BookListSection from "./BookListSection";
-import LocationSection from "./LocationSection";
-import ContactSection from "./ContactSection";
-import DescriptionSection from "./DescriptionSection";
-import SubmitButton from "./SubmitButton";
-import { AddPostFormValues, addPostSchema } from "@/lib/validaions/add-post-schema";
-import { BookItem } from "./post";
+import BasicInfoSection from "./sections/BasicInfoSection";
+import ImageUpload from "./sections/ImageUpload";
+import BookListSection from "./sections/BookListSection";
+import LocationSection from "./sections/LocationSection";
+import ContactSection from "./sections/ContactSection";
+import DescriptionSection from "./sections/DescriptionSection";
+import SubmitButton from "./sections/SubmitButton";
+import { AddPostFormValues, addPostSchema } from "@/lib/validations/add-post-schema";
+import { BookItem } from "@/interface/post/postDetails";
 import { addNewPost } from "@/services/features/posts";
 
 type AddPostFormInput = z.input<typeof addPostSchema>;

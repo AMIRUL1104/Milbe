@@ -1,4 +1,4 @@
-import { BookItem } from "@/interface/post related/postDetails";
+import { BookItem } from "@/interface/post/postDetails";
 import SectionHeading from "../shared/SectionHeading";
 import BookCard from "../shared/BookCard";
 

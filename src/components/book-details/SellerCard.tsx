@@ -1,5 +1,5 @@
 import { MapPin, MessageSquare } from "lucide-react";
-import { PostDetailData } from "@/app/books/[id]/page";
+import { PostDetailData } from "@/interface/post/postDetail";
 
 interface SellerCardProps {
   post: PostDetailData;

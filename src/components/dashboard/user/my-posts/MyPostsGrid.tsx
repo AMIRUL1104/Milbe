@@ -1,4 +1,4 @@
-import type { MyPost } from "./my-post";
+import type { MyPost } from "@/interface/post/myPost";
 import BookCard from "@/components/shared/BookCard";
 import DeleteButton from "./DeleteButton";
 

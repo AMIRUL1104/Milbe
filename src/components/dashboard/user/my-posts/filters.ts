@@ -1,4 +1,4 @@
-import type { MyPost, MyPostsFilter, MyPostsSort } from "./my-post";
+import type { MyPost, MyPostsFilter, MyPostsSort } from "@/interface/post/myPost";
 
 export function filterPosts(
   posts: MyPost[],

@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, MapPin, X } from "lucide-react";
-import { DISTRICTS } from "@/components/add-post/post";
+import { DISTRICTS } from "@/components/add-post/constants";
 
 type SearchMode = "default" | "search";
 

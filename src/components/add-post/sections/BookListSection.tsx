@@ -5,7 +5,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { Plus } from "lucide-react";
 
 import BookItemCard from "./BookItemCard";
-import { AddPostFormValues } from "@/lib/validaions/add-post-schema";
+import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 
 const emptyBook = {
   bookId: "",

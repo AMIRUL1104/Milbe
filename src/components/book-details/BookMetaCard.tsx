@@ -1,6 +1,6 @@
 import { Card } from "@heroui/react";
 import RequestBookButton from "./RequestBookButton";
-import { PostDetailData } from "@/app/books/[id]/page";
+import { PostDetailData } from "@/interface/post/postDetail";
 import { getUserProfile } from "@/services/features/userProfile";
 
 interface BookMetaCardProps {

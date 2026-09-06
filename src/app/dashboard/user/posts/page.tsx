@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getMyPosts } from "@/services/features/posts";
 import MyPostsClient from "@/components/dashboard/user/my-posts/MyPostsClient";
-import { MyPost } from "@/components/dashboard/user/my-posts/my-post";
+import type { MyPost } from "@/interface/post/myPost";
 
 // ১. MyPost টাইপটি ইম্পোর্ট করো (তোমার প্রজেক্টের সঠিক পাথ অনুযায়ী)
 // উদাহরণস্বরূপ:

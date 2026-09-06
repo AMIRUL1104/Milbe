@@ -1,3 +1,15 @@
+import type { PostType } from "./types";
+
+export interface PostBook {
+  bookId: string;
+  publisherId: string;
+  bookName: string;
+  publisherName: string;
+  image?: string | null;
+  condition: string;
+  price?: number;
+}
+
 export interface BookItem {
   _id: string;
   sellerId: string;
@@ -5,8 +17,8 @@ export interface BookItem {
   sellerEmail: string;
   title: string;
   category: string;
-  type: "sell" | "donate"; // API-তে ছোট হাতের অক্ষরে থাকে
-  image: string; // পোস্টের মেইন ইমেজ
+  type: PostType;
+  image: string;
   district: string;
   area: string;
   phone: string;
@@ -18,13 +30,5 @@ export interface BookItem {
   isDeleted: boolean;
   publishedAt: string;
   updatedAt: string;
-  books: {
-    bookId: string;
-    publisherId: string;
-    bookName: string;
-    publisherName: string;
-    image: string | null;
-    condition: string;
-    price: number;
-  }[];
+  books: PostBook[];
 }

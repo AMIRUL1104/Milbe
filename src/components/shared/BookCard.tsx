@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { MapPin, BookOpen, Tag } from "lucide-react";
 
-import { BookItem } from "@/interface/post related/postDetails";
+import { BookItem } from "@/interface/post/postDetails";
 
 interface BookCardProps {
   book: BookItem;

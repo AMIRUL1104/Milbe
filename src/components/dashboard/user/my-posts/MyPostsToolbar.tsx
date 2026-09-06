@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
-import type { MyPostsFilter, MyPostsSort } from "./my-post";
+import type { MyPostsFilter, MyPostsSort } from "@/interface/post/myPost";
 
 interface MyPostsToolbarProps {
   search: string;

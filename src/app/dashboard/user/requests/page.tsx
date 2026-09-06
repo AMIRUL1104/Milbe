@@ -4,7 +4,7 @@ import { SentRequestsList } from "@/components/dashboard/user/requests/sent/Sent
 import type { BookRequestResponse } from "@/interface/bookRequest/bookRequest";
 import type { BookRequest } from "@/interface/bookRequest/checkRequest";
 import type { PostSummary, ReceivedRequest, SentRequest } from "@/interface/dashboard/request";
-import type { BookItem } from "@/interface/post related/postDetails";
+import type { BookItem } from "@/interface/post/postDetails";
 import { getUserSession } from "@/services/core/session";
 import { getMyPosts } from "@/services/features/posts";
 import { getSentRequests as getSentBookRequests, getReceivedRequests as getReceivedBookRequests } from "@/services/features/bookRequests";

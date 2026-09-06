@@ -1,6 +1,6 @@
 "use client";
 
-import { AddPostFormValues } from "@/lib/validaions/add-post-schema";
+import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 import { useFormContext } from "react-hook-form";
 
 const labelBase = "text-xs font-bold text-text-secondary uppercase tracking-wider";

@@ -2,7 +2,7 @@
 
 import { UseFormReturn } from "react-hook-form";
 import { Mail } from "lucide-react";
-import { ProfileFormValues } from "@/lib/validaions/profile-schema";
+import { ProfileFormValues } from "@/lib/validations/profile-schema";
 
 interface ProfileFormProps {
     form: UseFormReturn<ProfileFormValues>;
