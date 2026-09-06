@@ -10,21 +10,21 @@ interface ProfileFormProps {
 }
 
 const DISTRICTS = [
-    "ঢাকা",
-    "চট্টগ্রাম",
-    "সিলেট",
-    "রাজশাহী",
-    "খুলনা",
-    "বরিশাল",
-    "রংপুর",
-    "ময়মনসিংহ",
-    "কুমিল্লা",
-    "নারায়ণগঞ্জ",
-    "গাজীপুর",
-    "বগুড়া",
-    "যশোর",
-    "দিনাজপুর",
-    "কক্সবাজার",
+    "Dhaka",
+    "Chittagong",
+    "Sylhet",
+    "Rajshahi",
+    "Khulna",
+    "Barisal",
+    "Rangpur",
+    "Mymensingh",
+    "Cumilla",
+    "Narayanganj",
+    "Gazipur",
+    "Bogra",
+    "Joypurhat",
+    "Dinajpur",
+    "Cox's Bazar",
 ];
 
 const inputBase =
@@ -111,7 +111,7 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
                         className={`${inputBase} ${errors.district ? inputError : ""} cursor-pointer bg-surface`}
                         {...register("district")}
                     >
-                         <option value="">জেলা বেছে নিন</option>
+                        <option value="">জেলা বেছে নিন</option>
                         {DISTRICTS.map((d) => (
                             <option key={d} value={d}>
                                 {d}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { ChevronDown, LogOut } from "lucide-react";
+import Image from "next/image";
 
 interface HeaderAuthProps {
   user: {
@@ -80,10 +81,12 @@ export function HeaderAuth({ user, isLoggedIn }: HeaderAuthProps) {
         aria-label="Profile মেনু"
       >
         {user.image ? (
-          <img
+          <Image
             src={user.image}
             alt=""
             className="w-10 h-10 rounded-full object-cover"
+            width={40}
+            height={40}
           />
         ) : (
           <span className="text-lg">{getInitials(user.name, user.email)}</span>
@@ -93,7 +96,7 @@ export function HeaderAuth({ user, isLoggedIn }: HeaderAuthProps) {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-card bg-surface border border-border shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
           <Link
-            href="/dashboard/user"
+            href={`/dashboard/${user.role}`}
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-background hover:text-primary transition-colors"
           >
@@ -102,26 +105,30 @@ export function HeaderAuth({ user, isLoggedIn }: HeaderAuthProps) {
             </svg>
             Dashboard
           </Link>
-          <Link
-            href="/dashboard/user/posts"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-background hover:text-primary transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-            আমার পোস্ট
-          </Link>
-          <Link
-            href="/dashboard/user/requests"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-background hover:text-primary transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            রিকোয়েস্ট
-          </Link>
+
+          {user.role === "user" && (
+            <><Link
+              href="/dashboard/user/posts"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-background hover:text-primary transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              আমার পোস্ট
+            </Link><Link
+              href="/dashboard/user/requests"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-background hover:text-primary transition-colors"
+            >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                রিকোয়েস্ট
+              </Link></>
+          )}
+
+
           <Link
             href="/profile"
             onClick={() => setIsOpen(false)}
