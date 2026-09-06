@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono, Hind_Siliguri } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/navbar/Header";
+import Header from "@/components/layout/navbar/Header";
 import Footer from "@/components/layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
-import { BottomNav } from "@/components/navbar/BottomNav";
+import { BottomNav } from "@/components/layout/navbar/BottomNav";
 
 const inter = Inter({
   variable: "--font-inter",

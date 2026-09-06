@@ -84,7 +84,7 @@ export default function Header() {
 
         <div className="hidden md:flex items-center gap-4">
           <Link
-            href="/books/add"
+            href="/add-book"
             className="px-5 py-2.5 text-sm font-semibold text-primary bg-accent hover:bg-accent-hover rounded-btn transition-base shadow-sm focus-visible:outline-2 focus-visible:outline-primary-focus whitespace-nowrap"
           >
             Sell/Donate

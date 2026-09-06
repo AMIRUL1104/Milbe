@@ -17,7 +17,7 @@ export const authHeader = async (): Promise<HeadersInit> => {
 
 async function handleResponse<T>(res: Response): Promise<ApiResponse<T>> {
   const responseData = (await res.json()) as ApiResponse<T>;
-  console.log(responseData);
+  // console.log(responseData);
   if (!res.ok) {
     throw new ApiError(responseData, res.status);
   }

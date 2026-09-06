@@ -32,7 +32,7 @@ const baseNavItems: NavItem[] = [
     ),
   },
   {
-    href: "/books/add",
+    href: "/add-book",
     label: "বই যোগ",
     icon: (
       <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -114,8 +114,8 @@ export function BottomNav() {
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center gap-1 px-3 py-2 text-xs font-medium transition-colors ${active
-                    ? "text-accent"
-                    : "text-text-inverse/70 hover:text-text-inverse"
+                  ? "text-accent"
+                  : "text-text-inverse/70 hover:text-text-inverse"
                   }`}
                 aria-current={active ? "page" : undefined}
               >
