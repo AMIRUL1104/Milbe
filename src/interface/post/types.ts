@@ -4,8 +4,8 @@ export type BookCondition = "new" | "like_new" | "good" | "fair";
 export type AvailableStatus = "available" | "unavailable";
 
 export interface PostBookEntry {
-  bookId: string;
-  publisherId: string;
+  bookId?: string;
+  publisherId?: string;
   bookName: string;
   publisherName: string;
   image: string | null;

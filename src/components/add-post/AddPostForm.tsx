@@ -58,8 +58,8 @@ function buildPayload(values: AddPostFormValues): NewPostPayload {
     whatsappOnly: values.whatsappOnly,
     description: values.description ?? "",
     books: values.books.map((book) => ({
-      bookId: book.bookId ?? "",
-      publisherId: book.publisherId ?? "",
+      bookId: book.bookId || undefined,
+      publisherId: book.publisherId || undefined,
       bookName: book.bookName,
       publisherName: book.publisherName,
       image: book.image,

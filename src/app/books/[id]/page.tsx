@@ -28,8 +28,8 @@ export default async function BookDetailsPage({ params }: { params: Params }) {
   const id = resolvedParams.id;
 
   const response = await getPostById(id);
-  console.log("BookDetailsPage params:", resolvedParams);
-  console.log("BookDetailsPage response:", response);
+  // console.log("BookDetailsPage params:", resolvedParams);
+  // console.log("BookDetailsPage response:", response);
 
   // ২. রেসপন্স null কিনা এবং তাতে data আছে কিনা তা চেক করো (Type Guard)
   if (!response || !response.success || !response.data) {
@@ -42,7 +42,7 @@ export default async function BookDetailsPage({ params }: { params: Params }) {
 
   // ৩. ডাটা টাইপ সেফ উপায়ে অ্যাসাইন করো
   const postData = response.data as PostItem;
-  console.log("BookDetailsPage postData:", postData);
+  // console.log("BookDetailsPage postData:", postData);
   return (
     <main className="min-h-screen w-full bg-[#F5F7F8] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col gap-6">

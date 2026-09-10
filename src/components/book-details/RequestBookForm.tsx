@@ -86,6 +86,7 @@ export default function RequestBookForm({
       };
 
       const response = await createBookRequest(payload);
+      console.log("Book request response:", response);
 
       if (!response?.success) {
         throw new Error(response?.message || "Failed to send request.");
