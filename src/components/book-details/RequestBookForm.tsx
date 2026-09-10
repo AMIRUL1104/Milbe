@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Send } from "lucide-react";
 import { toast } from "react-toastify";
-import type { BookRequest } from "@/interface/bookRequest/checkRequest";
 import { RequestBookFormValues, requestBookSchema } from "@/lib/validations/request-book-schema";
+import { CreateBookRequestPayload } from "@/interface/bookRequest/createBookRequest";
 import { createBookRequest } from "@/services/features/bookRequests";
 
 interface RequestBookFormProps {
@@ -64,7 +64,7 @@ export default function RequestBookForm({
         return;
       }
 
-      const payload: BookRequest = {
+      const payload: CreateBookRequestPayload = {
         postId,
         postTitle,
         bookCoverUrl,
@@ -81,8 +81,6 @@ export default function RequestBookForm({
           phone: values.phoneNumber,
         },
         message: values.message?.trim() || undefined,
-        status: "pending",
-        requestDate: new Date(),
       };
 
       const response = await createBookRequest(payload);

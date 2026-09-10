@@ -1,12 +1,12 @@
 import { serverMutation } from "@/services/core/server";
-import { BookRequest } from "@/interface/bookRequest/checkRequest";
+import { CreateBookRequestPayload } from "@/interface/bookRequest/createBookRequest";
 import { BookRequestUpdateResponse } from "@/interface/bookRequest/bookRequest";
 import { ApiResponse } from "@/interface/apiResponse";
 
 export async function createBookRequest(
-  data: BookRequest,
+  data: CreateBookRequestPayload,
 ): Promise<ApiResponse<{ insertedId: string; createdAt: string }>> {
-  return (await serverMutation<BookRequest, { insertedId: string; createdAt: string }>(
+  return (await serverMutation<CreateBookRequestPayload, { insertedId: string; createdAt: string }>(
     "/api/book-requests",
     data,
     "POST",
