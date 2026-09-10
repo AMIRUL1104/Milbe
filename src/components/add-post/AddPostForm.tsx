@@ -65,6 +65,7 @@ function buildPayload(values: AddPostFormValues): NewPostPayload {
       image: book.image,
       condition: book.condition,
       price: book.price ?? 0,
+      availableStatus: book.availableStatus,
     })),
   };
 }

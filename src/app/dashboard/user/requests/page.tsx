@@ -4,7 +4,7 @@ import { SentRequestsList } from "@/components/dashboard/user/requests/sent/Sent
 import type { BookRequestResponse } from "@/interface/bookRequest/bookRequest";
 import type { BookRequest } from "@/interface/bookRequest/checkRequest";
 import type { PostSummary, ReceivedRequest, SentRequest } from "@/interface/dashboard/request";
-import type { BookItem } from "@/interface/post/postDetails";
+import type { PostItem } from "@/interface/post/types";
 import { getUserSession } from "@/services/core/session";
 import { getMyPosts } from "@/services/features/posts";
 import { getSentRequests as getSentBookRequests, getReceivedRequests as getReceivedBookRequests } from "@/services/features/bookRequests";
@@ -59,7 +59,7 @@ function toReceivedRequest(request: BookRequest): ReceivedRequest {
 }
 
 function buildPostSummaries(
-  posts: BookItem[],
+  posts: PostItem[],
   requests: BookRequest[],
 ): PostSummary[] {
   const pendingCounts = new Map<string, number>();
@@ -96,7 +96,7 @@ export default async function RequestsPage() {
   const receivedRequests = receivedRequestsData.map(toReceivedRequest);
 
   const myPostsResponse = await getMyPosts();
-  const postsData = (myPostsResponse.data?.books ?? []) as BookItem[];
+  const postsData = (myPostsResponse.data?.books ?? []) as PostItem[];
   const posts = buildPostSummaries(postsData, receivedRequestsData);
 
   return (

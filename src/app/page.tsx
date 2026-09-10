@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { getPosts } from "@/services/features/posts";
 import { getUserSession } from "@/services/core/session";
 import { getUserProfile } from "@/services/features/userProfile";
-import { BookItem } from "@/interface/post/postDetails";
+import { PostItem } from "@/interface/post/types";
 import type { NearbyBooksState } from "@/components/home/NearbyBooks";
 import NearbyBooks from "@/components/home/NearbyBooks";
 import BooksGrid from "@/components/home/BooksGrid";
@@ -87,7 +87,7 @@ export default async function HomePage({
   const selectedDistrict = location || profileDistrict;
 
   let nearbyState: NearbyBooksState = "needs-login";
-  let nearbyBooks: BookItem[] = [];
+  let nearbyBooks: PostItem[] = [];
   let nearbyDistrict: string | undefined;
   let nearbyTotalPages = 1;
 
@@ -111,7 +111,7 @@ export default async function HomePage({
   }
 
   // Global books remain unscoped by location and power both default and unified views.
-  let books: BookItem[] = [];
+  let books: PostItem[] = [];
   let totalPages = 1;
   let allBooksError = false;
   try {

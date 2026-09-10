@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { MapPin, BookOpen, Tag } from "lucide-react";
 
-import { BookItem } from "@/interface/post/postDetails";
+import { PostItem } from "@/interface/post/types";
 
 interface BookCardProps {
-  book: BookItem;
+  book: PostItem;
 }
 
 export default function BookCard({ book }: BookCardProps) {

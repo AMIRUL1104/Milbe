@@ -6,6 +6,7 @@ import { Upload, X, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 import { ImgBBUploadError, uploadImageToImgBB } from "../../../lib/utils/imgbb";
+import Image from "next/image";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE_MB = 5;
@@ -88,7 +89,9 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
 
       {displayUrl ? (
         <div className="relative w-full max-w-xs">
-          <img
+          <Image
+            width={300}
+            height={192}
             src={displayUrl}
             alt="Post image preview"
             className="w-full h-48 object-cover rounded-xl border border-border"

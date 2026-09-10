@@ -1,11 +1,10 @@
 import type {
   PostType,
   BookCondition,
-  BookEntry,
   AddNewPostResult,
 } from "@/interface/post/types";
 
-export { PostType, BookCondition, BookEntry, AddNewPostResult };
+export { PostType, BookCondition, AddNewPostResult };
 
 export const BOOK_CATEGORIES = [
   "Science",

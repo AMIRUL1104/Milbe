@@ -5,7 +5,7 @@ import { BookRequest } from "@/interface/bookRequest/checkRequest";
 import { ApiResponse } from "@/interface/apiResponse";
 import { AdminDashboardResponse, AdminDashboardData } from "@/interface/dashboard/dashboard";
 import { GetUsersResponse, ManagedUser } from "@/interface/dashboard/manageUsers";
-import { BookItem } from "@/interface/post/postDetails";
+import { PostItem } from "@/interface/post/types";
 
 export interface GetUsersParams {
   search?: string;
@@ -47,8 +47,8 @@ export async function getAdminDashboard(): Promise<AdminDashboardResponse> {
   return protectedFetch<AdminDashboardData>("/api/dashboard/admin");
 }
 
-export type GetAllPostsResponse = ApiResponse<{ data: BookItem[] }>;
+export type GetAllPostsResponse = ApiResponse<{ data: PostItem[] }>;
 
 export async function getAllPosts(): Promise<GetAllPostsResponse> {
-  return protectedFetch<{ data: BookItem[] }>("/api/posts/admin");
+  return protectedFetch<{ data: PostItem[] }>("/api/posts/admin");
 }

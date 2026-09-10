@@ -1,10 +1,10 @@
-import { BookItem } from "@/interface/post/postDetails";
+import { PostItem } from "@/interface/post/types";
 import BookCard from "@/components/shared/BookCard";
 import SectionHeading from "../shared/SectionHeading";
 import ActiveFilterChips from "./ActiveFilterChips";
 
 interface BooksGridProps {
-  books: BookItem[];
+  books: PostItem[];
   error?: boolean;
   isFiltered?: boolean;
   search?: string;

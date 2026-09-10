@@ -7,7 +7,7 @@ import BookInformation from "@/components/book-details/BookInformation";
 import SellerCard from "@/components/book-details/SellerCard";
 import BookMetaCard from "@/components/book-details/BookMetaCard";
 import BookHero from "@/components/book-details/BookHero";
-import type { PostDetailData } from "@/interface/post/postDetail";
+import type { PostItem } from "@/interface/post/types";
 import { getPostById } from "@/services/features/posts";
 
 
@@ -40,7 +40,7 @@ export default async function BookDetailsPage({ params }: { params: Params }) {
   }
 
   // ৩. ডাটা টাইপ সেফ উপায়ে অ্যাসাইন করো
-  const postData = response.data as PostDetailData;
+  const postData = response.data as PostItem;
   return (
     <main className="min-h-screen w-full bg-[#F5F7F8] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col gap-6">

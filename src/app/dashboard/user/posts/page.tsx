@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getMyPosts } from "@/services/features/posts";
 import MyPostsClient from "@/components/dashboard/user/my-posts/MyPostsClient";
-import type { MyPost } from "@/interface/post/myPost";
+import type { PostItem } from "@/interface/post/types";
 
 // ১. MyPost টাইপটি ইম্পোর্ট করো (তোমার প্রজেক্টের সঠিক পাথ অনুযায়ী)
 // উদাহরণস্বরূপ:
@@ -23,7 +23,7 @@ export default async function MyPostsPage() {
   }
 
   // ২. Type Assertion (as MyPost[]) ব্যবহার করে unknown[] কে MyPost[] এ রূপান্তর করো
-  const posts = (response.data.books ?? []) as MyPost[];
+  const posts = (response.data.books ?? []) as PostItem[];
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">

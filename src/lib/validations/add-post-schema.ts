@@ -13,6 +13,9 @@ export const bookEntrySchema = z.object({
     .union([z.number(), z.nan(), z.null()])
     .transform((val) => (Number.isNaN(val) ? null : val))
     .default(null),
+  availableStatus: z
+    .enum(["available", "unavailable"])
+    .default("available"),
 });
 
 export const addPostSchema = z

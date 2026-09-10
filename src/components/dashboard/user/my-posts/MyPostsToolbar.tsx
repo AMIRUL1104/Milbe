@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
-import type { MyPostsFilter, MyPostsSort } from "@/interface/post/myPost";
+import type { MyPostsFilter, MyPostsSort } from "@/interface/post/responses";
 
 interface MyPostsToolbarProps {
   search: string;
@@ -18,7 +18,7 @@ const FILTER_OPTIONS: { label: string; value: MyPostsFilter }[] = [
   { label: "Sell", value: "sell" },
   { label: "Donate", value: "donate" },
   { label: "Available", value: "available" },
-  { label: "Requested", value: "requested" },
+  { label: "Donated", value: "donated" },
   { label: "Sold", value: "sold" },
 ];
 

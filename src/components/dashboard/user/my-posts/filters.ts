@@ -1,10 +1,11 @@
-import type { MyPost, MyPostsFilter, MyPostsSort } from "@/interface/post/myPost";
+import type { PostItem } from "@/interface/post/types";
+import type { MyPostsFilter, MyPostsSort } from "@/interface/post/responses";
 
 export function filterPosts(
-  posts: MyPost[],
+  posts: PostItem[],
   search: string,
   filter: MyPostsFilter,
-): MyPost[] {
+): PostItem[] {
   const query = search.trim().toLowerCase();
 
   return posts.filter((post) => {
@@ -23,7 +24,7 @@ export function filterPosts(
   });
 }
 
-export function sortPosts(posts: MyPost[], sort: MyPostsSort): MyPost[] {
+export function sortPosts(posts: PostItem[], sort: MyPostsSort): PostItem[] {
   const sorted = [...posts];
 
   switch (sort) {

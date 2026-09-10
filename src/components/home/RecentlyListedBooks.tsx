@@ -1,9 +1,9 @@
-import { BookItem } from "@/interface/post/postDetails";
+import { PostItem } from "@/interface/post/types";
 import SectionHeading from "../shared/SectionHeading";
 import BookCard from "../shared/BookCard";
 
 interface RecentlyListedBooksProps {
-  books: BookItem[];
+  books: PostItem[];
 }
 
 export default function RecentlyListedBooks({ books }: RecentlyListedBooksProps) {

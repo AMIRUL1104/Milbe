@@ -1,6 +1,6 @@
 "use client";
 
-import { BookItem } from "@/interface/post/postDetails";
+import { PostItem } from "@/interface/post/types";
 import { useState } from "react";
 import SectionHeading from "../shared/SectionHeading";
 import BookCard from "../shared/BookCard";
@@ -15,7 +15,7 @@ export type NearbyBooksState =
 
 interface NearbyBooksProps {
   state: NearbyBooksState;
-  books: BookItem[];
+  books: PostItem[];
   district?: string;
   totalPages?: number;
 }
@@ -48,7 +48,7 @@ export default function NearbyBooks({
       if (!response.ok) throw new Error("Location books request failed");
 
       const result = (await response.json()) as {
-        data?: BookItem[];
+        data?: PostItem[];
         meta?: { currentPage?: number; totalPages?: number };
       };
       const nextBooks = result.data || [];

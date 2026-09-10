@@ -5,7 +5,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Trash2, X, BookOpen } from "lucide-react";
-import { BookItem } from "@/interface/post/postDetails";
+import { PostItem } from "@/interface/post/types";
 import { deletePost } from "@/services/features/posts";
 
 
@@ -189,14 +189,14 @@ function EmptyState() {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 interface ManagePostsTableProps {
-  initialPosts: BookItem[];
+  initialPosts: PostItem[];
 }
 
 export default function ManagePostsTable({
   initialPosts,
 }: ManagePostsTableProps) {
-  const [posts, setPosts] = useState<BookItem[]>(initialPosts);
-  const [targetPost, setTargetPost] = useState<BookItem | null>(null);
+  const [posts, setPosts] = useState<PostItem[]>(initialPosts);
+  const [targetPost, setTargetPost] = useState<PostItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [toast, setToast] = useState<ToastState | null>(null);
 

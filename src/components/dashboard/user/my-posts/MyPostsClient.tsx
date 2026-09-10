@@ -1,14 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { MyPost, MyPostsFilter, MyPostsSort } from "@/interface/post/myPost";
+import type { PostItem } from "@/interface/post/types";
+import type { MyPostsFilter, MyPostsSort } from "@/interface/post/responses";
 import { filterPosts, sortPosts } from "./filters";
 import MyPostsToolbar from "./MyPostsToolbar";
 import MyPostsGrid from "./MyPostsGrid";
 import EmptyState from "./EmptyState";
 
 interface MyPostsClientProps {
-  initialPosts: MyPost[];
+  initialPosts: PostItem[];
 }
 
 export default function MyPostsClient({ initialPosts }: MyPostsClientProps) {

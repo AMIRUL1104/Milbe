@@ -1,10 +1,10 @@
-import type { MyPost } from "@/interface/post/myPost";
+import type { PostItem } from "@/interface/post/types";
 import BookCard from "@/components/shared/BookCard";
 import DeleteButton from "./DeleteButton";
 
 
 interface MyPostsGridProps {
-  posts: MyPost[];
+  posts: PostItem[];
   onDeleted: (postId: string) => void;
 }
 

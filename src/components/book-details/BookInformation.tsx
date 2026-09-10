@@ -1,8 +1,8 @@
 import { MapPin, Calendar, BookOpen, Layers } from "lucide-react";
-import { PostDetailData } from "@/interface/post/postDetail";
+import { PostItem } from "@/interface/post/types";
 
 interface BookInfoProps {
-  post: PostDetailData;
+  post: PostItem;
 }
 
 export default function BookInformation({ post }: BookInfoProps) {

@@ -15,6 +15,7 @@ const emptyBook = {
   image: null,
   condition: "good" as const,
   price: null,
+  availableStatus: "available" as const,
 };
 
 export default function BookListSection() {

@@ -1,16 +1,16 @@
 import { Card } from "@heroui/react";
 import RequestBookButton from "./RequestBookButton";
-import { PostDetailData } from "@/interface/post/postDetail";
+import { PostItem } from "@/interface/post/types";
 import { getUserProfile } from "@/services/features/userProfile";
 
 interface BookMetaCardProps {
-  post: PostDetailData;
+  post: PostItem;
 }
 
 export default async function BookMetaCard({ post }: BookMetaCardProps) {
   const user = await getUserProfile();
 
-  const totalBundlePrice = post.books.reduce((acc, book) => acc + book.price, 0);
+  const totalBundlePrice = post.books.reduce((acc, book) => acc + (book.price ?? 0), 0);
 
   return (
     <Card className="card bg-surface border border-border rounded-card p-5 shadow-xs flex flex-col justify-between h-full">

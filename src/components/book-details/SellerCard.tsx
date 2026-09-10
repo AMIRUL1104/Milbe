@@ -1,8 +1,8 @@
 import { MapPin, MessageSquare } from "lucide-react";
-import { PostDetailData } from "@/interface/post/postDetail";
+import { PostItem } from "@/interface/post/types";
 
 interface SellerCardProps {
-  post: PostDetailData;
+  post: PostItem;
 }
 
 export default function SellerCard({ post }: SellerCardProps) {
