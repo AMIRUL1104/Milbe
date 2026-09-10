@@ -44,9 +44,7 @@ export async function getPosts(
 }
 
 export async function getPostById(id: string): Promise<PostResponse> {
-  return unwrapResponse<PostResponse>(
-    await serverFetch<PostResponse>(`/api/posts/${id}`),
-  );
+  return serverFetch<PostItem>(`/api/posts/${id}`);
 }
 
 export async function getFeaturedPosts(): Promise<PostItem[]> {
