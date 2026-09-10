@@ -3,7 +3,7 @@
 import { useFormContext } from "react-hook-form";
 import { Trash2, BookOpen, Building2, ShieldCheck, Tag } from "lucide-react";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
-import { BOOK_CONDITIONS } from "../constants";
+import { BOOK_CONDITIONS } from "../../../lib/constant/post";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
@@ -90,7 +90,6 @@ export default function BookItemCard({
             <ShieldCheck className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <select
               {...register(`books.${index}.condition`)}
-              defaultValue=""
               className={`${inputBase} appearance-none cursor-pointer ${borderClass(!!bookErrors?.condition)}`}
             >
               <option value="" disabled>

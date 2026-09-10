@@ -25,11 +25,10 @@ export default function DescriptionSection() {
           rows={4}
           placeholder="Mention edition year, highlighted pages, missing pages, etc."
           {...register("description")}
-          className={`w-full bg-surface border rounded-input px-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base resize-none ${
-            errors.description
-              ? "border-danger focus:border-danger focus-visible:outline-danger"
-              : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
-          }`}
+          className={`w-full bg-surface border rounded-input px-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base resize-none ${errors.description
+            ? "border-danger focus:border-danger focus-visible:outline-danger"
+            : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
+            }`}
         />
         {errors.description && (
           <p className={errorText}>{errors.description.message}</p>

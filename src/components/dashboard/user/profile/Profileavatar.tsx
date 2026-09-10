@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { Camera } from "lucide-react";
 import Image from "next/image";
-import { uploadImageToImgBB } from "@/components/add-post/utils/imgbb";
+import { uploadImageToImgBB } from "@/lib/utils/imgbb";
 
 interface ProfileAvatarProps {
     avatarUrl: string | null;

@@ -3,29 +3,13 @@
 import { UseFormReturn } from "react-hook-form";
 import { Mail } from "lucide-react";
 import { ProfileFormValues } from "@/lib/validations/profile-schema";
+import { DISTRICTS } from "@/lib/constant/location";
 
 interface ProfileFormProps {
     form: UseFormReturn<ProfileFormValues>;
     email: string;
 }
 
-const DISTRICTS = [
-    "Dhaka",
-    "Chittagong",
-    "Sylhet",
-    "Rajshahi",
-    "Khulna",
-    "Barisal",
-    "Rangpur",
-    "Mymensingh",
-    "Cumilla",
-    "Narayanganj",
-    "Gazipur",
-    "Bogra",
-    "Joypurhat",
-    "Dinajpur",
-    "Cox's Bazar",
-];
 
 const inputBase =
     "w-full rounded-input border border-border focus:border-border-focus focus:ring-2 focus:ring-primary/20 outline-none px-4 py-2.5 text-sm text-text-primary bg-surface transition-base placeholder:text-text-placeholder";

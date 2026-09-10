@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { Upload, X, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
-import { ImgBBUploadError, uploadImageToImgBB } from "../utils/imgbb";
+import { ImgBBUploadError, uploadImageToImgBB } from "../../../lib/utils/imgbb";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE_MB = 5;

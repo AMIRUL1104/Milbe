@@ -6,8 +6,8 @@ export const bookEntrySchema = z.object({
   bookName: z.string().min(1, "বইয়ের নাম দিন"),
   publisherName: z.string().min(1, "পাবলিশারের নাম দিন"),
   image: z.string().nullable().default(null),
-  condition: z.enum(["new", "excellent", "good", "fair"], {
-    error: "অবস্থা বেছে নিন",
+  condition: z.enum(["new", "like_new", "good", "fair"], {
+    message: "অবস্থা বেছে নিন",
   }),
   price: z
     .union([z.number(), z.nan(), z.null()])
@@ -15,25 +15,12 @@ export const bookEntrySchema = z.object({
     .default(null),
 });
 
-// আপনার বিদ্যমান bookEntrySchema এখানে থাকবে
-// const bookEntrySchema = ...
-
 export const addPostSchema = z
   .object({
-    // ব্যাকএন্ড/পেলোড ম্যানেজমেন্টের জন্য ফিল্ডসমূহ
-    sellerId: z.string().optional(),
-    sellerName: z.string().optional(),
-    sellerEmail: z.string().optional(),
-    status: z.enum(["available", "sold", "donated"]).default("available"),
-    acceptedRequestId: z.string().nullable().default(null),
-    isDeleted: z.boolean().default(false),
-    updatedAt: z.string().optional(),
-
-    // ফর্মের মূল ইনপুট ফিল্ডসমূহ
     title: z.string().min(1, "Title is required"),
     category: z.string().min(1, "Select a category"),
     type: z.enum(["sell", "donate"], {
-      error: "Select a listing type",
+      message: "Select a listing type",
     }),
     image: z.string().min(1, "A post image is required"),
     district: z.string().min(1, "District is required"),

@@ -2,8 +2,8 @@
 
 import { useFormContext, Controller } from "react-hook-form";
 import { Tag } from "lucide-react";
+import { BOOK_CATEGORIES } from "../../../lib/constant/post";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
-import { BOOK_CATEGORIES } from "../constants";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
@@ -33,11 +33,10 @@ export default function BasicInfoSection() {
           type="text"
           placeholder="যেমন: এইচএসসি সায়েন্স বই"
           {...register("title")}
-          className={`${inputBase} pl-4 ${
-            errors.title
-              ? "border-danger focus:border-danger focus-visible:outline-danger"
-              : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
-          }`}
+          className={`${inputBase} pl-4 ${errors.title
+            ? "border-danger focus:border-danger focus-visible:outline-danger"
+            : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
+            }`}
         />
         {errors.title && <p className={errorText}>{errors.title.message}</p>}
       </div>
@@ -53,11 +52,10 @@ export default function BasicInfoSection() {
               id="category"
               {...register("category")}
               defaultValue=""
-              className={`${inputBase} appearance-none cursor-pointer ${
-                errors.category
-                  ? "border-danger focus:border-danger focus-visible:outline-danger"
-                  : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
-              }`}
+              className={`${inputBase} appearance-none cursor-pointer ${errors.category
+                ? "border-danger focus:border-danger focus-visible:outline-danger"
+                : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
+                }`}
             >
               <option value="" disabled>
                 ক্যাটাগরি বেছে নিন

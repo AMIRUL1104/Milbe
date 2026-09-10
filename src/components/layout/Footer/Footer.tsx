@@ -6,7 +6,7 @@ export default function Footer() {
   const quickLinks = [
     { label: "হোম", href: "/" },
     { label: "বই দেখুন", href: "/" },
-    { label: "বই যোগ করুন", href: "/books/add" },
+    { label: "বই যোগ করুন", href: "/add-post" },
   ];
 
   const resourcesLinks = [

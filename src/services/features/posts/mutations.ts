@@ -1,9 +1,9 @@
 import { serverMutation } from "@/services/core/server";
-import { BookItem } from "@/interface/post/postDetails";
+import type { NewPostPayload } from "@/interface/post/types";
 import { ApiResponse } from "@/interface/apiResponse";
 
-export async function addNewPost(data: BookItem): Promise<ApiResponse<{ insertedId: string; createdAt: string }>> {
-  return (await serverMutation<BookItem, { insertedId: string; createdAt: string }>("/api/posts", data, "POST")) as ApiResponse<{ insertedId: string; createdAt: string }>;
+export async function addNewPost(data: NewPostPayload): Promise<ApiResponse<{ insertedId: string; createdAt: string }>> {
+  return (await serverMutation<NewPostPayload, { insertedId: string; createdAt: string }>("/api/posts", data, "POST")) as ApiResponse<{ insertedId: string; createdAt: string }>;
 }
 
 export async function deletePost(postId: string): Promise<ApiResponse<null>> {

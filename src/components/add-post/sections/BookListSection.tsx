@@ -43,9 +43,8 @@ export default function BookListSection() {
     if (!category && !firstBookName) return;
 
     const generated = firstBookName
-      ? `${category ? `${category} ` : ""}${firstBookName}${
-          books.length > 1 ? ` + ${books.length - 1} more` : ""
-        }`
+      ? `${category ? `${category} ` : ""}${firstBookName}${books.length > 1 ? ` + ${books.length - 1} more` : ""
+      }`
       : `${category} Books`;
 
     setValue("title", generated, { shouldDirty: false });

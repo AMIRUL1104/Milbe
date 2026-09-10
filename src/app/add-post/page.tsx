@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import AddPostForm from "@/components/add-post/AddPostForm";
+
 import { getUserSession } from "@/services/core/session";
 import { redirect } from "next/navigation";
+import AddPostForm from "@/components/add-post/AddPostForm";
 
 export const metadata: Metadata = {
   title: "Add Post | Milbe",
@@ -26,7 +27,7 @@ export default async function AddPostPage() {
         </p>
       </div>
 
-      <AddPostForm user={{ id: user.id, name: user.name as string, email: user.email as string }} />
+      <AddPostForm />
     </main>
   );
 }

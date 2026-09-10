@@ -13,17 +13,12 @@ import LocationSection from "./sections/LocationSection";
 import ContactSection from "./sections/ContactSection";
 import DescriptionSection from "./sections/DescriptionSection";
 import SubmitButton from "./sections/SubmitButton";
-import { AddPostFormValues, addPostSchema } from "@/lib/validations/add-post-schema";
-import { BookItem } from "@/interface/post/postDetails";
+import { NewPostPayload } from "@/interface/post/types";
 import { addNewPost } from "@/services/features/posts";
+import { getFriendlyApiError } from "@/lib/apiErrorMap";
+import { AddPostFormValues, addPostSchema } from "@/lib/validations/add-post-schema";
 
 type AddPostFormInput = z.input<typeof addPostSchema>;
-
-// NewPostPayload থেকে sellerId আর বাদ দেওয়া যাবে না কারণ সার্ভার এটি আশা করে
-export type NewPostPayload = Omit<
-  BookItem,
-  "_id" | "publishedAt"
->;
 
 const defaultValues: AddPostFormInput = {
   title: "",
@@ -49,16 +44,9 @@ const defaultValues: AddPostFormInput = {
   ],
 };
 
-// আপনার আগের স্ট্রাকচার অনুযায়ী buildPayload শুধুমাত্র values নিচ্ছে
+// Build a clean payload that matches the backend API contract.
 function buildPayload(values: AddPostFormValues): NewPostPayload {
   return {
-    sellerId: values.sellerId || "", // স্কিমাতে অপশনাল থাকায় এখানে ফলব্যাক দেওয়া হলো
-    sellerName: values.sellerName || "", // স্কিমাতে অপশনাল থাকায় এখানে ফলব্যাক দেওয়া হলো;
-    sellerEmail: values.sellerEmail || "", // স্কিমাতে অপশনাল থাকায় এখানে ফলব্যাক দেওয়া হলো;
-    status: "available",
-    acceptedRequestId: null,
-    isDeleted: false,
-    updatedAt: new Date().toISOString(),
     title: values.title,
     category: values.category,
     type: values.type,
@@ -81,7 +69,7 @@ function buildPayload(values: AddPostFormValues): NewPostPayload {
   };
 }
 
-export default function AddPostForm({ user }: { user: { id: string; name: string; email: string } }) {
+export default function AddPostForm() {
   const [isUploadPending, setIsUploadPending] = useState(false);
 
   const methods = useForm<AddPostFormInput, unknown, AddPostFormValues>({
@@ -97,17 +85,9 @@ export default function AddPostForm({ user }: { user: { id: string; name: string
   } = methods;
 
   const onSubmit = async (values: AddPostFormValues) => {
-    // আগের স্ট্রাকচার ঠিক রেখে values এর সাথে sellerId যুক্ত করা হলো
-    const updatedValues = {
-      ...values,
-      sellerId: user.id,
-      sellerName: user.name,
-      sellerEmail: user.email,
-    };
-
     try {
-      const payload = buildPayload(updatedValues);
-      const response = await addNewPost(payload as unknown as BookItem);
+      const payload = buildPayload(values);
+      const response = await addNewPost(payload);
 
       if (response?.success) {
         toast.success("পোস্ট সফলভাবে প্রকাশিত হয়েছে!");
@@ -116,11 +96,7 @@ export default function AddPostForm({ user }: { user: { id: string; name: string
         toast.error(response?.message ?? "পোস্ট প্রকাশ করা যায়নি।");
       }
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন।";
-      toast.error(message);
+      toast.error(getFriendlyApiError(error));
     }
   };
 

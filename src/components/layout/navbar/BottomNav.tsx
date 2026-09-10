@@ -32,7 +32,7 @@ const baseNavItems: NavItem[] = [
     ),
   },
   {
-    href: "/add-book",
+    href: "/add-post",
     label: "বই যোগ",
     icon: (
       <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

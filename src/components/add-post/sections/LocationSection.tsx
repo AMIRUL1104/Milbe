@@ -3,7 +3,7 @@
 import { useFormContext } from "react-hook-form";
 import { MapPin, Home } from "lucide-react";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
-import { DISTRICTS } from "../constants";
+import { DISTRICTS } from "../../../lib/constant/location";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
