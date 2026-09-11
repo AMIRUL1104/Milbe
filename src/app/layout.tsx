@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono, Hind_Siliguri } from "next/font/google";
+import { Inter, Geist_Mono, Hind_Siliguri, Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/navbar/Header";
 import Footer from "@/components/layout/Footer/Footer";
@@ -22,6 +22,13 @@ const hindSiliguri = Hind_Siliguri({
   variable: "--font-hind-siliguri",
   subsets: ["bengali", "latin"],
   weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const notoSerifBengali = Noto_Serif_Bengali({
+  variable: "--font-bn-serif",
+  subsets: ["bengali"],
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -72,7 +79,7 @@ export default async function RootLayout({
   return (
     <html
       lang="bn"
-      className={`${inter.variable} ${geistMono.variable} ${hindSiliguri.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistMono.variable} ${hindSiliguri.variable} ${notoSerifBengali.variable} h-full antialiased`}
     >
       <head>
         <script

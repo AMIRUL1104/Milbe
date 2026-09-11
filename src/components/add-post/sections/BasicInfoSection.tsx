@@ -4,6 +4,7 @@ import { useFormContext, Controller } from "react-hook-form";
 import { Tag } from "lucide-react";
 import { BOOK_CATEGORIES } from "../../../lib/constant/post";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
+import TypeToggle from "../TypeToggle";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
@@ -15,95 +16,73 @@ export default function BasicInfoSection() {
     register,
     control,
     formState: { errors },
+    watch,
   } = useFormContext<AddPostFormValues>();
 
-  return (
-    <section className="space-y-4">
-      <h2 className="text-base font-semibold text-text-secondary">মূল তথ্য</h2>
+  const title = watch("title");
+  const titleCount = title?.length ?? 0;
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="title" className={labelBase}>
-          পোস্টের শিরোনাম
+  return (
+    <section className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">1</div>
+        <h2 className="text-base font-semibold text-text-secondary">মূল তথ্য</h2>
+      </div>
+
+      <div className="mb-3.5">
+        <label className="block text-sm font-medium text-text-primary mb-1.5">পোস্টের ধরন</label>
+        <TypeToggle />
+      </div>
+
+      <div className="mb-3.5">
+        <label htmlFor="title" className="block text-sm font-medium text-text-primary mb-1.5">
+          পোস্টের শিরোনাম <span className="text-danger font-semibold">*</span>
         </label>
-        <p className="text-xs text-text-muted -mt-0.5">
-          বই থেকে স্বয়ংক্রিয়ভাবে তৈরি — পরে সম্পাদনা করতে পারবেন।
-        </p>
         <input
           id="title"
           type="text"
-          placeholder="যেমন: এইচএসসি সায়েন্স বই"
+          maxLength={80}
+          placeholder="যেমন: এইচএসসি সায়েন্স গ্রুপের বই"
           {...register("title")}
           className={`${inputBase} pl-4 ${errors.title
             ? "border-danger focus:border-danger focus-visible:outline-danger"
             : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
             }`}
         />
+        <div className="text-right font-en text-[11px] text-text-muted mt-1">
+          <span id="titleCount">{titleCount}</span>/80
+        </div>
         {errors.title && <p className={errorText}>{errors.title.message}</p>}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="category" className={labelBase}>
-            ক্যাটাগরি
-          </label>
-          <div className="relative">
-            <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-            <select
-              id="category"
-              {...register("category")}
-              defaultValue=""
-              className={`${inputBase} appearance-none cursor-pointer ${errors.category
-                ? "border-danger focus:border-danger focus-visible:outline-danger"
-                : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
-                }`}
-            >
-              <option value="" disabled>
-                ক্যাটাগরি বেছে নিন
+      <div className="mb-3.5">
+        <label htmlFor="category" className="block text-sm font-medium text-text-primary mb-1.5">
+          ক্যাটাগরি <span className="text-danger font-semibold">*</span>
+        </label>
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none">
+            <Tag width="16" height="16" />
+          </span>
+          <select
+            id="category"
+            {...register("category")}
+            defaultValue=""
+            className={`${inputBase} appearance-none cursor-pointer ${errors.category
+              ? "border-danger focus:border-danger focus-visible:outline-danger"
+              : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
+              }`}
+          >
+            <option value="" disabled>ক্যাটাগরি বেছে নিন</option>
+            {BOOK_CATEGORIES.map((category) => (
+              <option key={category} value={category}>
+                {category}
               </option>
-              {BOOK_CATEGORIES.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
-          {errors.category && (
-            <p className={errorText}>{errors.category.message}</p>
-          )}
+            ))}
+          </select>
         </div>
-
-        <div className="flex flex-col gap-1.5">
-          <label className={labelBase}>পোস্টের ধরন</label>
-          <Controller
-            control={control}
-            name="type"
-            render={({ field }) => (
-              <div className="flex items-center gap-4 h-10.5">
-                <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
-                  <input
-                    type="radio"
-                    value="sell"
-                    checked={field.value === "sell"}
-                    onChange={() => field.onChange("sell")}
-                    className="w-4 h-4 text-primary focus:ring-primary"
-                  />
-                  বিক্রি
-                </label>
-                <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
-                  <input
-                    type="radio"
-                    value="donate"
-                    checked={field.value === "donate"}
-                    onChange={() => field.onChange("donate")}
-                    className="w-4 h-4 text-primary focus:ring-primary"
-                  />
-                  দান
-                </label>
-              </div>
-            )}
-          />
-          {errors.type && <p className={errorText}>{errors.type.message}</p>}
-        </div>
+        {errors.category && (
+          <p className={errorText}>{errors.category.message}</p>
+        )}
       </div>
     </section>
   );

@@ -1,18 +1,19 @@
 "use client";
-
-import { useState } from "react";
-import { z } from "zod";
+import { useState, useEffect, useCallback } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 
+import TopBar from "./TopBar";
+import Sidebar from "./Sidebar";
 import BasicInfoSection from "./sections/BasicInfoSection";
 import ImageUpload from "./sections/ImageUpload";
 import BookListSection from "./sections/BookListSection";
 import LocationSection from "./sections/LocationSection";
 import ContactSection from "./sections/ContactSection";
 import DescriptionSection from "./sections/DescriptionSection";
-import SubmitButton from "./sections/SubmitButton";
+
 import { NewPostPayload } from "@/interface/post/types";
 import { addNewPost } from "@/services/features/posts";
 import { getFriendlyApiError } from "@/lib/apiErrorMap";
@@ -44,7 +45,6 @@ const defaultValues: AddPostFormInput = {
   ],
 };
 
-// Build a clean payload that matches the backend API contract.
 function buildPayload(values: AddPostFormValues): NewPostPayload {
   return {
     title: values.title,
@@ -70,8 +70,15 @@ function buildPayload(values: AddPostFormValues): NewPostPayload {
   };
 }
 
+const STEP_SECTIONS = [
+  "step-basic",
+  "step-books",
+  "step-location",
+  "step-contact",
+];
 export default function AddPostForm() {
   const [isUploadPending, setIsUploadPending] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
 
   const methods = useForm<AddPostFormInput, unknown, AddPostFormValues>({
     resolver: zodResolver(addPostSchema),
@@ -83,7 +90,21 @@ export default function AddPostForm() {
     handleSubmit,
     reset,
     formState: { isSubmitting },
+    watch,
   } = methods;
+
+  const isDonate = watch("type") === "donate";
+  const title = watch("title");
+  const district = watch("district");
+  const area = watch("area");
+  const books = watch("books");
+
+  const totalPrice = books?.reduce((sum, book) => {
+    if (isDonate) return 0;
+    return sum + (Number(book.price) || 0);
+  }, 0) ?? 0;
+
+  const meta = [area, district].filter(Boolean).join(", ") || "";
 
   const onSubmit = async (values: AddPostFormValues) => {
     try {
@@ -101,27 +122,98 @@ export default function AddPostForm() {
     }
   };
 
+  useEffect(() => {
+    const sections = STEP_SECTIONS.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const progressFill = document.getElementById("progressFill");
+    const chips = document.querySelectorAll(".step-chip");
+
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = sections.findIndex((s) => s.id === entry.target.id);
+            if (idx >= 0) {
+              setActiveStep(idx);
+              if (progressFill) {
+                progressFill.style.width = `${((idx + 1) / sections.length) * 100}%`;
+              }
+              chips.forEach((chip, i) => {
+                chip.classList.toggle("active", i === idx);
+                chip.classList.toggle("done", i < idx);
+              });
+            }
+          }
+        });
+      },
+      { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const targetId = chip.getAttribute("data-target");
+        if (targetId) {
+          const target = document.getElementById(targetId);
+          target?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <FormProvider {...methods}>
+    <>
+      <TopBar activeStepIndex={activeStep} />
+
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-8 max-w-2xl mx-auto"
+        className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 px-4 py-5 lg:px-6 lg:py-8 lg:gap-7"
         noValidate
       >
-        <BasicInfoSection />
-        <ImageUpload onUploadingChange={setIsUploadPending} />
-        <BookListSection />
-        <LocationSection />
-        <ContactSection />
-        <DescriptionSection />
+        <div className="flex flex-col gap-4 min-w-0">
+          <div className="px-0.5 pb-2">
+            <h1 className="font-bn-serif text-2xl font-semibold text-text-primary mb-1">
+              বই বিক্রি করুন বা দান করুন
+            </h1>
+            <p className="text-sm text-text-secondary">
+              আপনার বইগুলো অন্য শিক্ষার্থীদের কাজে লাগুক — মাত্র কয়েকটি ধাপে
+              পোস্ট তৈরি করুন।
+            </p>
+          </div>
 
-        <SubmitButton
+          <FormProvider {...methods}>
+            <BasicInfoSection />
+            <ImageUpload onUploadingChange={setIsUploadPending} />
+            <BookListSection />
+            <LocationSection />
+            <ContactSection />
+            <DescriptionSection />
+          </FormProvider>
+        </div>
+
+        <Sidebar
+          imageUrl={methods.watch("image") || null}
+          badge={isDonate ? "দান" : "বিক্রি"}
+          isDonate={isDonate}
+          title={title}
+          meta={meta}
+          bookCount={books?.length ?? 1}
+          totalPrice={isDonate ? null : totalPrice}
           isSubmitting={isSubmitting}
           isUploading={isUploadPending}
         />
       </form>
-    </FormProvider>
+      {/* <MobileBottomBar
+        isDonate={isDonate}
+        bookCount={books?.length ?? 1}
+        totalPrice={isDonate ? null : totalPrice}
+        isSubmitting={isSubmitting}
+        isUploading={isUploadPending}
+      /> */}
+    </>
   );
 }
-
-

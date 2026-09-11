@@ -2,11 +2,9 @@
 
 import { useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Upload, X, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 import { ImgBBUploadError, uploadImageToImgBB } from "../../../lib/utils/imgbb";
-import Image from "next/image";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE_MB = 5;
@@ -27,13 +25,11 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const uploadedUrl = watch("image");
 
-  async function handleFileChange(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const file = event.target.files?.[0];
+  async function handleFileChange(file: File | undefined) {
     if (!file) return;
 
     if (!ACCEPTED_TYPES.includes(file.type)) {
@@ -81,63 +77,90 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
   const displayUrl = previewUrl ?? (uploadedUrl || null);
 
   return (
-    <section className="space-y-3">
-      <h2 className="text-base font-semibold text-text-secondary">Post Image</h2>
-      <p className="text-sm text-text-muted">
-        One image is allowed for the whole post (JPG, PNG, or WEBP).
-      </p>
+    <section className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">      <div className="flex items-center gap-2.5 mb-4">
+      <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">2</div>
+      <h2 className="text-base font-semibold text-text-secondary">পোস্টের ছবি</h2>
+    </div>
 
-      {displayUrl ? (
-        <div className="relative w-full max-w-xs">
-          <Image
-            width={300}
-            height={192}
-            src={displayUrl}
-            alt="Post image preview"
-            className="w-full h-48 object-cover rounded-xl border border-border"
-          />
-
-          {isUploading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-overlay-dark rounded-xl">
-              <Loader2 className="w-6 h-6 text-text-inverse animate-spin" />
-            </div>
-          )}
-
-          {!isUploading && (
-            <button
-              type="button"
-              onClick={handleRemove}
-              aria-label="Remove image"
-              className="absolute top-2 right-2 p-1.5 bg-danger hover:bg-danger-hover text-text-inverse rounded-full transition-base cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          className="inline-flex items-center gap-2 border border-border hover:border-primary text-sm font-semibold text-text-secondary rounded-xl px-4 py-2.5 transition-base cursor-pointer"
-        >
-          <Upload className="w-4 h-4" />
-          Upload Image
-        </button>
-      )}
-
-      <input
-        ref={inputRef}
-        type="file"
-        accept={ACCEPTED_TYPES.join(",")}
-        className="hidden"
-        onChange={handleFileChange}
-      />
-
-      {errors.image && (
-        <p className="text-xs font-medium text-danger">
-          {errors.image.message}
+      <div className="mb-3.5">
+        <label className="block text-sm font-medium text-text-primary mb-1.5">
+          পোস্টের ছবি <span className="font-medium text-text-muted text-xs">(ঐচ্ছিক)</span>
+        </label>
+        <p className="text-xs text-text-muted -mt-0.5 mb-2">
+          পুরো পোস্টের জন্য একটি ছবি — JPG, PNG বা WEBP
         </p>
-      )}
+
+        {displayUrl ? (
+          <div className="relative rounded-card overflow-hidden border border-border-light">
+            <img src={displayUrl} alt="Preview" className="w-full block max-h-[220px] object-cover" />
+            <div className="absolute top-2 right-2 flex gap-1.5">
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                aria-label="পরিবর্তন করুন"
+                className="w-8 h-8 rounded-full bg-black/55 text-white flex items-center justify-center backdrop-blur-sm hover:bg-black/75 transition-base"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={handleRemove}
+                aria-label="মুছে ফেলুন"
+                className="w-8 h-8 rounded-full bg-black/55 text-white flex items-center justify-center backdrop-blur-sm hover:bg-black/75 transition-base"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <label
+            className={`block border-2 border-dashed border-border rounded-card p-6 text-center cursor-pointer bg-surface-hover transition-base ${isDragOver ? "border-primary bg-primary-light" : ""
+              }`}
+            htmlFor="imgInput"
+          >
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragOver(true);
+              }}
+              onDragLeave={() => setIsDragOver(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDragOver(false);
+                handleFileChange(e.dataTransfer.files[0]);
+              }}
+            >
+              <div className="w-11 h-11 rounded-full bg-primary-light text-primary flex items-center justify-center mx-auto mb-2.5">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                </svg>
+              </div>
+              <strong className="block text-sm mb-0.5">ছবি আপলোড করুন</strong>
+              <span className="text-xs text-text-muted">ট্যাপ করুন অথবা টেনে আনুন</span>
+            </div>
+          </label>
+        )}
+
+        <input
+          ref={inputRef}
+          type="file"
+          id="imgInput"
+          accept={ACCEPTED_TYPES.join(",")}
+          className="hidden"
+          onChange={(e) => handleFileChange(e.target.files?.[0])}
+        />
+
+        {errors.image && (
+          <p className="text-xs font-medium text-danger mt-1.5">
+            {errors.image.message}
+          </p>
+        )}
+      </div>
     </section>
   );
 }

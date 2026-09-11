@@ -83,6 +83,7 @@
   /* Fonts */
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
+  --font-bn-serif: var(--font-noto-serif-bengali);
 
   /* Colors - Primary */
   --color-primary: var(--color-primary);
@@ -173,8 +174,7 @@ body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
   line-height: 1.6;
-  padding-bottom: env(safe-area-inset-bottom, 88px);
-}
+   padding-bottom: env(safe-area-inset-bottom, 88px);}
 
 @media (min-width: 768px) {
   body {

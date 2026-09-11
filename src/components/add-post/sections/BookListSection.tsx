@@ -44,28 +44,21 @@ export default function BookListSection() {
     if (!category && !firstBookName) return;
 
     const generated = firstBookName
-      ? `${category ? `${category} ` : ""}${firstBookName}${books.length > 1 ? ` + ${books.length - 1} more` : ""
-      }`
+      ? `${category ? `${category} ` : ""}${firstBookName}${books.length > 1 ? ` + ${books.length - 1} more` : ""}`
       : `${category} Books`;
 
     setValue("title", generated, { shouldDirty: false });
   }, [category, books, setValue]);
 
   return (
-    <section className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-text-secondary">Books</h2>
-        <button
-          type="button"
-          onClick={() => append({ ...emptyBook })}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary bg-primary-light hover:bg-primary/20 rounded-btn px-3 py-1.5 transition-base cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          Add Book
-        </button>
+    <section className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">3</div>
+        <h2 className="text-base font-semibold text-text-secondary">বইসমূহ</h2>
+        <span className="ml-auto text-xs text-text-muted font-en">{fields.length} বই</span>
       </div>
 
-      <div className="space-y-4">
+      <div className="flex flex-col gap-3.5">
         {fields.map((field, index) => (
           <BookItemCard
             key={field.id}
@@ -75,6 +68,27 @@ export default function BookListSection() {
           />
         ))}
       </div>
+
+      <button
+        type="button"
+        className="w-full mt-3 flex items-center justify-center gap-1.5 border-2 border-dashed border-border bg-transparent rounded-card py-3 text-sm font-semibold text-primary cursor-pointer transition-base hover:bg-primary-light hover:border-primary"
+        id="addBookBtn"
+        onClick={() => append({ ...emptyBook })}
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        আরেকটি বই যোগ করুন
+      </button>
     </section>
   );
 }

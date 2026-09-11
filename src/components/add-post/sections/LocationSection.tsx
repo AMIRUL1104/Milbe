@@ -22,26 +22,29 @@ export default function LocationSection() {
       : "border-border focus:border-border-focus focus-visible:outline-primary-focus";
 
   return (
-    <section className="space-y-4">
-      <h2 className="text-base font-semibold text-text-secondary">Location</h2>
+    <section className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">4</div>
+        <h2 className="text-base font-semibold text-text-secondary">অবস্থান</h2>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="district" className={labelBase}>
-            District
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div className="mb-3.5">
+          <label htmlFor="district" className="block text-sm font-medium text-text-primary mb-1.5">
+            জেলা <span className="text-danger font-semibold">*</span>
           </label>
           <div className="relative">
-            <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"><MapPin width="16" height="16" /></span>
             <input
               id="district"
               type="text"
-              list="district-options"
-              placeholder="Search district"
+              list="districtList"
+              placeholder="জেলা খুঁজুন"
               autoComplete="off"
               {...register("district")}
               className={`${inputBase} ${borderClass(!!errors.district)}`}
             />
-            <datalist id="district-options">
+            <datalist id="districtList">
               {DISTRICTS.map((district) => (
                 <option key={district} value={district} />
               ))}
@@ -52,16 +55,16 @@ export default function LocationSection() {
           )}
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="area" className={labelBase}>
-            Area
+        <div className="mb-3.5">
+          <label htmlFor="area" className="block text-sm font-medium text-text-primary mb-1.5">
+            এলাকা <span className="text-danger font-semibold">*</span>
           </label>
           <div className="relative">
-            <Home className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"><Home width="16" height="16" /></span>
             <input
               id="area"
               type="text"
-              placeholder="e.g. Ambarkhana"
+              placeholder="যেমন: আমবারখানা"
               {...register("area")}
               className={`${inputBase} ${borderClass(!!errors.area)}`}
             />
