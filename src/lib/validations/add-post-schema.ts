@@ -13,29 +13,27 @@ export const bookEntrySchema = z.object({
     .union([z.number(), z.nan(), z.null()])
     .transform((val) => (Number.isNaN(val) ? null : val))
     .default(null),
-  availableStatus: z
-    .enum(["available", "unavailable"])
-    .default("available"),
+  availableStatus: z.enum(["available", "unavailable"]).default("available"),
 });
 
 export const addPostSchema = z
   .object({
-    title: z.string().min(1, "Title is required"),
-    category: z.string().min(1, "Select a category"),
+    title: z.string().min(1, "পোস্টের শিরোনাম দিন"),
+    category: z.string().min(1, "ক্যাটাগরি বেছে নিন"),
     type: z.enum(["sell", "donate"], {
-      message: "Select a listing type",
+      message: "পোস্টের ধরন বেছে নিন",
     }),
-    image: z.string().min(1, "A post image is required"),
-    district: z.string().min(1, "District is required"),
-    area: z.string().min(1, "Area is required"),
+    image: z.string().min(1, "পোস্টের একটি ছবি দিন"),
+    district: z.string().min(1, "জেলা নির্বাচন করুন"),
+    area: z.string().min(1, "এলাকা নির্বাচন করুন"),
     phone: z
       .string()
-      .min(1, "Phone number is required")
-      .regex(/^[0-9+\-\s]{6,15}$/, "Enter a valid phone number"),
+      .min(1, "ফোন নম্বর দিন")
+      .regex(/^[0-9+\-\s]{6,15}$/, "বৈধ ফোন নম্বর দিন"),
     messenger: z.string().optional().default(""),
     whatsappOnly: z.boolean().default(false),
     description: z.string().optional().default(""),
-    books: z.array(bookEntrySchema).min(1, "Add at least one book"),
+    books: z.array(bookEntrySchema).min(1, "কমপক্ষে একটি বই যোগ করুন"),
   })
   .superRefine((data, ctx) => {
     if (data.type === "sell") {
@@ -43,7 +41,8 @@ export const addPostSchema = z
         if (book.price === null || book.price === undefined || book.price < 0) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Price is required and must be 0 or more for a Sell post",
+            message:
+              "বিক্রয় পোস্টে মূল্য দিতে হবে এবং তা ০ বা তার বেশি হতে হবে",
             path: ["books", index, "price"],
           });
         }
