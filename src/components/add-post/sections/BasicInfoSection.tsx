@@ -5,13 +5,18 @@ import { Tag } from "lucide-react";
 import { BOOK_CATEGORIES } from "../../../lib/constant/post";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 import TypeToggle from "../TypeToggle";
+import ImageUpload from "./ImageUpload";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
 const labelBase = "text-xs font-bold text-text-secondary uppercase tracking-wider";
 const errorText = "text-xs font-medium text-danger mt-0.5";
 
-export default function BasicInfoSection() {
+interface ImageUploadProps {
+  onUploadingChange: (isUploading: boolean) => void;
+}
+
+export default function BasicInfoSection({ onUploadingChange }: ImageUploadProps) {
   const {
     register,
     control,
@@ -84,6 +89,8 @@ export default function BasicInfoSection() {
           <p className={errorText}>{errors.category.message}</p>
         )}
       </div>
+
+      <ImageUpload onUploadingChange={onUploadingChange} />
     </section>
   );
 }

@@ -53,7 +53,7 @@ export default function BookListSection() {
   return (
     <section className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
       <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">3</div>
+        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">2</div>
         <h2 className="text-base font-semibold text-text-secondary">বইসমূহ</h2>
         <span className="ml-auto text-xs text-text-muted font-en">{fields.length} বই</span>
       </div>

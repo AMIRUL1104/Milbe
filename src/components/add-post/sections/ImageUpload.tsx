@@ -5,6 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 import { ImgBBUploadError, uploadImageToImgBB } from "../../../lib/utils/imgbb";
+import Image from "next/image";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE_MB = 5;
@@ -77,14 +78,11 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
   const displayUrl = previewUrl ?? (uploadedUrl || null);
 
   return (
-    <section className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">      <div className="flex items-center gap-2.5 mb-4">
-      <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">2</div>
-      <h2 className="text-base font-semibold text-text-secondary">পোস্টের ছবি</h2>
-    </div>
 
+    <>
       <div className="mb-3.5">
         <label className="block text-sm font-medium text-text-primary mb-1.5">
-          পোস্টের ছবি <span className="font-medium text-text-muted text-xs">(ঐচ্ছিক)</span>
+          পোস্টের ছবি <span className="text-danger font-semibold">*</span>
         </label>
         <p className="text-xs text-text-muted -mt-0.5 mb-2">
           পুরো পোস্টের জন্য একটি ছবি — JPG, PNG বা WEBP
@@ -92,7 +90,7 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
 
         {displayUrl ? (
           <div className="relative rounded-card overflow-hidden border border-border-light">
-            <img src={displayUrl} alt="Preview" className="w-full block max-h-[220px] object-cover" />
+            <Image width={300} height={220} src={displayUrl} alt="Preview" className="w-full block max-h-[220px] object-cover" />
             <div className="absolute top-2 right-2 flex gap-1.5">
               <button
                 type="button"
@@ -161,6 +159,6 @@ export default function ImageUpload({ onUploadingChange }: ImageUploadProps) {
           </p>
         )}
       </div>
-    </section>
+    </>
   );
 }

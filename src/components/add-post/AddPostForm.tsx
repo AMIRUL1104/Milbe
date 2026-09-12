@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import TopBar from "./TopBar";
 import Sidebar from "./Sidebar";
 import BasicInfoSection from "./sections/BasicInfoSection";
-import ImageUpload from "./sections/ImageUpload";
 import BookListSection from "./sections/BookListSection";
 import LocationSection from "./sections/LocationSection";
 import ContactSection from "./sections/ContactSection";
@@ -18,6 +17,7 @@ import { NewPostPayload } from "@/interface/post/types";
 import { addNewPost } from "@/services/features/posts";
 import { getFriendlyApiError } from "@/lib/apiErrorMap";
 import { AddPostFormValues, addPostSchema } from "@/lib/validations/add-post-schema";
+import SubmitButton from "./sections/SubmitButton";
 
 type AddPostFormInput = z.input<typeof addPostSchema>;
 
@@ -186,12 +186,12 @@ export default function AddPostForm() {
           </div>
 
           <FormProvider {...methods}>
-            <BasicInfoSection />
-            <ImageUpload onUploadingChange={setIsUploadPending} />
+            <BasicInfoSection onUploadingChange={setIsUploadPending} />
             <BookListSection />
             <LocationSection />
             <ContactSection />
             <DescriptionSection />
+            <SubmitButton isSubmitting={isSubmitting} isUploading={isUploadPending} />
           </FormProvider>
         </div>
 
@@ -207,13 +207,7 @@ export default function AddPostForm() {
           isUploading={isUploadPending}
         />
       </form>
-      {/* <MobileBottomBar
-        isDonate={isDonate}
-        bookCount={books?.length ?? 1}
-        totalPrice={isDonate ? null : totalPrice}
-        isSubmitting={isSubmitting}
-        isUploading={isUploadPending}
-      /> */}
+
     </>
   );
 }
