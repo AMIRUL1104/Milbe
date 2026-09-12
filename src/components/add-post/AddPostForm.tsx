@@ -122,6 +122,15 @@ export default function AddPostForm() {
     }
   };
 
+  // Handle step click - update active step and scroll
+  const handleStepClick = useCallback((index: number) => {
+    setActiveStep(index);
+    const target = document.getElementById(STEP_SECTIONS[index]);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
   useEffect(() => {
     const sections = STEP_SECTIONS.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     const progressFill = document.getElementById("progressFill");
@@ -152,22 +161,12 @@ export default function AddPostForm() {
 
     sections.forEach((section) => observer.observe(section));
 
-    chips.forEach((chip) => {
-      chip.addEventListener("click", () => {
-        const targetId = chip.getAttribute("data-target");
-        if (targetId) {
-          const target = document.getElementById(targetId);
-          target?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
-    });
-
     return () => observer.disconnect();
   }, []);
 
   return (
     <>
-      <TopBar activeStepIndex={activeStep} />
+      <TopBar activeStepIndex={activeStep} onStepClick={handleStepClick} />
 
       <form
         onSubmit={handleSubmit(onSubmit)}

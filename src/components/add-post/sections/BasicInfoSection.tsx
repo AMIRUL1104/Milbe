@@ -28,7 +28,7 @@ export default function BasicInfoSection({ onUploadingChange }: ImageUploadProps
   const titleCount = title?.length ?? 0;
 
   return (
-    <section className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
+    <section id="step-basic" className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
       <div className="flex items-center gap-2.5 mb-4">
         <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">1</div>
         <h2 className="text-base font-semibold text-text-secondary">মূল তথ্য</h2>

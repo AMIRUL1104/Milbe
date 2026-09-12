@@ -23,10 +23,11 @@ export default function ContactSection() {
       : "border-border focus:border-border-focus focus-visible:outline-primary-focus";
 
   return (
-    <section className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">  <div className="flex items-center gap-2.5 mb-4">
-      <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">4</div>
-      <h2 className="text-base font-semibold text-text-secondary">যোগাযোগ</h2>
-    </div>
+    <section id="step-contact" className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">4</div>
+        <h2 className="text-base font-semibold text-text-secondary">যোগাযোগ</h2>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
         <div className="mb-3.5">

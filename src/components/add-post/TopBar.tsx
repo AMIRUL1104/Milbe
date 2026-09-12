@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 
 interface TopBarProps {
   activeStepIndex: number;
+  onStepClick?: (index: number) => void;
 }
 
 const STEP_SECTIONS = [
@@ -16,8 +17,18 @@ const STEP_SECTIONS = [
 
 const STEP_LABELS = ["মূল তথ্য", "বইসমূহ", "অবস্থান", "যোগাযোগ"];
 
-export default function TopBar({ activeStepIndex }: TopBarProps) {
+export default function TopBar({ activeStepIndex, onStepClick }: TopBarProps) {
   const router = useRouter();
+
+  const handleStepClick = (idx: number) => {
+    if (onStepClick) {
+      onStepClick(idx);
+    } else {
+      // Fallback if no handler provided
+      const target = document.getElementById(STEP_SECTIONS[idx]);
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   return (
     <div className="sticky top-0 z-40 bg-surface border-b border-border-light">
@@ -59,10 +70,7 @@ export default function TopBar({ activeStepIndex }: TopBarProps) {
                 ? "border-border bg-surface text-secondary-hover"
                 : "border-border bg-surface text-text-muted"
               }`}
-            onClick={() => {
-              const target = document.getElementById(section);
-              target?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
+            onClick={() => handleStepClick(idx)}
           >
             <span
               className={`w-[18px] h-[18px] rounded-full font-en text-[10.5px] font-semibold flex items-center justify-center transition-base ${idx === activeStepIndex

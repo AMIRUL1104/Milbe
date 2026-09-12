@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function AddPostPage() {
   const user = await getUserSession();
   if (!user) {
-    redirect("/auth/signin?redirect=/books/add");
+    redirect("/auth/signin?redirect=/add-post");
   }
 
   return <AddPostForm />;

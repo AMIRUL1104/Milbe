@@ -51,7 +51,7 @@ export default function BookListSection() {
   }, [category, books, setValue]);
 
   return (
-    <section className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
+    <section id="step-books" className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
       <div className="flex items-center gap-2.5 mb-4">
         <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">2</div>
         <h2 className="text-base font-semibold text-text-secondary">বইসমূহ</h2>
