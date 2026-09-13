@@ -1,7 +1,6 @@
 import { ReceivedRequestsClient } from "@/components/dashboard/user/requests/received/ReceivedRequestsClient";
 import { RequestsTabs } from "@/components/dashboard/user/requests/RequestsTabs";
 import { SentRequestsList } from "@/components/dashboard/user/requests/sent/SentRequestsList";
-import type { BookRequestResponse } from "@/interface/bookRequest/bookRequest";
 import type { BookRequest } from "@/interface/bookRequest/checkRequest";
 import type { PostSummary, ReceivedRequest, SentRequest } from "@/interface/dashboard/request";
 import type { PostItem } from "@/interface/post/types";
@@ -79,25 +78,48 @@ function buildPostSummaries(
 }
 
 export default async function RequestsPage() {
+  let hasError = false;
+
   const user = await getUserSession();
   const userId = user?.id ?? "";
 
-  const [sentResponse, receivedResponse] = await Promise.all([
-    userId
-      ? getSentBookRequests(userId)
-      : Promise.resolve(null),
-    userId
-      ? getReceivedBookRequests(userId)
-      : Promise.resolve(null),
-  ]);
+  let sentRequests: SentRequest[] = [];
+  let receivedRequests: ReceivedRequest[] = [];
+  let posts: PostSummary[] = [];
+  console.log("User ID:", userId);
+  console.log("receivedRequests:", receivedRequests);
+  console.log("posts:", posts);
+  try {
+    const [sentResponse, receivedResponse] = await Promise.all([
+      userId
+        ? getSentBookRequests(userId)
+        : Promise.resolve(null),
+      userId
+        ? getReceivedBookRequests(userId)
+        : Promise.resolve(null),
+    ]);
 
-  const sentRequests = (sentResponse?.data?.requests ?? []).map(toSentRequest);
-  const receivedRequestsData = receivedResponse?.data?.requests ?? [];
-  const receivedRequests = receivedRequestsData.map(toReceivedRequest);
+    sentRequests = (sentResponse?.data?.requests ?? []).map(toSentRequest);
+    const receivedRequestsData = receivedResponse?.data?.requests ?? [];
+    receivedRequests = receivedRequestsData.map(toReceivedRequest);
 
-  const myPostsResponse = await getMyPosts();
-  const postsData = (myPostsResponse.data?.books ?? []) as PostItem[];
-  const posts = buildPostSummaries(postsData, receivedRequestsData);
+    const myPostsResponse = await getMyPosts();
+    const postsData = (myPostsResponse.data ?? []) as PostItem[];
+    console.log("sentRequests:", sentRequests);
+    console.log("receivedRequests:", receivedRequests);
+    console.log("postsData:", postsData);
+    posts = buildPostSummaries(postsData, receivedRequestsData);
+  } catch {
+    hasError = true;
+  }
+
+  if (hasError) {
+    return (
+      <div className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
+        <p className="text-red-500 font-bold">রিকোয়েস্ট পাওয়া যায়নি!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">

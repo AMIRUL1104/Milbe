@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { SendHorizonal } from "lucide-react";
+import { SendHorizontal } from "lucide-react";
 
 export function SentRequestsEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center gap-3 rounded-card border border-dashed border-border bg-surface px-6 py-16 text-center">
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-        <SendHorizonal className="h-7 w-7 text-primary" />
+        <SendHorizontal className="h-7 w-7 text-primary" />
       </div>
       <h3 className="text-lg font-bold text-text-primary">No requests sent yet</h3>
       <p className="max-w-sm text-sm text-text-muted">
