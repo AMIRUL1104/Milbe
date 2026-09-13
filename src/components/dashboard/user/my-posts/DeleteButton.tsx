@@ -46,7 +46,7 @@ export default function DeleteButton({
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label={`Delete ${postTitle}`}
-        className="absolute top-3 right-3 z-10 p-2 rounded-xl bg-surface/90 backdrop-blur text-danger shadow-md opacity-0 group-hover:opacity-100 transition-base duration-200 hover:bg-danger hover:text-text-inverse cursor-pointer"
+        className="absolute top-3 right-3 z-10 p-2 rounded-xl bg-surface/90 backdrop-blur text-danger shadow-md  transition-base duration-200 hover:bg-danger hover:text-text-inverse cursor-pointer"
       >
         <Trash2 className="w-4 h-4" />
       </button>

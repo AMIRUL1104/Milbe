@@ -55,36 +55,38 @@ export default function MyPostsToolbar({
           />
         </div>
 
-        <div className="relative w-full lg:w-48">
-          <SlidersHorizontal className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-          <select
-            value={filter}
-            onChange={(event) =>
-              onFilterChange(event.target.value as MyPostsFilter)
-            }
-            className={controlBase}
-          >
-            {FILTER_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <div className="flex gap-3 lg:flex-col lg:flex-row lg:items-center">
+          <div className="relative w-full lg:w-48">
+            <SlidersHorizontal className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+            <select
+              value={filter}
+              onChange={(event) =>
+                onFilterChange(event.target.value as MyPostsFilter)
+              }
+              className={controlBase}
+            >
+              {FILTER_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div className="relative w-full lg:w-48">
-          <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-          <select
-            value={sort}
-            onChange={(event) => onSortChange(event.target.value as MyPostsSort)}
-            className={controlBase}
-          >
-            {SORT_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative w-full lg:w-48">
+            <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+            <select
+              value={sort}
+              onChange={(event) => onSortChange(event.target.value as MyPostsSort)}
+              className={controlBase}
+            >
+              {SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
