@@ -86,9 +86,7 @@ export default async function RequestsPage() {
   let sentRequests: SentRequest[] = [];
   let receivedRequests: ReceivedRequest[] = [];
   let posts: PostSummary[] = [];
-  console.log("User ID:", userId);
-  console.log("receivedRequests:", receivedRequests);
-  console.log("posts:", posts);
+
   try {
     const [sentResponse, receivedResponse] = await Promise.all([
       userId
@@ -99,15 +97,12 @@ export default async function RequestsPage() {
         : Promise.resolve(null),
     ]);
 
-    sentRequests = (sentResponse?.data?.requests ?? []).map(toSentRequest);
-    const receivedRequestsData = receivedResponse?.data?.requests ?? [];
+    sentRequests = (sentResponse?.data ?? []).map(toSentRequest);
+    const receivedRequestsData = receivedResponse?.data ?? [];
     receivedRequests = receivedRequestsData.map(toReceivedRequest);
 
     const myPostsResponse = await getMyPosts();
     const postsData = (myPostsResponse.data ?? []) as PostItem[];
-    console.log("sentRequests:", sentRequests);
-    console.log("receivedRequests:", receivedRequests);
-    console.log("postsData:", postsData);
     posts = buildPostSummaries(postsData, receivedRequestsData);
   } catch {
     hasError = true;

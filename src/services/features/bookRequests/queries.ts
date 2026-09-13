@@ -14,16 +14,16 @@ export async function checkBookRequest(
 
 export async function getSentRequests(
   userId: string,
-): Promise<ApiResponse<{ requests: BookRequest[] }>> {
-  return protectedFetch<{ requests: BookRequest[] }>(
+): Promise<ApiResponse<BookRequest[]>> {
+  return protectedFetch<BookRequest[]>(
     `/api/book-requests/sent?requesterId=${userId}`,
   );
 }
 
 export async function getReceivedRequests(
   userId: string,
-): Promise<ApiResponse<{ requests: BookRequest[] }>> {
-  return protectedFetch<{ requests: BookRequest[] }>(
+): Promise<ApiResponse<BookRequest[]>> {
+  return protectedFetch<BookRequest[]>(
     `/api/book-requests/received?sellerId=${userId}`,
   );
 }

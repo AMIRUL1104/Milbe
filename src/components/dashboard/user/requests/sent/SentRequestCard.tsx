@@ -75,7 +75,7 @@ export function SentRequestCard({ request }: SentRequestCardProps) {
         <div className="flex gap-5 ">
 
           <Link
-            href={`/posts/${request.postId}`}
+            href={`/books/${request.postId}`}
             className="inline-flex w-fit items-center gap-1.5 rounded-btn border border-primary px-3.5 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-text-inverse"
           >
             View Post
