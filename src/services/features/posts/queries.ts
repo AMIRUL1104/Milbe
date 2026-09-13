@@ -53,8 +53,8 @@ export async function getFeaturedPosts(): Promise<PostItem[]> {
   );
 }
 
-export type MyPostsResponse = ApiResponse<{ books: PostItem[] }>;
+export type MyPostsResponse = ApiResponse<PostItem[]>;
 
 export async function getMyPosts(): Promise<MyPostsResponse> {
-  return protectedFetch<{ books: PostItem[] }>("/api/posts/my");
+  return protectedFetch<PostItem[]>("/api/posts/my");
 }

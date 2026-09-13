@@ -23,7 +23,7 @@ export default async function MyPostsPage() {
   }
 
   // ২. Type Assertion (as MyPost[]) ব্যবহার করে unknown[] কে MyPost[] এ রূপান্তর করো
-  const posts = (response.data.books ?? []) as PostItem[];
+  const posts = (response.data ?? []) as PostItem[];
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">

@@ -13,9 +13,15 @@ export interface FeaturedPostsResponse<T> extends ApiResponse<T[]> {
 
 export interface GetMyPostsResponse {
   success: boolean;
-  data: { books: PostItem[] };
+  data: PostItem[];
   message?: string;
 }
 
-export type MyPostsFilter = "all" | "sell" | "donate" | "available" | "sold" | "donated";
+export type MyPostsFilter =
+  | "all"
+  | "sell"
+  | "donate"
+  | "available"
+  | "sold"
+  | "donated";
 export type MyPostsSort = "newest" | "oldest" | "title-asc" | "title-desc";
