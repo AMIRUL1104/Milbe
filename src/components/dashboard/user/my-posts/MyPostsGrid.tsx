@@ -1,8 +1,9 @@
+import Link from "next/link";
+import { Edit } from "lucide-react";
+
 import type { PostItem } from "@/interface/post/types";
 import BookCard from "@/components/shared/BookCard";
 import DeleteButton from "./DeleteButton";
-// import Link from "next/link";
-// import { Edit } from "lucide-react";
 
 
 interface MyPostsGridProps {
@@ -15,13 +16,13 @@ export default function MyPostsGrid({ posts, onDeleted }: MyPostsGridProps) {
     <div className="grid  grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
       {posts.map((post) => (
         <div key={post._id} className="relative group">
-          {/* add a edit button link here */}
-          {/* <Link
+          <Link
             href={`/add-post?edit=${post._id}`}
+            aria-label={`Edit ${post.title}`}
             className="absolute top-3 left-3 z-10 p-2 rounded-xl bg-white/90 backdrop-blur text-cyan-600 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-cyan-500 hover:text-white cursor-pointer"
           >
             <Edit className="w-4 h-4" />
-          </Link> */}
+          </Link>
 
           <DeleteButton
             postId={post._id}

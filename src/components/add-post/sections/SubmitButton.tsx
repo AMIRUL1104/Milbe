@@ -5,11 +5,13 @@ import { Loader2 } from "lucide-react";
 interface SubmitButtonProps {
   isSubmitting: boolean;
   isUploading?: boolean;
+  isEditing?: boolean;
 }
 
 export default function SubmitButton({
   isSubmitting,
   isUploading,
+  isEditing = false,
 }: SubmitButtonProps) {
   const isLoading = isSubmitting || isUploading;
   const disabled = isLoading;
@@ -23,11 +25,11 @@ export default function SubmitButton({
       {isLoading ? (
         <>
           <Loader2 className="w-5 h-5 animate-spin" />
-          <span>বই পোস্ট হচ্ছে...</span>
+          <span>{isEditing ? "আপডেট হচ্ছে..." : "বই পোস্ট হচ্ছে..."}</span>
         </>
       ) : (
         <>
-          পোস্ট প্রকাশ করুন
+          {isEditing ? "পরিবর্তন সংরক্ষণ করুন" : "পোস্ট প্রকাশ করুন"}
           <svg
             width="17"
             height="17"

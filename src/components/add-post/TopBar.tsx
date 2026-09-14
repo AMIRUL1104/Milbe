@@ -8,6 +8,7 @@ interface TopBarProps {
   activeStepIndex: number;
   onStepClick?: (index: number) => void;
   draftTimestamp?: string | null;
+  isEditing?: boolean;
 }
 
 const STEP_SECTIONS = [
@@ -40,6 +41,7 @@ function TopBarComponent({
   activeStepIndex,
   onStepClick,
   draftTimestamp,
+  isEditing = false,
 }: TopBarProps) {
   const router = useRouter();
   const [saveTimeText, setSaveTimeText] = useState<string | null>(null);
@@ -87,7 +89,7 @@ function TopBarComponent({
         </button>
 
         <div className="flex-1 font-semibold text-[15.5px] text-text-primary">
-          নতুন পোস্ট
+          {isEditing ? "পোস্ট সম্পাদনা করুন" : "নতুন পোস্ট"}
           <small className="block font-en font-medium text-[11.5px] text-text-muted tracking-wide">
             MILBE · SELL OR DONATE BOOKS
           </small>

@@ -18,7 +18,13 @@ const emptyBook = {
   availableStatus: "available" as const,
 };
 
-export default function BookListSection() {
+interface BookListSectionProps {
+  isEditing?: boolean;
+}
+
+export default function BookListSection({
+  isEditing = false,
+}: BookListSectionProps) {
   const { control, watch, setValue, getFieldState, formState } =
     useFormContext<AddPostFormValues>();
   const { fields, append, remove } = useFieldArray({
@@ -38,6 +44,9 @@ export default function BookListSection() {
   }, [titleFieldState.isDirty]);
 
   useEffect(() => {
+    // In edit mode the title already belongs to an existing post — the
+    // auto-generated title should never overwrite it.
+    if (isEditing) return;
     if (titleTouched.current) return;
 
     const firstBookName = books?.[0]?.bookName?.trim();
@@ -48,7 +57,7 @@ export default function BookListSection() {
       : `${category} Books`;
 
     setValue("title", generated, { shouldDirty: false });
-  }, [category, books, setValue]);
+  }, [category, books, setValue, isEditing]);
 
   return (
     <section id="step-books" className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">

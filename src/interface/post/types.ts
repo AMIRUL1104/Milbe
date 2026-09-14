@@ -52,6 +52,9 @@ export type NewPostPayload = Pick<
   | "books"
 >;
 
+/** Payload accepted by PATCH /api/posts/:id — same editable fields as create. */
+export type UpdatePostPayload = NewPostPayload;
+
 export interface AddNewPostResult {
   success: boolean;
   message?: string;
