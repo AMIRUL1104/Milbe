@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { z } from "zod";
 
 
 const uri = process.env.MONGODB_URI;
@@ -43,26 +44,66 @@ export const auth = betterAuth({
 
     // ── Milbe profile fields ────────────────────────────────────────────────
     // Formerly stored in the separate `userProfile` collection; consolidated
-    // onto the Better Auth `user` document. `input: false` keeps writes behind
-    // the validated Express `PATCH /api/users` route (Better Auth rejects any
-    // request trying to set these fields directly).
+    // onto the Better Auth `user` document.
+    // User-editable profile fields (`input: true` → the user may update them
+    // through Better Auth's `updateUser`). `role`, `isBlocked` and
+    // `profileCompleted` stay `input: false` so users can never set them.
     phoneNumber: {
       type: "string",
       defaultValue: "",
-      input: false,
+      input: true,
+      validator: {
+        input: z
+          .string()
+          .refine(
+            (value) => value === "" || /^[0-9+\-\s()]{7,20}$/.test(value),
+            "Enter a valid phone number",
+          ),
+      },
     },
 
     district: {
       type: "string",
       defaultValue: "",
-      input: false,
+      input: true,
+      validator: { input: z.string().max(50) },
     },
 
     area: {
       type: "string",
       defaultValue: "",
-      input: false,
+      input: true,
+      validator: { input: z.string().max(100) },
     },
   },
-}
+},
+
+  // Keeps `profileCompleted` in sync whenever the user document is updated
+  // with profile fields (e.g. through Better Auth's `/update-user`).
+  databaseHooks: {
+    user: {
+      update: {
+        before: async (data, ctx) => {
+          const current = ctx?.context?.session?.user;
+          if (!current) {
+            // Internal/userless flows: leave the flag untouched.
+            return { data: {} };
+          }
+
+          const merged = { ...current, ...data };
+          const completed = Boolean(
+            (merged.phoneNumber ?? "").trim() &&
+              (merged.district ?? "").trim() &&
+              (merged.area ?? "").trim(),
+          );
+
+          if (completed === Boolean(current.profileCompleted)) {
+            return { data: {} };
+          }
+
+          return { data: { profileCompleted: completed } };
+        },
+      },
+    },
+  },
 });
