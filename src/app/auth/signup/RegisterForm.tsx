@@ -10,7 +10,6 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
-import { createUserProfile } from "@/services/features/userProfile";
 
 const registerSchema = z.object({
   fullName: z.string().min(1, "পুরো নাম দিন"),
@@ -68,7 +67,8 @@ export default function RegisterForm() {
       }
 
       if (data?.user) {
-        await createUserProfile();
+        // No separate profile-creation call is needed anymore — profile fields
+        // now live on the Better Auth `user` document created by signUp.
         toast.success("রেজিস্ট্রেশন সফল! মিলবেতে স্বাগতম।");
         setIsLoading(false);
         router.push(redirectUrl);

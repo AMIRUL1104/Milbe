@@ -14,8 +14,16 @@ export async function getUserSession(): Promise<UserSession | null> {
     return null;
   }
 
+  const user = session.user as UserSession;
+
+  // Blocked users are denied at the server-session layer as well.
+  // (The Express API enforces the same flag in `auth.middleware.ts`.)
+  if (user.isBlocked) {
+    return null;
+  }
+
   // টাইপ কাস্টিং করে সঠিক স্ট্রাকচার রিটার্ন
-  return session.user as UserSession;
+  return user;
 }
 
 // ২. ইউজার টোকেন পাওয়ার ফাংশন

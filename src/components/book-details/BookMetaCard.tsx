@@ -1,14 +1,14 @@
 import { Card } from "@heroui/react";
 import RequestBookButton from "./RequestBookButton";
 import { PostItem } from "@/interface/post/types";
-import { getUserProfile } from "@/services/features/userProfile";
+import { getUserSession } from "@/services/core/session";
 
 interface BookMetaCardProps {
   post: PostItem;
 }
 
 export default async function BookMetaCard({ post }: BookMetaCardProps) {
-  const user = await getUserProfile();
+  const session = await getUserSession();
 
   const totalBundlePrice = post.books.reduce((acc, book) => acc + (book.price ?? 0), 0);
 
@@ -44,15 +44,15 @@ export default async function BookMetaCard({ post }: BookMetaCardProps) {
         <RequestBookButton
           postId={post._id}
           sellerId={post.sellerId}
-          requesterId={user?.userId}
+          requesterId={session?.id}
           postTitle={post.title}
           sellerName={post.sellerName}
           bookCoverUrl={post.image}
           sellerPhone={post.phone}
           sellerMessenger={post.messenger}
-          requesterName={user?.fullName}
-          requesterPhone={user?.phoneNumber}
-          requesterAvatarUrl={user?.avatarUrl}
+          requesterName={session?.name ?? undefined}
+          requesterPhone={session?.phoneNumber ?? undefined}
+          requesterAvatarUrl={session?.image}
         />
       </div>
 

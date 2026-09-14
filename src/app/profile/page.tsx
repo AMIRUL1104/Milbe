@@ -1,15 +1,20 @@
 import { ProfileClient } from "@/components/dashboard/user/profile/Profileclient";
-import { getUserProfile } from "@/services/features/userProfile";
+import { getUserSession } from "@/services/core/session";
+import { toUserProfile } from "@/services/features/userProfile";
 import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
 
-    const user = await getUserProfile();
+    const session = await getUserSession();
 
-    if (!user) {
+    if (!session) {
         redirect("/auth/signin")
 
     }
+
+    // Profile fields now live on the Better Auth `user` document; map the
+    // session user into the UserProfile shape the profile UI already expects.
+    const user = toUserProfile(session);
 
     // console.log(user);
     return (

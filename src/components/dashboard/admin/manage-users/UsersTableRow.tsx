@@ -38,7 +38,7 @@ export function UsersTableRow({ user }: UsersTableRowProps) {
       </td>
 
       <td className="px-3 py-3.5">
-        <UserStatusBadge isBlocked={false} />
+        <UserStatusBadge isBlocked={user.isBlocked ?? false} />
       </td>
 
       <td className="px-3 py-3.5">

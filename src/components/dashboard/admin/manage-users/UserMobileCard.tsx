@@ -29,7 +29,7 @@ export function UserMobileCard({ user }: UserMobileCardProps) {
 
         <div className="flex flex-wrap items-center gap-2">
           <UserRoleBadge role={user.role} />
-          <UserStatusBadge isBlocked={false} />
+          <UserStatusBadge isBlocked={user.isBlocked ?? false} />
         </div>
 
         <span className="flex items-center gap-1 text-xs text-text-muted">

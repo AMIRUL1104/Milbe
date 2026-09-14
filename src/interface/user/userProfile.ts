@@ -11,6 +11,7 @@ export interface UserProfile {
   avatarUrl: string | null;
   role: "user" | "admin";
   memberSince: string; // ISO date string
+  isBlocked?: boolean;
 }
 
 export interface UpdateProfilePayload {

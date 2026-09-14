@@ -2,7 +2,6 @@
 import { Metadata } from "next";
 import { getPosts } from "@/services/features/posts";
 import { getUserSession } from "@/services/core/session";
-import { getUserProfile } from "@/services/features/userProfile";
 import { PostItem } from "@/interface/post/types";
 import type { NearbyBooksState } from "@/components/home/NearbyBooks";
 import NearbyBooks from "@/components/home/NearbyBooks";
@@ -81,8 +80,7 @@ export default async function HomePage({
   const session = await getUserSession();
   let profileDistrict: string | undefined;
   if (session && !location) {
-    const profile = await getUserProfile();
-    profileDistrict = profile?.district?.trim() || undefined;
+    profileDistrict = session.district?.trim() || undefined;
   }
   const selectedDistrict = location || profileDistrict;
 

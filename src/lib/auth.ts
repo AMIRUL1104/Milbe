@@ -40,6 +40,29 @@ export const auth = betterAuth({
       defaultValue: false,
       input: false,
     },
+
+    // ── Milbe profile fields ────────────────────────────────────────────────
+    // Formerly stored in the separate `userProfile` collection; consolidated
+    // onto the Better Auth `user` document. `input: false` keeps writes behind
+    // the validated Express `PATCH /api/users` route (Better Auth rejects any
+    // request trying to set these fields directly).
+    phoneNumber: {
+      type: "string",
+      defaultValue: "",
+      input: false,
+    },
+
+    district: {
+      type: "string",
+      defaultValue: "",
+      input: false,
+    },
+
+    area: {
+      type: "string",
+      defaultValue: "",
+      input: false,
+    },
   },
 }
 });
