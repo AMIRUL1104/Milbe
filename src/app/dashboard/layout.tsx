@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { ReactNode } from "react";
 
 import SidebarClient from "@/components/dashboard/sidebar/SidebarClient";
