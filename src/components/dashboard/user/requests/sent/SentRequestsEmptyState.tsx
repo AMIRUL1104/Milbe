@@ -7,16 +7,18 @@ export function SentRequestsEmptyState() {
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light">
         <SendHorizontal className="h-7 w-7 text-primary" />
       </div>
-      <h3 className="text-lg font-bold text-text-primary">No requests sent yet</h3>
+      <h3 className="text-lg font-bold text-text-primary">
+        এখনো কোনো রিকোয়েস্ট পাঠানো হয়নি
+      </h3>
       <p className="max-w-sm text-sm text-text-muted">
-        Browse available books and send a request to the seller when you find
-        one you like. Your requests will show up here.
+        উপলভ্য বই খুঁজুন এবং পছন্দের বইটিতে রিকোয়েস্ট পাঠান। পাঠানো
+        রিকোয়েস্টগুলো এখানে দেখা যাবে।
       </p>
       <Link
         href="/"
         className="mt-2 rounded-btn bg-primary px-5 py-2.5 text-sm font-bold text-text-inverse shadow-md transition-colors hover:bg-primary-hover"
       >
-        Browse Books
+        বই খুঁজুন
       </Link>
     </div>
   );

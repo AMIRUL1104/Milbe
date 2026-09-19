@@ -14,7 +14,7 @@ export function NoPostsEmptyState() {
         অন্য শিক্ষার্থীদের কাছ থেকে রিকোয়েস্ট পেতে আপনার প্রথম পোস্ট তৈরি করুন।
       </p>
       <Link
-        href="/posts/add"
+        href="/books/add"
         className="mt-2 rounded-btn bg-primary px-5 py-2.5 text-sm font-bold text-text-inverse shadow-md transition-colors hover:bg-primary-hover"
       >
         পোস্ট তৈরি করুন
@@ -43,7 +43,7 @@ export function NoMatchingRequestsEmptyState() {
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-background">
         <FileQuestion className="h-7 w-7 text-text-muted" />
       </div>
-      <h3 className="text-lg font-bold text-text-primary">কোনো মিল রিকোয়েস্ট নেই</h3>
+      <h3 className="text-lg font-bold text-text-primary">কোনো মিল পাওয়া যায়নি</h3>
       <p className="max-w-sm text-sm text-text-muted">
         সার্চ বা ফিল্টার পরিবর্তন করে চেষ্টা করুন।
       </p>

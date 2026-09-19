@@ -1,14 +1,16 @@
-import { serverFetch, protectedFetch } from "@/services/core/serverFetch";
-import { CheckBookRequestResponse, BookRequest } from "@/interface/bookRequest/checkRequest";
+import { protectedFetch } from "@/services/core/serverFetch";
+import {
+  CheckBookRequestResponse,
+  BookRequest,
+} from "@/interface/bookRequest/checkRequest";
 import { ApiResponse } from "@/interface/apiResponse";
 
 export async function checkBookRequest(
   postId: string,
-  sellerId: string,
-  requesterId: string,
 ): Promise<CheckBookRequestResponse> {
-  return serverFetch<NonNullable<CheckBookRequestResponse["data"]>>(
-    `/api/book-requests/check?postId=${postId}&sellerId=${sellerId}&requesterId=${requesterId}`
+  console.log(encodeURIComponent(postId));
+  return protectedFetch<NonNullable<CheckBookRequestResponse["data"]>>(
+    `/api/book-requests/check?postId=${postId}`,
   );
 }
 

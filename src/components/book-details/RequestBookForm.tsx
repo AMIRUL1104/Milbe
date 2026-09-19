@@ -8,35 +8,24 @@ import { toast } from "react-toastify";
 import { RequestBookFormValues, requestBookSchema } from "@/lib/validations/request-book-schema";
 import { CreateBookRequestPayload } from "@/interface/bookRequest/createBookRequest";
 import { createBookRequest } from "@/services/features/bookRequests";
+import { getFriendlyApiError } from "@/lib/apiErrorMap";
 
 interface RequestBookFormProps {
-  bookCoverUrl: string;
-  sellerPhone: string;
-  sellerMessenger?: string;
   postId: string;
-  sellerId: string;
   requesterId?: string;
-  postTitle: string;
-  sellerName: string;
+  requesterName?: string;
   defaultRequesterName?: string;
   defaultRequesterPhone?: string;
-  requesterAvatarUrl?: string | null;
   onCancel: () => void;
   onSuccess: () => void;
 }
 
 export default function RequestBookForm({
-  bookCoverUrl,
-  sellerPhone,
-  sellerMessenger,
   postId,
-  sellerId,
   requesterId,
-  postTitle,
-  sellerName,
+  requesterName,
   defaultRequesterName,
   defaultRequesterPhone,
-  requesterAvatarUrl,
   onCancel,
   onSuccess,
 }: RequestBookFormProps) {
@@ -56,35 +45,24 @@ export default function RequestBookForm({
   });
 
   const onSubmit = async (values: RequestBookFormValues) => {
+    if (!requesterId) {
+      toast.error("You must be logged in to send a request.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      if (!requesterId) {
-        toast.error("Please sign in before sending a book request.");
-        return;
-      }
-
+      const message = values.message?.trim();
       const payload: CreateBookRequestPayload = {
         postId,
-        postTitle,
-        bookCoverUrl,
-        sellerId,
-        sellerName,
-        sellerContact: {
-          phone: sellerPhone,
-          messenger: sellerMessenger,
-        },
-        requesterId,
-        requesterName: values.requesterName,
-        requesterAvatarUrl: requesterAvatarUrl ?? undefined,
         requesterContact: {
           phone: values.phoneNumber,
         },
-        message: values.message?.trim() || undefined,
+        ...(message ? { message } : {}),
       };
 
       const response = await createBookRequest(payload);
-      console.log("Book request response:", response);
 
       if (!response?.success) {
         throw new Error(response?.message || "Failed to send request.");
@@ -93,8 +71,7 @@ export default function RequestBookForm({
       toast.success("Your request has been sent to the seller!");
       onSuccess();
     } catch (error) {
-      console.error("Book request submission failed:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(getFriendlyApiError(error));
     } finally {
       setIsSubmitting(false);
     }

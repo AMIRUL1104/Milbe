@@ -86,7 +86,7 @@ function postToForm(post: PostItem): AddPostFormValues {
     image: post.image,
     district: post.district,
     area: post.area,
-    phone: post.phone,
+    phone: post.phone ?? "",
     messenger: post.messenger ?? "",
     whatsappOnly: post.whatsappOnly ?? false,
     description: post.description ?? "",

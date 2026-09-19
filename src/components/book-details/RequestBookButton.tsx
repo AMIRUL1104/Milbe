@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HandHelping, Loader2 } from "lucide-react";
+import { HandHelping, Loader2, RefreshCw } from "lucide-react";
 import { checkBookRequest } from "@/services/features/bookRequests";
 import RequestBookModal from "./RequestBookModal";
 
@@ -9,74 +9,91 @@ type ButtonStatus =
   | "checking"
   | "can-request"
   | "already-requested"
-  | "own-post";
+  | "own-post"
+  | "error";
 
 interface RequestBookButtonProps {
   postId: string;
-  sellerId: string;
   requesterId?: string;
   postTitle: string;
   sellerName: string;
-  bookCoverUrl: string;
-  sellerPhone: string;
-  sellerMessenger?: string;
   requesterName?: string;
   requesterPhone?: string;
-  requesterAvatarUrl?: string | null;
 }
 
 export default function RequestBookButton({
   postId,
-  sellerId,
   requesterId,
   postTitle,
   sellerName,
-  bookCoverUrl,
-  sellerPhone,
-  sellerMessenger,
   requesterName,
   requesterPhone,
-  requesterAvatarUrl,
 }: RequestBookButtonProps) {
   const [status, setStatus] = useState<ButtonStatus>("checking");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [checkAttempt, setCheckAttempt] = useState(0);
 
   useEffect(() => {
+    if (!requesterId || !postId) {
+      return;
+    }
+
     let isMounted = true;
 
     const runCheck = async () => {
-      const result = await checkBookRequest(postId, sellerId, requesterId as string);
-      if (!isMounted) return;
+      try {
+        // console.log("Checking book request status...");
+        // console.log("postId:", postId);
+        const result = await checkBookRequest(postId);
+        // console.log("checkBookRequest result", result);
+        if (!isMounted) return;
 
-      if (!result.success || !result.data) {
-        setStatus("already-requested");
-        return;
+        if (!result.data) {
+          setStatus("error");
+          return;
+        }
+
+        if (result.data.reason === "own_post") {
+          setStatus("own-post");
+          return;
+        }
+
+        if (result.data.reason === "already_requested") {
+          setStatus("already-requested");
+          return;
+        }
+
+        setStatus(result.data.canRequest ? "can-request" : "already-requested");
+      } catch {
+        if (isMounted) {
+          setStatus("error");
+        }
       }
-
-      if (result.data.reason === "own_post") {
-        setStatus("own-post");
-        return;
-      }
-
-      if (result.data.reason === "already_requested") {
-        setStatus("already-requested");
-        return;
-      }
-
-      setStatus(result.data.canRequest ? "can-request" : "already-requested");
     };
 
-    runCheck();
+    void runCheck();
 
     return () => {
       isMounted = false;
     };
-  }, [postId, sellerId, requesterId]);
+  }, [postId, requesterId, checkAttempt]);
 
   const handleRequestSuccess = () => {
     setIsModalOpen(false);
     setStatus("already-requested");
   };
+
+  if (!requesterId) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="w-full inline-flex items-center justify-center gap-2 font-bold py-2.5 px-4 rounded-btn bg-background text-text-muted border border-border cursor-not-allowed"
+      >
+        <span>Login to Request</span>
+      </button>
+    );
+  }
 
   if (status === "checking") {
     return (
@@ -91,14 +108,16 @@ export default function RequestBookButton({
     );
   }
 
-  if (!requesterId) {
+  if (status === "error") {
     return (
       <button
         type="button"
-        disabled
-        className="w-full inline-flex items-center justify-center gap-2 font-bold py-2.5 px-4 rounded-btn bg-background text-text-muted border border-border cursor-not-allowed"
+        onClick={() => setCheckAttempt((current) => current + 1)}
+        className="w-full inline-flex items-center justify-center gap-2 font-bold py-2.5 px-4 rounded-btn bg-danger-light text-danger border border-danger-border cursor-pointer hover:bg-danger hover:text-text-inverse"
       >
-        <span>Login to Request</span>
+        <RefreshCw className="w-4 h-4" />
+        <span>Unable to check request status</span>
+        <span>Retry</span>
       </button>
     );
   }
@@ -142,16 +161,11 @@ export default function RequestBookButton({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         postId={postId}
-        sellerId={sellerId}
-        requesterId={requesterId ?? ""}
+        requesterId={requesterId}
         postTitle={postTitle}
         sellerName={sellerName}
-        bookCoverUrl={bookCoverUrl}
-        sellerPhone={sellerPhone}
-        sellerMessenger={sellerMessenger}
-        requesterName={requesterName}
-        requesterPhone={requesterPhone}
-        requesterAvatarUrl={requesterAvatarUrl}
+        defaultRequesterName={requesterName}
+        defaultRequesterPhone={requesterPhone}
         onSuccess={handleRequestSuccess}
       />
     </>

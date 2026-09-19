@@ -9,7 +9,7 @@ interface BookMetaCardProps {
 
 export default async function BookMetaCard({ post }: BookMetaCardProps) {
   const session = await getUserSession();
-
+  console.log("BookMetaCard session", session);
   const totalBundlePrice = post.books.reduce((acc, book) => acc + (book.price ?? 0), 0);
 
   return (
@@ -43,16 +43,11 @@ export default async function BookMetaCard({ post }: BookMetaCardProps) {
       <div className="card__footer w-full pt-4">
         <RequestBookButton
           postId={post._id}
-          sellerId={post.sellerId}
           requesterId={session?.id}
           postTitle={post.title}
           sellerName={post.sellerName}
-          bookCoverUrl={post.image}
-          sellerPhone={post.phone}
-          sellerMessenger={post.messenger}
           requesterName={session?.name ?? undefined}
           requesterPhone={session?.phoneNumber ?? undefined}
-          requesterAvatarUrl={session?.image}
         />
       </div>
 

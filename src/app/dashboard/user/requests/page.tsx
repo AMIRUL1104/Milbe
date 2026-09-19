@@ -1,4 +1,5 @@
 import { ReceivedRequestsClient } from "@/components/dashboard/user/requests/received/ReceivedRequestsClient";
+import { RequestsErrorState } from "@/components/dashboard/user/requests/RequestsErrorState";
 import { RequestsTabs } from "@/components/dashboard/user/requests/RequestsTabs";
 import { SentRequestsList } from "@/components/dashboard/user/requests/sent/SentRequestsList";
 import type { BookRequest } from "@/interface/bookRequest/checkRequest";
@@ -34,12 +35,13 @@ function toSentRequest(request: BookRequest): SentRequest {
     requestDate: toIsoDate(request.requestDate),
     status: request.status,
     message: request.message,
-    sellerContact: request.sellerContact
-      ? {
-        phone: request.sellerContact.phone ?? "",
-        messenger: request.sellerContact.messenger,
-      }
-      : undefined,
+    sellerContact:
+      request.status === "accepted" && request.sellerContact
+        ? {
+            phone: request.sellerContact.phone ?? "",
+            messenger: request.sellerContact.messenger,
+          }
+        : undefined,
   };
 }
 
@@ -78,16 +80,15 @@ function buildPostSummaries(
 }
 
 export default async function RequestsPage() {
-  let hasError = false;
-
-  const user = await getUserSession();
-  const userId = user?.id ?? "";
-
   let sentRequests: SentRequest[] = [];
   let receivedRequests: ReceivedRequest[] = [];
   let posts: PostSummary[] = [];
+  let hasError = false;
 
   try {
+    const user = await getUserSession();
+    const userId = user?.id ?? "";
+
     const [sentResponse, receivedResponse] = await Promise.all([
       userId
         ? getSentBookRequests(userId)
@@ -102,18 +103,14 @@ export default async function RequestsPage() {
     receivedRequests = receivedRequestsData.map(toReceivedRequest);
 
     const myPostsResponse = await getMyPosts();
-    const postsData = (myPostsResponse.data ?? []) as PostItem[];
+    const postsData = (myPostsResponse?.data ?? []) as PostItem[];
     posts = buildPostSummaries(postsData, receivedRequestsData);
   } catch {
     hasError = true;
   }
 
   if (hasError) {
-    return (
-      <div className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
-        <p className="text-red-500 font-bold">রিকোয়েস্ট পাওয়া যায়নি!</p>
-      </div>
-    );
+    return <RequestsErrorState />;
   }
 
   return (

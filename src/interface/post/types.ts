@@ -25,9 +25,9 @@ export interface PostItem {
   image: string;
   district: string;
   area: string;
-  phone: string;
-  messenger: string;
-  whatsappOnly: boolean;
+  phone?: string;
+  messenger?: string;
+  whatsappOnly?: boolean;
   description: string;
   status: PostStatus;
   acceptedRequestId: string | null;
