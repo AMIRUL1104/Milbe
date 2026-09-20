@@ -87,7 +87,7 @@ export default function BooksGrid({
         title={isFiltered ? "Filtered Results" : "সকল বই"}
         subtitle={countSubtitle}
       />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-10">
 
         {books.map((book) => (
           <BookCard key={book._id} book={book} />

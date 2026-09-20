@@ -1,11 +1,9 @@
-"use client";
-
 import { PostItem } from "@/interface/post/types";
 import { toBengaliNumber } from "@/lib/utils/toBengaliNumber";
-import { useState } from "react";
-import SectionHeading from "../shared/SectionHeading";
 import BookCard from "../shared/BookCard";
-import LocationWarning from "./LocationWarning";
+import LocationDropdown from "./LocationDropdown";
+import LoadMoreBooks from "./LoadMoreBooks";
+import { MapPin, BookOpen } from "lucide-react";
 
 export type NearbyBooksState =
   | "loaded"
@@ -19,119 +17,73 @@ interface NearbyBooksProps {
   books: PostItem[];
   district?: string;
   totalPages?: number;
-  /** Total matching posts for the district (from GET /api/posts meta.total). */
   total?: number;
 }
 
 export default function NearbyBooks({
   state,
-  books: initialBooks,
+  books,
   district,
   totalPages = 1,
   total = 0,
 }: NearbyBooksProps) {
-  const [books, setBooks] = useState(initialBooks);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [loadError, setLoadError] = useState(false);
-
-  const loadMore = async () => {
-    if (!district || isLoadingMore || currentPage >= totalPages) return;
-
-    setIsLoadingMore(true);
-    setLoadError(false);
-    try {
-      const params = new URLSearchParams({
-        district,
-        page: String(currentPage + 1),
-        limit: "10",
-      });
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/posts?${params.toString()}`,
-      );
-      if (!response.ok) throw new Error("Location books request failed");
-
-      const result = (await response.json()) as {
-        data?: PostItem[];
-        meta?: { currentPage?: number; totalPages?: number };
-      };
-      const nextBooks = result.data || [];
-      setBooks((previousBooks) => {
-        const existingIds = new Set(previousBooks.map((book) => book._id));
-        return [...previousBooks, ...nextBooks.filter((book) => !existingIds.has(book._id))];
-      });
-      setCurrentPage(result.meta?.currentPage || currentPage + 1);
-    } catch {
-      setLoadError(true);
-    } finally {
-      setIsLoadingMore(false);
-    }
-  };
-
+  // State: Needs Login
   if (state === "needs-login") {
     return (
-      <section className="bg-background py-4 lg:py-5">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <LocationWarning
-            title="⚠️ আপনার লোকেশন নির্বাচন করুন"
-            actionLabel="লোকেশন নির্বাচন করুন"
-          />
-        </div>
-      </section>
-    );
-  }
+      <section className="bg-background py-8 lg:py-12 overflow-visible">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
+          <div className="rounded-2xl border border-border bg-surface p-6 sm:p-10 text-center shadow-sm flex flex-col items-center max-w-lg mx-auto relative overflow-visible">
+            {/* Top Accent Gradient Border */}
+            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary via-accent to-secondary rounded-t-2xl" />
 
-  if (state === "needs-profile") {
-    return (
-      <section className="bg-background py-4 lg:py-5">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <LocationWarning
-            title="⚠️ আপনার প্রোফাইলে লোকেশন যোগ করুন"
-            actionLabel="লোকেশন যোগ করুন"
-            actionHref="/profile"
-          />
-        </div>
-      </section>
-    );
-  }
+            {/* Colorful Location Icon Badge */}
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/15 via-accent/20 to-secondary/15 flex items-center justify-center text-primary mb-4 shadow-xs">
+              <MapPin className="w-7 h-7 text-primary stroke-[2.2]" />
+            </div>
 
-  if (state === "empty") {
-    return (
-      <section className="bg-background py-4 lg:py-5">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-btn border border-border bg-surface px-4 py-3">
-            <p className="text-sm text-text-muted">
-              📍 {district} এলাকায় এখনো কোনো বই পাওয়া যায়নি।
-            </p>
-            <button
-              type="button"
-              onClick={() => window.dispatchEvent(new CustomEvent("open-location-selector"))}
-              className="text-sm font-semibold text-primary hover:underline"
-            >
-              এলাকা পরিবর্তন করুন
-            </button>
+            <h3 className="sm:text-xl mb-4 font-bold text-text-primary tracking-tight">
+              আপনার আশেপাশের বইগুলো খুঁজে পেতে জেলা নির্বাচন করুন।
+            </h3>
+
+            <LocationDropdown
+              currentLocation={district}
+              variant="inline"
+              buttonText="এলাকা নির্বাচন করুন"
+            />
           </div>
         </div>
       </section>
     );
   }
 
-  if (state === "error") {
+  // State: Needs Profile Location
+  if (state === "needs-profile") {
     return (
-      <section className="bg-background py-4 lg:py-5">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-btn border border-danger/30 bg-surface px-4 py-3">
-            <div>
-              <p className="text-sm font-semibold text-text-primary">Location Books</p>
-              <p className="text-sm text-text-muted">Unable to load books right now.</p>
+      <section className="bg-background py-8 lg:py-12 overflow-visible">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
+          <div className="rounded-2xl border border-border bg-surface p-6 sm:p-10 text-center shadow-sm flex flex-col items-center max-w-lg mx-auto relative overflow-visible">
+            {/* Top Accent Gradient Border */}
+            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent via-primary to-secondary rounded-t-2xl" />
+
+            {/* Colorful Location Icon Badge */}
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent/25 via-primary/15 to-secondary/20 flex items-center justify-center text-primary mb-4 shadow-xs">
+              <MapPin className="w-7 h-7 text-primary stroke-[2.2]" />
             </div>
-            <button
-              type="button"
-              onClick={() => window.location.reload()}
-              className="rounded-btn border border-border px-3 py-2 text-sm font-semibold text-primary hover:bg-background"
-            >
-              Retry
-            </button>
+
+            <h3 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
+              আপনার এলাকা সেট করা নেই
+            </h3>
+
+            {/* Single Meaningful & Direct Message */}
+            <p className="mt-2 text-xs sm:text-sm text-text-secondary mb-6">
+              তাৎক্ষণিকভাবে কাছাকাছি বই খুঁজতে জেলা বা এলাকা নির্বাচন করুন।
+            </p>
+
+            <LocationDropdown
+              currentLocation={district}
+              variant="inline"
+              buttonText="এলাকা সিলেক্ট করুন"
+            />
           </div>
         </div>
       </section>
@@ -139,40 +91,78 @@ export default function NearbyBooks({
   }
 
   return (
-    <section className="py-8 lg:py-12 bg-background">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <SectionHeading
-          title="আপনার কাছাকাছি বই"
-          subtitle={
-            district ? `${district} এলাকায় পাওয়া বই` : undefined
-          }
-        />
-        {district && (
-          <p className="-mt-8 mb-8 text-center text-base text-text-muted">
-            মোট {toBengaliNumber(total)}টি বই
-          </p>
-        )}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {books.map((book) => (
-            <BookCard key={book._id} book={book} />
-          ))}
-        </div>
-        {loadError && (
-          <p className="mt-4 text-center text-sm text-danger">
-            Unable to load books right now.
-          </p>
-        )}
-        {currentPage < totalPages && (
-          <div className="mt-6 flex justify-center">
-            <button
-              type="button"
-              onClick={loadMore}
-              disabled={isLoadingMore}
-              className="rounded-btn bg-primary px-4 py-2.5 text-sm font-semibold text-text-inverse hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isLoadingMore ? "লোড হচ্ছে..." : "আরো ১০টি বই দেখুন"}
-            </button>
+    <section className="py-8 sm:py-10 lg:py-14 bg-background overflow-visible">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
+        {/* Dynamic Section Header */}
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4 sm:pb-5 relative z-30 overflow-visible">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-text-primary">
+                আপনার কাছাকাছি বই
+              </h2>
+              {total > 0 && (
+                <span className="inline-flex items-center rounded-full bg-primary-light border border-primary/20 px-3 py-0.5 text-[11px] sm:text-xs font-bold text-primary">
+                  {toBengaliNumber(total)}টি বই
+                </span>
+              )}
+            </div>
+
+            {/* Direct Status Message */}
+            <p className="text-xs sm:text-sm text-text-secondary font-medium">
+              {district ? (
+                <>
+                  <span className="font-semibold text-primary">{district}</span> এলাকায় সহজলভ্য বইগুলো দেখানো হচ্ছে
+                </>
+              ) : (
+                "কাছাকাছি সহজলভ্য বইগুলো দেখতে আপনার এলাকা সিলেক্ট করুন"
+              )}
+            </p>
           </div>
+
+          {/* Inline Location Search Component */}
+          <LocationDropdown currentLocation={district} />
+        </div>
+
+        {/* Empty State */}
+        {books.length === 0 && (
+          <div className="rounded-2xl border border-border bg-surface p-8 sm:p-12 text-center flex flex-col items-center justify-center max-w-md mx-auto my-6 shadow-xs relative overflow-visible">
+            <div className="w-14 h-14 rounded-2xl bg-primary-light border border-primary/20 flex items-center justify-center text-primary mb-4">
+              <BookOpen className="w-7 h-7 text-primary stroke-[2]" />
+            </div>
+
+            <h3 className="text-base sm:text-lg font-bold text-text-primary">
+              {district ? `${district} এলাকায় কোনো বই পাওয়া যায়নি` : "কোনো বই পাওয়া যায়নি"}
+            </h3>
+
+            {/* Single Meaningful Empty State Message */}
+            <p className="mt-2 text-xs sm:text-sm text-text-secondary mb-6">
+              অন্য কোনো জেলা সিলেক্ট করে কাছাকাছি বইগুলো খুঁজে নিন।
+            </p>
+
+            <LocationDropdown
+              currentLocation={district}
+              variant="inline"
+              buttonText="অন্য এলাকা নির্বাচন করুন"
+            />
+          </div>
+        )}
+
+        {/* Books Grid */}
+        {books.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+            {books.map((book) => (
+              <BookCard key={book._id} book={book} />
+            ))}
+          </div>
+        )}
+
+        {/* Load More Pagination */}
+        {totalPages > 1 && (
+          <LoadMoreBooks
+            district={district}
+            initialPage={1}
+            totalPages={totalPages}
+          />
         )}
       </div>
     </section>

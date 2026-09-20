@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
@@ -88,39 +89,63 @@ export function BottomNav() {
 
   const authNavItems = getAuthNavItems(isLoggedIn);
   const allNavItems = [...baseNavItems, ...authNavItems];
+  const fabItem = allNavItems.find((item) => item.isFab);
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50" aria-label="Bottom navigation">
       <div className="relative mx-auto max-w-screen-xl bg-primary border-t border-white-10 shadow-lg rounded-t-[24px]">
-        <div className="flex items-center justify-around h-16 px-4 relative">
-          {allNavItems.map((item) => {
+
+        {/* FAB Button - Centered absolutely */}
+        {fabItem && (
+          <Link
+            href={fabItem.href}
+            className="absolute -top-6 left-1/2 -translate-x-1/2 z-10 flex items-center justify-center w-14 h-14 rounded-full bg-accent text-primary shadow-lg hover:bg-accent-hover hover:shadow-xl focus-visible:outline-2 focus-visible:outline-primary-focus transition-all duration-200"
+            aria-label={fabItem.label}
+          >
+            {fabItem.icon}
+          </Link>
+        )}
+
+        {/* 5-Column Grid Layout */}
+        <div className="grid grid-cols-5 items-center h-16 px-2 relative">
+          {allNavItems.map((item, index) => {
             const active = isActive(item.href);
 
-            if (item.isFab) {
+            // 3rd Column (Index 2): FAB-এর জায়গায় খালি Slot রাখা
+            if (index === 2) {
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="absolute -top-8 left-1/2 -translate-x-1/2 z-10 flex items-center justify-center w-16 h-16 rounded-full bg-accent text-primary shadow-lg hover:bg-accent-hover hover:shadow-xl focus-visible:outline-2 focus-visible:outline-primary-focus transition-all duration-200"
-                  aria-label={item.label}
-                >
-                  {item.icon}
-                </Link>
+                <React.Fragment key="fab-placeholder">
+                  <div className="w-full h-full pointer-events-none" aria-hidden="true" />
+
+                  {/* আসল Item Render করা (যদি Item-টি FAB না হয়ে থাকে) */}
+                  {!item.isFab && (
+                    <Link
+                      href={item.href}
+                      className={`flex flex-col items-center justify-center gap-1 w-full h-full text-xs font-medium transition-colors ${active ? "text-accent" : "text-text-inverse/70 hover:text-text-inverse"
+                        }`}
+                      aria-current={active ? "page" : undefined}
+                    >
+                      <span className={active ? "text-accent" : "text-text-inverse/70"}>{item.icon}</span>
+                      <span className="truncate max-w-[64px] text-center">{item.label}</span>
+                    </Link>
+                  )}
+                </React.Fragment>
               );
             }
+
+            // FAB Item হলে Grid Column-এ Render না করে Skip করা (কারণ এটি Absolute)
+            if (item.isFab) return null;
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center gap-1 px-3 py-2 text-xs font-medium transition-colors ${active
-                  ? "text-accent"
-                  : "text-text-inverse/70 hover:text-text-inverse"
+                className={`flex flex-col items-center justify-center gap-1 w-full h-full text-xs font-medium transition-colors ${active ? "text-accent" : "text-text-inverse/70 hover:text-text-inverse"
                   }`}
                 aria-current={active ? "page" : undefined}
               >
                 <span className={active ? "text-accent" : "text-text-inverse/70"}>{item.icon}</span>
-                <span>{item.label}</span>
+                <span className="truncate max-w-[64px] text-center">{item.label}</span>
               </Link>
             );
           })}
