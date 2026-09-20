@@ -11,7 +11,7 @@ interface MenuDrawerProps {
 
 const menuItems = [
   { href: "/about", label: "About Milbe", icon: Info },
-  { href: "/about", label: "How It Works", icon: HelpCircle },
+  { href: "/how-it-works", label: "How It Works", icon: HelpCircle },
   { href: "/faq", label: "Help Center", icon: HelpCircle },
   { href: "/terms", label: "Terms & Conditions", icon: FileText },
   { href: "/privacy", label: "Privacy Policy", icon: Lock },

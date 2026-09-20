@@ -8,6 +8,10 @@ import NearbyBooks from "@/components/home/NearbyBooks";
 import BooksGrid from "@/components/home/BooksGrid";
 import HeaderFilters from "@/components/home/HeaderFilters";
 import BooksPagination from "@/components/shared/BooksPagination";
+import HowItWorks from "@/components/home/HowItWorks";
+import WhyChooseUs from "@/components/home/WhyChooseUs";
+import CTA from "@/components/home/CTA";
+import Hero from "@/components/home/Hero";
 
 export const metadata: Metadata = {
   title: "milbe.shop | Bangladesh's Student Book Hub",
@@ -157,6 +161,8 @@ export default async function HomePage({
           condition={condition}
           search={search}
         />
+        {/* 1. New SEO & Content Hero Section */}
+        <Hero />
         {!hasActiveFilters && (
           <NearbyBooks
             key={nearbyDistrict || nearbyState}
@@ -184,6 +190,15 @@ export default async function HomePage({
             <BooksPagination totalPages={totalPages} />
           </div>
         </div>
+
+        {/* 4. How Milbe Works Section */}
+        <HowItWorks />
+
+        {/* 5. Why Choose Milbe Section */}
+        <WhyChooseUs />
+
+        {/* 6. CTA Section */}
+        <CTA />
       </main>
     </div>
   );
