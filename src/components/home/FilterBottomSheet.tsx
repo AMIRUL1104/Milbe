@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X, GripHorizontal } from "lucide-react";
+import { FILTER_KEYS } from "@/lib/constants/filters";
 
 interface FilterBottomSheetProps {
   isOpen: boolean;
@@ -65,10 +66,20 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
-  const activeCount = [category, condition].filter(Boolean).length;
+  // Count ALL active filters (search/type included) so the "Apply" badge
+  // reflects the real number of active filters, not just the sheet's own fields.
+  const activeCount = FILTER_KEYS.filter(
+    (key) => (searchParams.get(key) || "").trim().length > 0
+  ).length;
 
   const handleReset = () => {
-    updateParams({ category: undefined, condition: undefined });
+    // Clear ALL home filters (search/category/condition/type) — same contract
+    // as ActiveFilterChips' "Clear All". `location` is navbar-managed and stays.
+    const resetUpdates: Record<string, string | undefined> = {};
+    FILTER_KEYS.forEach((key) => {
+      resetUpdates[key] = undefined;
+    });
+    updateParams(resetUpdates);
   };
 
   const handleApply = () => {
@@ -87,7 +98,7 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
 
       <div
         ref={sheetRef}
-        className="absolute inset-x-0 bottom-0 bg-surface border-t border-border rounded-t-3xl shadow-2xl flex flex-col h-[85vh] animate-in slide-in-from-bottom duration-300 ease-out"
+        className="absolute inset-x-0 bottom-0 bg-surface border-t border-border rounded-t-3xl shadow-2xl flex flex-col h-[85dvh] max-h-[85dvh] animate-in slide-in-from-bottom duration-300 ease-out"
         aria-modal="true"
         aria-label="Filters"
       >
@@ -105,7 +116,7 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-text-primary mb-2">
               📚 Category
@@ -164,7 +175,7 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
           </div>
         </div>
 
-        <div className="shrink-0 border-t border-border px-5 py-4 flex items-center gap-3">
+        <div className="shrink-0 border-t border-border px-5 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex items-center gap-3">
           <button
             type="button"
             onClick={handleReset}

@@ -88,32 +88,31 @@ export default async function HomePage({
   let nearbyBooks: PostItem[] = [];
   let nearbyDistrict: string | undefined;
   let nearbyTotalPages = 1;
-
-  if (!hasActiveFilters && selectedDistrict) {
-    try {
-      const nearbyResponse = await getPosts({
-        district: selectedDistrict,
-        page: 1,
-        limit: 10,
-      });
-      nearbyBooks = nearbyResponse.data || [];
-      nearbyTotalPages = nearbyResponse.meta?.totalPages || 1;
-      nearbyDistrict = selectedDistrict;
-      nearbyState = nearbyBooks.length > 0 ? "loaded" : "empty";
-    } catch {
-      nearbyDistrict = selectedDistrict;
-      nearbyState = "error";
-    }
-  } else if (!hasActiveFilters && session && !selectedDistrict) {
-    nearbyState = "needs-profile";
-  }
+  let nearbyTotal = 0;
 
   // Global books remain unscoped by location and power both default and unified views.
   let books: PostItem[] = [];
   let totalPages = 1;
+  let allBooksTotal = 0;
   let allBooksError = false;
-  try {
-    const paginatedResponse = await getPosts({
+
+  // Both requests are independent — run them in parallel to halve SSR wait time.
+  // Each result keeps its own isolated error state so one failing section
+  // never breaks the other (spec §18: homepage must never fully break).
+  const [nearbyResult, allBooksResult] = await Promise.allSettled([
+    // 1) Nearby books (only meaningful when a district is known and no filters active)
+    (async () => {
+      if (!hasActiveFilters && selectedDistrict) {
+        return getPosts({
+          district: selectedDistrict,
+          page: 1,
+          limit: 10,
+        });
+      }
+      return null;
+    })(),
+    // 2) All books / unified filtered results
+    getPosts({
       search,
       category,
       district: hasActiveFilters ? selectedDistrict : undefined,
@@ -122,10 +121,30 @@ export default async function HomePage({
       sort: "newest",
       page: currentPage,
       limit: 20,
-    });
+    }),
+  ]);
+
+  if (nearbyResult.status === "fulfilled" && nearbyResult.value) {
+    const nearbyResponse = nearbyResult.value;
+    nearbyBooks = nearbyResponse.data || [];
+    nearbyTotalPages = nearbyResponse.meta?.totalPages || 1;
+    nearbyTotal = nearbyResponse.meta?.total ?? nearbyBooks.length;
+    nearbyDistrict = selectedDistrict;
+    nearbyState = nearbyBooks.length > 0 ? "loaded" : "empty";
+  } else if (nearbyResult.status === "rejected") {
+    nearbyDistrict = selectedDistrict;
+    nearbyState = "error";
+  } else if (!hasActiveFilters && session && !selectedDistrict) {
+    // Nearby request intentionally skipped: logged-in user without a district.
+    nearbyState = "needs-profile";
+  }
+
+  if (allBooksResult.status === "fulfilled") {
+    const paginatedResponse = allBooksResult.value;
     books = paginatedResponse.data || [];
     totalPages = paginatedResponse.meta?.totalPages || 1;
-  } catch {
+    allBooksTotal = paginatedResponse.meta?.total ?? books.length;
+  } else {
     allBooksError = true;
   }
 
@@ -145,6 +164,7 @@ export default async function HomePage({
             books={nearbyBooks}
             district={nearbyDistrict}
             totalPages={nearbyTotalPages}
+            total={nearbyTotal}
           />
         )}
 
@@ -158,6 +178,7 @@ export default async function HomePage({
             category={category}
             condition={condition}
             type={type || ""}
+            total={allBooksTotal}
           />
           <div className="flex justify-center mt-6">
             <BooksPagination totalPages={totalPages} />

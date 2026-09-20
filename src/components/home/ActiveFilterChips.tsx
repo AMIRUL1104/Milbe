@@ -2,6 +2,8 @@
 
 import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
+import { FILTER_KEYS } from "@/lib/constants/filters";
 
 interface ActiveFilterChipsProps {
     search?: string;
@@ -26,6 +28,7 @@ export default function ActiveFilterChips({
 }: ActiveFilterChipsProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const [isPending, startTransition] = useTransition();
     const filters = [
         search?.trim() ? { key: "search", label: search.trim() } : null,
         category?.trim() ? { key: "category", label: category.trim() } : null,
@@ -41,14 +44,15 @@ export default function ActiveFilterChips({
         const params = new URLSearchParams(searchParams.toString());
         params.delete(key);
         params.set("page", "1");
-        router.push(`?${params.toString()}`, { scroll: false });
+        startTransition(() => router.push(`?${params.toString()}`, { scroll: false }));
     };
 
     const clearFilters = () => {
         const params = new URLSearchParams(searchParams.toString());
-        ["search", "category", "condition", "type"].forEach((key) => params.delete(key));
+        // Single source of truth — keeps this in sync with FilterBottomSheet's reset.
+        FILTER_KEYS.forEach((key) => params.delete(key));
         params.set("page", "1");
-        router.push(`?${params.toString()}`, { scroll: false });
+        startTransition(() => router.push(`?${params.toString()}`, { scroll: false }));
     };
 
     return (

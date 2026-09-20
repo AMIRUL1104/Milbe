@@ -1,6 +1,7 @@
 "use client";
 
 import { PostItem } from "@/interface/post/types";
+import { toBengaliNumber } from "@/lib/utils/toBengaliNumber";
 import { useState } from "react";
 import SectionHeading from "../shared/SectionHeading";
 import BookCard from "../shared/BookCard";
@@ -18,6 +19,8 @@ interface NearbyBooksProps {
   books: PostItem[];
   district?: string;
   totalPages?: number;
+  /** Total matching posts for the district (from GET /api/posts meta.total). */
+  total?: number;
 }
 
 export default function NearbyBooks({
@@ -25,6 +28,7 @@ export default function NearbyBooks({
   books: initialBooks,
   district,
   totalPages = 1,
+  total = 0,
 }: NearbyBooksProps) {
   const [books, setBooks] = useState(initialBooks);
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,7 +74,7 @@ export default function NearbyBooks({
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <LocationWarning
             title="⚠️ আপনার লোকেশন নির্বাচন করুন"
-            actionLabel="এলাকা নির্বাচন করুন"
+            actionLabel="লোকেশন নির্বাচন করুন"
           />
         </div>
       </section>
@@ -82,8 +86,8 @@ export default function NearbyBooks({
       <section className="bg-background py-4 lg:py-5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <LocationWarning
-            title="⚠️ আপনার প্রোফাইলে এলাকা যোগ করুন"
-            actionLabel="এলাকা যোগ করুন"
+            title="⚠️ আপনার প্রোফাইলে লোকেশন যোগ করুন"
+            actionLabel="লোকেশন যোগ করুন"
             actionHref="/profile"
           />
         </div>
@@ -143,6 +147,11 @@ export default function NearbyBooks({
             district ? `${district} এলাকায় পাওয়া বই` : undefined
           }
         />
+        {district && (
+          <p className="-mt-8 mb-8 text-center text-base text-text-muted">
+            মোট {toBengaliNumber(total)}টি বই
+          </p>
+        )}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {books.map((book) => (
             <BookCard key={book._id} book={book} />

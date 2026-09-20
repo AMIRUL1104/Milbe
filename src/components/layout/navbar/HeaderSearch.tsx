@@ -15,7 +15,9 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
-  const [selectedLocation, setSelectedLocation] = useState(searchParams.get("location") || "");
+  // Derived from the URL on every render — stays correct across back/forward
+  // navigation and any external URL change (fixes stale label desync).
+  const selectedLocation = searchParams.get("location") || "";
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -64,13 +66,13 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   };
 
   const handleLocationSelect = (district: string) => {
-    setSelectedLocation(district);
+    // URL (updated below) is the single source of truth for the label.
     setIsLocationOpen(false);
     updateSearchParams({ location: district });
   };
 
   const handleClearLocation = () => {
-    setSelectedLocation("");
+    // URL (updated below) is the single source of truth for the label.
     updateSearchParams({ location: undefined });
   };
 

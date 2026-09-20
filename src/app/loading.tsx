@@ -65,6 +65,7 @@ function NearbyBooksSectionSkeleton() {
                 <div className="space-y-1">
                     <div className="h-6 w-40 bg-gray-100 rounded" />
                     <div className="h-3 w-56 bg-gray-100 rounded" />
+                    <div className="h-3 w-24 bg-gray-100 rounded" />
                 </div>
 
                 {/* Books grid - responsive 2/3/4 columns */}
@@ -120,6 +121,7 @@ function BooksGridSkeleton() {
                 <div className="space-y-1">
                     <div className="h-6 w-32 bg-gray-100 rounded" />
                     <div className="h-3 w-48 bg-gray-100 rounded" />
+                    <div className="h-3 w-24 bg-gray-100 rounded" />
                 </div>
 
                 {/* Books grid - responsive 2/3/4 columns */}
