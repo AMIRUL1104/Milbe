@@ -24,7 +24,7 @@ function InfoField({ icon, label, value, locked }: InfoFieldProps) {
                     {label}
                     {locked && (
                         <span className="ml-1.5 text-[10px] font-semibold text-text-muted normal-case tracking-normal">
-                            (locked)
+                            (অপরিবর্তনীয়)
                         </span>
                     )}
                 </p>
@@ -35,7 +35,7 @@ function InfoField({ icon, label, value, locked }: InfoFieldProps) {
 }
 
 function formatMemberSince(iso: string): string {
-    return new Date(iso).toLocaleDateString("en-US", {
+    return new Date(iso).toLocaleDateString("bn-BD", {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -43,47 +43,47 @@ function formatMemberSince(iso: string): string {
 }
 
 const ROLE_DISPLAY: Record<UserProfile["role"], string> = {
-    user: "Member",
-    admin: "Administrator",
+    user: "সাধারণ ব্যবহারকারী",
+    admin: "অ্যাডমিন",
 };
 
 export function ProfileInfo({ user }: ProfileInfoProps) {
     return (
         <div className="rounded-card border border-border-light shadow-sm bg-surface p-6">
             <h2 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-5">
-                Account Details
+                অ্যাকাউন্টের তথ্য
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <InfoField
                     icon={<Mail size={15} />}
-                    label="Email Address"
+                    label="ইমেইল"
                     value={user.email}
                     locked
                 />
                 <InfoField
                     icon={<Phone size={15} />}
-                    label="Phone Number"
+                    label="ফোন নম্বর"
                     value={user.phoneNumber}
                 />
                 <InfoField
                     icon={<MapPin size={15} />}
-                    label="District"
+                    label="জেলা"
                     value={user.district}
                 />
                 <InfoField
                     icon={<Home size={15} />}
-                    label="Area"
+                    label="এলাকা"
                     value={user.area}
                 />
                 <InfoField
                     icon={<Calendar size={15} />}
-                    label="Member Since"
+                    label="সদস্য হয়েছেন"
                     value={formatMemberSince(user.memberSince)}
                 />
                 <InfoField
                     icon={<Shield size={15} />}
-                    label="Account Role"
+                    label="অ্যাকাউন্টের ধরন"
                     value={ROLE_DISPLAY[user.role]}
                 />
             </div>

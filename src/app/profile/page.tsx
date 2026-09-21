@@ -22,10 +22,9 @@ export default async function ProfilePage() {
             <div className="max-w-2xl mx-auto">
                 {/* Page title */}
                 <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">আমার প্রোফাইল</h1>
                     <p className="mt-1 text-sm text-gray-500">
-                        View and manage your personal information.
-                    </p>
+                        আপনার ব্যক্তিগত তথ্য দেখুন ও পরিবর্তন করুন।                    </p>
                 </div>
 
                 {/* Interactive profile — Client Component */}

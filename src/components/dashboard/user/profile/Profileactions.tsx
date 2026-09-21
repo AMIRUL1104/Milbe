@@ -16,7 +16,7 @@ export function ProfileActions({ onCancel, isSubmitting }: ProfileActionsProps) 
                 className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-text-secondary bg-surface border border-border rounded-btn hover:bg-background transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 <X size={15} />
-                Cancel
+                বাতিল
             </button>
 
             <button
@@ -27,12 +27,12 @@ export function ProfileActions({ onCancel, isSubmitting }: ProfileActionsProps) 
                 {isSubmitting ? (
                     <>
                         <Loader2 size={15} className="animate-spin" />
-                        Saving…
+                        সংরক্ষণ করা হচ্ছে…
                     </>
                 ) : (
                     <>
                         <Save size={15} />
-                        Save Changes
+                        সংরক্ষণ করুন
                     </>
                 )}
             </button>

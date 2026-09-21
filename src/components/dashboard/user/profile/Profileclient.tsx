@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { Pencil, LogOut } from "lucide-react";
 import { UpdateProfilePayload, UserProfile } from "@/interface/user/userProfile";
 import { ProfileFormValues, profileSchema } from "@/lib/validations/profile-schema";
 import { ProfileAvatar } from "./Profileavatar";
@@ -12,6 +14,8 @@ import { ProfileForm } from "./Profileform";
 import { ProfileActions } from "./Profileactions";
 import { ProfileInfo } from "./Profileinfo";
 import { updateUserProfile } from "@/services/features/userProfile";
+import { signOut } from "@/lib/auth-client";
+import { Button } from "@/components/ui/Button";
 
 
 interface ProfileClientProps {
@@ -23,6 +27,7 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const router = useRouter();
 
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
@@ -97,9 +102,19 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
             isEditing={isEditing}
             previewUrl={previewUrl}
             onImageChange={handleImageChange}
-            onEditClick={enterEditMode}
         />
     );
+
+    async function handleSignOut() {
+        await signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    router.push("/auth/signin");
+                    router.refresh();
+                },
+            },
+        });
+    }
 
     if (isEditing) {
         return (
@@ -121,6 +136,14 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
     return (
         <div className="flex flex-col gap-5">
             <ProfileHeader user={user} avatarSlot={avatarNode} />
+            <div className="flex justify-center gap-3 py-2">
+                <Button variant="outline" size="sm" onClick={enterEditMode}>
+                    <Pencil size={14} /> Edit Profile
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleSignOut}>
+                    <LogOut size={14} /> LogOut
+                </Button>
+            </div>
             <ProfileInfo user={user} />
         </div>
     );

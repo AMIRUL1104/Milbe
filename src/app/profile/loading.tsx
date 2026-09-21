@@ -60,19 +60,29 @@ function ProfileInfoSkeleton() {
     );
 }
 
+function ProfileActionButtonsSkeleton() {
+    return (
+        <div className="flex justify-center gap-3 py-2 animate-pulse" aria-hidden="true">
+            <div className="h-9 w-28 rounded-btn bg-gray-100" />
+            <div className="h-9 w-20 rounded-btn bg-gray-100" />
+        </div>
+    );
+}
+
 export default function Loading() {
     return (
         <main
             className="min-h-screen bg-[#F5F7F8] px-4 py-8 sm:px-6 lg:px-8"
             aria-busy="true"
-            aria-label="Loading profile"
+            aria-label="লোড হচ্ছে"
             role="status"
         >
             <div className="mx-auto max-w-2xl">
                 <PageHeadingSkeleton />
                 <ProfileHeaderSkeleton />
+                <ProfileActionButtonsSkeleton />
                 <ProfileInfoSkeleton />
-                <span className="sr-only">Loading profile information...</span>
+                <span className="sr-only">প্রোফাইল তথ্য লোড হচ্ছে…</span>
             </div>
         </main>
     );

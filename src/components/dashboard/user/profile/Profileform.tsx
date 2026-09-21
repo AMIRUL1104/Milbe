@@ -29,7 +29,7 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
     return (
         <div className="rounded-card border border-border-light shadow-sm bg-surface p-6">
             <h2 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-5">
-                বিস্তারিত সম্পাদনা
+                বিস্তারিত তথ্য
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -51,9 +51,9 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
 
                 <div className="sm:col-span-2">
                     <label className={labelClass} htmlFor="email">
-                        Email
+                        ইমেইল
                         <span className="ml-1.5 text-[10px] font-semibold text-text-muted normal-case tracking-normal">
-                            (লক করা)
+                            (অপরিবর্তনীয়)
                         </span>
                     </label>
                     <div className="relative">

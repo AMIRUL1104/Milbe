@@ -7,8 +7,8 @@ interface ProfileHeaderProps {
 }
 
 const ROLE_LABELS: Record<UserProfile["role"], string> = {
-    user: "Member",
-    admin: "Administrator",
+    user: "সাধারণ ব্যবহারকারী",
+    admin: "অ্যাডমিন",
 };
 
 const ROLE_STYLES: Record<UserProfile["role"], string> = {
@@ -17,7 +17,7 @@ const ROLE_STYLES: Record<UserProfile["role"], string> = {
 };
 
 function formatMemberSince(iso: string): string {
-    return new Date(iso).toLocaleDateString("en-US", {
+    return new Date(iso).toLocaleDateString("bn-BD", {
         month: "long",
         year: "numeric",
     });
@@ -35,24 +35,24 @@ export function ProfileHeader({ user, avatarSlot }: ProfileHeaderProps) {
             />
 
             <div className="px-6 pb-6">
-                <div className="flex items-end gap-4 -mt-14">
+                <div className="flex flex-wrap items-end gap-4 -mt-10 sm:-mt-14">
                     {avatarSlot}
 
-                    <div className="mb-1 min-w-0">
+                    <div className="mb-1 min-w-0 flex-1">
                         <h1 className="text-xl font-bold text-text-primary leading-tight truncate">
-                            {user.fullName}
+                            {user.fullName || "ব্যবহারকারী"}
                         </h1>
                         <p className="text-sm text-text-muted truncate">{user.email}</p>
                     </div>
 
-                    <div className="ml-auto mb-1 shrink-0 flex flex-col items-end gap-1">
+                    <div className="mb-1 shrink-0 w-full sm:w-auto sm:ml-auto flex flex-col items-end gap-1">
                         <span
                             className={`text-xs font-semibold px-3 py-1 rounded-full ${ROLE_STYLES[user.role]}`}
                         >
                             {ROLE_LABELS[user.role]}
                         </span>
                         <span className="text-xs text-text-muted">
-                            Member since {formatMemberSince(user.memberSince)}
+                            সদস্য হয়েছেন {formatMemberSince(user.memberSince)}
                         </span>
                     </div>
                 </div>

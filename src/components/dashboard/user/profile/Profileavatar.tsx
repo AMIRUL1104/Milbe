@@ -11,12 +11,13 @@ interface ProfileAvatarProps {
     isEditing: boolean;
     previewUrl: string | null;
     onImageChange: (file: File, previewUrl: string) => void;
-    onEditClick: () => void;
 }
 
 function getInitials(name: string): string {
-    return name
-        .split(" ")
+    const trimmed = (name || "").trim();
+    if (!trimmed) return "U";
+    return trimmed
+        .split(/\s+/)
         .map((n) => n[0])
         .slice(0, 2)
         .join("")
@@ -29,7 +30,6 @@ export function ProfileAvatar({
     isEditing,
     previewUrl,
     onImageChange,
-    onEditClick,
 }: ProfileAvatarProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,13 +55,13 @@ export function ProfileAvatar({
 
     return (
         <div className="relative inline-block">
-            <div className="w-28 h-28 rounded-full ring-4 ring-surface shadow-lg overflow-hidden bg-secondary flex items-center justify-center relative">
+            <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full ring-4 ring-surface shadow-lg overflow-hidden bg-secondary flex items-center justify-center relative">
                 {displayUrl ? (
                     <Image
                         loader={imgbbLoader}
                         fill
                         src={displayUrl as string}
-                        alt={fullName}
+                        alt={fullName || "ব্যবহারকারী"}
                         className="w-full h-full object-cover"
                         sizes="112px"
                     />
@@ -90,28 +90,7 @@ export function ProfileAvatar({
                         onChange={handleFileChange}
                     />
                 </>
-            ) : (
-                <button
-                    type="button"
-                    onClick={onEditClick}
-                    className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-primary hover:bg-primary-hover text-text-inverse shadow-md flex items-center justify-center transition-base"
-                    aria-label="Edit profile"
-                >
-                    <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                </button>
-            )}
+            ) : null}
         </div>
     );
 }
