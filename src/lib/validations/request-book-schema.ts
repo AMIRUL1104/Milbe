@@ -1,8 +1,7 @@
 import { z } from "zod";
 
 export const requestBookSchema = z.object({
-  requesterName: z.string().min(1, "Name is required"),
-  phoneNumber: z.string().min(1, "Phone number is required"),
+  phoneNumber: z.string().trim().min(1, "ফোন নম্বর প্রয়োজন"),
   message: z.string().optional(),
 });
 

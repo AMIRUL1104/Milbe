@@ -1,8 +1,6 @@
-// src/app/books/[id]/page.tsx
 import { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-
 import BookInformation from "@/components/book-details/BookInformation";
 import SellerCard from "@/components/book-details/SellerCard";
 import BookMetaCard from "@/components/book-details/BookMetaCard";
@@ -10,66 +8,102 @@ import BookHero from "@/components/book-details/BookHero";
 import type { PostItem } from "@/interface/post/types";
 import { getPostById } from "@/services/features/posts";
 
+interface BookDetailsPageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
-// let bookName ;
-export const metadata: Metadata = {
-  title: "Post Details | Milbe",
-  description: "View books bundle shared by students.",
-};
+export async function generateMetadata({
+  params,
+}: BookDetailsPageProps): Promise<Metadata> {
+  const { id } = await params;
+  try {
+    const response = await getPostById(id);
+    const post = response?.data;
+    if (!post) {
+      return {
+        title: "বই পাওয়া যায়নি | Milbe",
+      };
+    }
+    return {
+      title: `${post.title} | Milbe`,
+      description: post.description || `${post.title} - বইটির বিস্তারিত দেখুন Milbe-তে।`,
+    };
+  } catch {
+    return {
+      title: "বইয়ের বিবরণ | Milbe",
+    };
+  }
+}
 
-// ১. প্রথমে params এর টাইপ ডিফাইন করো (এটি একটি Promise হবে)
-type Params = Promise<{ id: string }>;
+export default async function BookDetailsPage({ params }: BookDetailsPageProps) {
+  const { id } = await params;
 
-// ২. কম্পোনেন্ট সিগনেচার আপডেট করো
-export default async function BookDetailsPage({ params }: { params: Params }) {
+  let post: PostItem | null = null;
+  let isError = false;
 
-  // ৩. অবশ্যই params-কে await করে নিতে হবে
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
+  try {
+    const response = await getPostById(id);
+    post = response?.data || null;
+  } catch {
+    isError = true;
+  }
 
-  const response = await getPostById(id);
-  // console.log("BookDetailsPage params:", resolvedParams);
-  // console.log("BookDetailsPage response:", response);
-
-  // ২. রেসপন্স null কিনা এবং তাতে data আছে কিনা তা চেক করো (Type Guard)
-  if (!response || !response.success || !response.data) {
+  if (isError || !post) {
     return (
-      <main className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
-        <p className="text-red-500 font-bold">Book not found or data error!</p>
-      </main>
+      <div className="min-h-[70vh] w-full flex items-center justify-center p-4 bg-[#F8FAFC]">
+        <div className="max-w-md w-full text-center bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+            📖
+          </div>
+          <h2 className="text-xl font-bold text-slate-800 mb-2">
+            বইয়ের তথ্য পাওয়া যায়নি!
+          </h2>
+          <p className="text-sm text-slate-500 mb-6">
+            পোস্টটি হয়তো মুছে ফেলা হয়েছে অথবা ইউআরএল (URL) টি সঠিক নয়।
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#35858E] hover:bg-[#2c6e76] text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            হোম পেজে ফিরে যান
+          </Link>
+        </div>
+      </div>
     );
   }
 
-  // ৩. ডাটা টাইপ সেফ উপায়ে অ্যাসাইন করো
-  const postData = response.data as PostItem;
-  // console.log("BookDetailsPage postData:", postData);
   return (
-    <main className="min-h-screen w-full bg-[#F5F7F8] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto flex flex-col gap-6">
-
-        <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-[#35858E] transition-colors w-fit">
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Home</span>
-        </Link>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* বাম কলাম: মেইন পোস্ট ইমেজ */}
-          <div className="lg:col-span-5 w-full">
-            <BookHero imageUrl={postData.image} name="Books Bundle" />
-          </div>
-
-          {/* ডান কলাম: পোস্ট ডিটেইলস ও বইয়ের তালিকা */}
-          <div className="lg:col-span-7 flex flex-col gap-6 w-full">
-            <BookInformation post={postData} />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <SellerCard post={postData} />
-              <BookMetaCard post={postData} />
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#F8FAFC] py-6 sm:py-10 text-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        {/* Back Button Section */}
+        <div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#35858E] bg-white hover:bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 transition-all duration-200 shadow-xs group"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1" />
+            <span>হোমে ফিরে যান</span>
+          </Link>
         </div>
 
+        {/* Main Content Layout Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          {/* Left Column: Hero & Book Information */}
+          <div className="lg:col-span-8 space-y-6">
+            <BookHero post={post} />
+            <BookInformation post={post} />
+          </div>
+
+          {/* Right Column: Meta Card & Seller Card */}
+          <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-6">
+            <BookMetaCard post={post} />
+            <SellerCard post={post} />
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }

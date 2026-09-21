@@ -5,7 +5,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Send } from "lucide-react";
 import { toast } from "react-toastify";
-import { RequestBookFormValues, requestBookSchema } from "@/lib/validations/request-book-schema";
+import {
+  RequestBookFormValues,
+  requestBookSchema,
+} from "@/lib/validations/request-book-schema";
 import { CreateBookRequestPayload } from "@/interface/bookRequest/createBookRequest";
 import { createBookRequest } from "@/services/features/bookRequests";
 import { getFriendlyApiError } from "@/lib/apiErrorMap";
@@ -13,8 +16,6 @@ import { getFriendlyApiError } from "@/lib/apiErrorMap";
 interface RequestBookFormProps {
   postId: string;
   requesterId?: string;
-  requesterName?: string;
-  defaultRequesterName?: string;
   defaultRequesterPhone?: string;
   onCancel: () => void;
   onSuccess: () => void;
@@ -23,8 +24,6 @@ interface RequestBookFormProps {
 export default function RequestBookForm({
   postId,
   requesterId,
-  requesterName,
-  defaultRequesterName,
   defaultRequesterPhone,
   onCancel,
   onSuccess,
@@ -38,7 +37,6 @@ export default function RequestBookForm({
   } = useForm<RequestBookFormValues>({
     resolver: zodResolver(requestBookSchema),
     defaultValues: {
-      requesterName: defaultRequesterName ?? "",
       phoneNumber: defaultRequesterPhone ?? "",
       message: "",
     },
@@ -46,7 +44,7 @@ export default function RequestBookForm({
 
   const onSubmit = async (values: RequestBookFormValues) => {
     if (!requesterId) {
-      toast.error("You must be logged in to send a request.");
+      toast.error("লগইন করে রিকোয়েস্ট পাঠাতে হবে।");
       return;
     }
 
@@ -57,7 +55,7 @@ export default function RequestBookForm({
       const payload: CreateBookRequestPayload = {
         postId,
         requesterContact: {
-          phone: values.phoneNumber,
+          phone: values.phoneNumber.trim(),
         },
         ...(message ? { message } : {}),
       };
@@ -65,10 +63,10 @@ export default function RequestBookForm({
       const response = await createBookRequest(payload);
 
       if (!response?.success) {
-        throw new Error(response?.message || "Failed to send request.");
+        throw new Error(response?.message || "রিকোয়েস্ট পাঠানো যায়নি।");
       }
 
-      toast.success("Your request has been sent to the seller!");
+      toast.success("রিকোয়েস্ট পাঠানো হয়েছে। সেলার শীঘ্রই আপনার অনুরোধ দেখবেন।");
       onSuccess();
     } catch (error) {
       toast.error(getFriendlyApiError(error));
@@ -78,82 +76,68 @@ export default function RequestBookForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="px-6 py-4 space-y-4">
-      <div>
-        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-          Requester Name
-        </label>
-        <input
-          type="text"
-          {...register("requesterName")}
-          className={`w-full text-text-primary mt-1 border rounded-input pl-4 pr-4 py-2.5 text-sm outline-none transition-base ${errors.requesterName
-            ? "border-danger focus-visible:outline-danger"
-            : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
-            }`}
-          placeholder="Your full name"
-        />
-        {errors.requesterName && (
-          <p className="text-xs font-medium text-danger mt-0.5">
-            {errors.requesterName.message}
-          </p>
-        )}
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
+      {/* Scrollable Input Fields Area */}
+      <div className="space-y-4 px-5 sm:px-6 py-4 flex-1 overflow-y-auto">
+        {/* Phone Number Field */}
+        <div>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+            ফোন নম্বর <span className="text-rose-500">*</span>
+          </label>
+          <input
+            type="tel"
+            {...register("phoneNumber")}
+            className={`w-full rounded-xl border px-3.5 py-2.5 text-sm text-slate-800 outline-none transition-all placeholder:text-slate-400 ${errors.phoneNumber
+                ? "border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-100 bg-rose-50/30"
+                : "border-slate-200 focus:border-[#35858E] focus:ring-2 focus:ring-[#35858E]/10 bg-white"
+              }`}
+            placeholder="যেমন: 017XXXXXXXX"
+          />
+          {errors.phoneNumber && (
+            <p className="mt-1 text-xs font-medium text-rose-500">
+              {errors.phoneNumber.message}
+            </p>
+          )}
+        </div>
+
+        {/* Optional Message Field */}
+        <div>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+            মেসেজ{" "}
+            <span className="font-normal text-slate-400 normal-case">
+              (ঐচ্ছিক)
+            </span>
+          </label>
+          <textarea
+            {...register("message")}
+            rows={3}
+            className="w-full resize-none rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition-all focus:border-[#35858E] focus:ring-2 focus:ring-[#35858E]/10 bg-white placeholder:text-slate-400"
+            placeholder="সেলারের কাছে একটি ছোট বার্তা লিখুন..."
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-          Phone Number
-        </label>
-        <input
-          type="tel"
-          {...register("phoneNumber")}
-          className={`w-full text-text-primary mt-1 border rounded-input pl-4 pr-4 py-2.5 text-sm outline-none transition-base ${errors.phoneNumber
-            ? "border-danger focus-visible:outline-danger"
-            : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
-            }`}
-          placeholder="e.g. 017XXXXXXXX"
-        />
-        {errors.phoneNumber && (
-          <p className="text-xs font-medium text-danger mt-0.5">
-            {errors.phoneNumber.message}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-          Message{" "}
-          <span className="normal-case font-medium text-text-muted">
-            (optional)
-          </span>
-        </label>
-        <textarea
-          {...register("message")}
-          rows={3}
-          className="w-full text-text-primary mt-1 border border-border focus:border-border-focus rounded-input pl-4 pr-4 py-2.5 text-sm outline-none transition-base resize-none"
-          placeholder="Add a note to the seller (optional)"
-        />
-      </div>
-
-      <div className="flex items-center justify-end gap-3 pt-2">
+      {/* Sticky Bottom Actions Container */}
+      <div className="sticky bottom-0 left-0 right-0 z-20 flex items-center justify-end gap-3 px-5 sm:px-6 py-3.5 bg-slate-50 border-t border-slate-100 rounded-b-2xl sm:rounded-b-3xl">
         <button
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="py-2.5 px-4 rounded-btn font-bold text-sm text-text-secondary border border-border hover:bg-background transition-colors cursor-pointer disabled:opacity-50"
+          className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-600 transition-colors hover:bg-white hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
-          Cancel
+          বাতিল
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center gap-2 py-2.5 px-4 rounded-btn font-bold text-sm text-text-inverse bg-primary hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#35858E] px-5 py-2.5 text-xs sm:text-sm font-bold text-white transition-all hover:bg-[#2c6e76] shadow-xs active:scale-98 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
         >
           {isSubmitting ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            <Send className="w-4 h-4" />
+            <Send className="h-4 w-4" />
           )}
-          <span>Send Request</span>
+          <span>রিকোয়েস্ট পাঠান</span>
         </button>
       </div>
     </form>

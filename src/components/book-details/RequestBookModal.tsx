@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X } from "lucide-react";
+import { X, BookOpen, User, Sparkles } from "lucide-react";
 import RequestBookForm from "./RequestBookForm";
 
 interface RequestBookModalProps {
@@ -30,16 +30,22 @@ export default function RequestBookModal({
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-
-    document.addEventListener("keydown", handleEscape);
+    // Body scroll lock
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
+    // ESC Key listener
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
     return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
 
@@ -47,54 +53,95 @@ export default function RequestBookModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 my-3.5 flex items-center justify-center p-4"
-      role="dialog"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-slate-900/60 backdrop-blur-sm transition-all animate-in fade-in duration-200"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
       aria-modal="true"
+      role="dialog"
+      aria-labelledby="modal-title"
     >
-      <div
-        className="absolute inset-0 bg-overlay-dark backdrop-blur-sm"
-        onClick={onClose}
-      />
+      {/* Responsive Modal Container */}
+      <div className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-2xl overflow-hidden flex flex-col max-h-[80vh] sm:max-h-[80vh] animate-in zoom-in-95 duration-200">
 
-      <div className="relative my-4 w-full max-w-md bg-surface rounded-card shadow-lg border border-border-light max-h-[80vh] overflow-y-auto">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border-light">
-          <h2 className="text-base font-bold text-text-primary">
-            Request This Book
-          </h2>
+        {/* Modal Header */}
+        <div className="flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 border-b border-slate-100 bg-white sticky top-0 z-10">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#35858E]/10 text-[#35858E] flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#35858E]">
+                রিকোয়েস্ট পাঠানোর কনফার্মেশন ফর্ম
+              </p>
+              <h2
+                id="modal-title"
+                className="text-base sm:text-lg font-bold text-slate-900 leading-snug"
+              >
+                বইটির জন্য রিকোয়েস্ট পাঠান
+              </h2>
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-lg text-text-muted hover:text-text-secondary hover:bg-background transition-colors cursor-pointer"
-            aria-label="Close"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
+            aria-label="মডাল বন্ধ করুন"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="px-6 pt-4 pb-3 space-y-3 border-b border-border-light">
-          <div>
-            <p className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-              Post Title
-            </p>
-            <p className="text-sm text-text-primary mt-0.5">{postTitle}</p>
+        {/* Modal Scrollable Content Container */}
+        <div className="overflow-y-auto flex-1 divide-y divide-slate-100">
+
+          {/* Post Summary Section */}
+          <div className="px-5 py-4 sm:px-6 sm:py-5 bg-slate-50/70 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Book Info */}
+              <div className="flex items-start gap-2.5 bg-white p-3 rounded-xl border border-slate-200/70 shadow-2xs">
+                <BookOpen className="w-4 h-4 text-[#35858E] shrink-0 mt-0.5" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    বইয়ের শিরোনাম
+                  </p>
+                  <p className="text-xs sm:text-sm font-semibold text-slate-800 line-clamp-1 mt-0.5">
+                    {postTitle}
+                  </p>
+                </div>
+              </div>
+
+              {/* Seller Info */}
+              <div className="flex items-start gap-2.5 bg-white p-3 rounded-xl border border-slate-200/70 shadow-2xs">
+                <User className="w-4 h-4 text-[#35858E] shrink-0 mt-0.5" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    বিক্রেতার নাম
+                  </p>
+                  <p className="text-xs sm:text-sm font-semibold text-slate-800 line-clamp-1 mt-0.5">
+                    {sellerName}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-              Seller Name
-            </p>
-            <p className="text-sm text-text-primary mt-0.5">{sellerName}</p>
+
+          {/* Form Body */}
+          <div className="p-5 sm:p-6 bg-white">
+            <RequestBookForm
+              postId={postId}
+              requesterId={requesterId}
+              defaultRequesterPhone={defaultRequesterPhone}
+              onCancel={onClose}
+              onSuccess={onSuccess}
+            />
           </div>
+
         </div>
 
-        <RequestBookForm
-          postId={postId}
-          requesterId={requesterId}
-          requesterName={defaultRequesterName}
-          defaultRequesterName={defaultRequesterName}
-          defaultRequesterPhone={defaultRequesterPhone}
-          onCancel={onClose}
-          onSuccess={onSuccess}
-        />
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { HandHelping, Loader2, RefreshCw } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { HandHelping, Loader2, LogIn, RefreshCcw } from "lucide-react";
+import Link from "next/link";
 import { checkBookRequest } from "@/services/features/bookRequests";
 import RequestBookModal from "./RequestBookModal";
 
@@ -10,6 +11,7 @@ type ButtonStatus =
   | "can-request"
   | "already-requested"
   | "own-post"
+  | "not-logged-in"
   | "error";
 
 interface RequestBookButtonProps {
@@ -17,7 +19,6 @@ interface RequestBookButtonProps {
   requesterId?: string;
   postTitle: string;
   sellerName: string;
-  requesterName?: string;
   requesterPhone?: string;
 }
 
@@ -26,72 +27,79 @@ export default function RequestBookButton({
   requesterId,
   postTitle,
   sellerName,
-  requesterName,
   requesterPhone,
 }: RequestBookButtonProps) {
   const [status, setStatus] = useState<ButtonStatus>("checking");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [checkAttempt, setCheckAttempt] = useState(0);
 
-  useEffect(() => {
-    if (!requesterId || !postId) {
+  const refreshStatus = useCallback(async () => {
+    // 1. User login na thakle direct 'not-logged-in' set hobe
+    if (!requesterId) {
+      setStatus("not-logged-in");
       return;
     }
 
+    // 2. Post ID na thakle error
+    if (!postId) {
+      setStatus("error");
+      return;
+    }
+
+    setStatus("checking");
+
+    try {
+      const result = await checkBookRequest(postId);
+
+      if (!result?.data) {
+        setStatus("error");
+        return;
+      }
+
+      if (result.data.reason === "own_post") {
+        setStatus("own-post");
+        return;
+      }
+
+      if (result.data.reason === "already_requested") {
+        setStatus("already-requested");
+        return;
+      }
+
+      setStatus(result.data.canRequest ? "can-request" : "already-requested");
+    } catch {
+      setStatus("error");
+    }
+  }, [postId, requesterId]);
+
+  const handleRequestSuccess = () => {
+    setStatus("already-requested");
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    // Cascading render error rodhe queueMicrotask ba async scheduler bebohar kora hoyeche
     let isMounted = true;
 
-    const runCheck = async () => {
-      try {
-        // console.log("Checking book request status...");
-        // console.log("postId:", postId);
-        const result = await checkBookRequest(postId);
-        // console.log("checkBookRequest result", result);
-        if (!isMounted) return;
-
-        if (!result.data) {
-          setStatus("error");
-          return;
-        }
-
-        if (result.data.reason === "own_post") {
-          setStatus("own-post");
-          return;
-        }
-
-        if (result.data.reason === "already_requested") {
-          setStatus("already-requested");
-          return;
-        }
-
-        setStatus(result.data.canRequest ? "can-request" : "already-requested");
-      } catch {
-        if (isMounted) {
-          setStatus("error");
-        }
+    queueMicrotask(() => {
+      if (isMounted) {
+        void refreshStatus();
       }
-    };
-
-    void runCheck();
+    });
 
     return () => {
       isMounted = false;
     };
-  }, [postId, requesterId, checkAttempt]);
+  }, [refreshStatus]);
 
-  const handleRequestSuccess = () => {
-    setIsModalOpen(false);
-    setStatus("already-requested");
-  };
-
-  if (!requesterId) {
+  if (status === "not-logged-in") {
     return (
-      <button
-        type="button"
-        disabled
-        className="w-full inline-flex items-center justify-center gap-2 font-bold py-2.5 px-4 rounded-btn bg-background text-text-muted border border-border cursor-not-allowed"
+      <Link
+        href={`/auth/signin?callbackUrl=/books/${postId}`}
+        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#35858E] px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#2c6e76]"
       >
-        <span>Login to Request</span>
-      </button>
+        <LogIn className="h-4 w-4" />
+        <span>রিকোয়েস্ট করতে লগইন করুন</span>
+      </Link>
     );
   }
 
@@ -100,37 +108,19 @@ export default function RequestBookButton({
       <button
         type="button"
         disabled
-        className="w-full inline-flex items-center justify-center gap-2 font-bold py-2.5 px-4 rounded-btn bg-background text-text-muted border border-border cursor-not-allowed"
+        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 py-3 text-sm font-bold text-slate-400"
       >
-        <Loader2 className="w-4 h-4 animate-spin" />
-        <span>Checking...</span>
-      </button>
-    );
-  }
-
-  if (status === "error") {
-    return (
-      <button
-        type="button"
-        onClick={() => setCheckAttempt((current) => current + 1)}
-        className="w-full inline-flex items-center justify-center gap-2 font-bold py-2.5 px-4 rounded-btn bg-danger-light text-danger border border-danger-border cursor-pointer hover:bg-danger hover:text-text-inverse"
-      >
-        <RefreshCw className="w-4 h-4" />
-        <span>Unable to check request status</span>
-        <span>Retry</span>
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span>যাচাই করা হচ্ছে...</span>
       </button>
     );
   }
 
   if (status === "own-post") {
     return (
-      <button
-        type="button"
-        disabled
-        className="w-full inline-flex items-center justify-center gap-2 font-bold py-2.5 px-4 rounded-btn bg-background text-text-muted border border-border cursor-not-allowed"
-      >
-        <span>Your Post</span>
-      </button>
+      <div className="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-center text-xs font-semibold text-slate-600">
+        এটি আপনার নিজের তৈরি করা পোস্ট
+      </div>
     );
   }
 
@@ -139,9 +129,22 @@ export default function RequestBookButton({
       <button
         type="button"
         disabled
-        className="w-full inline-flex items-center justify-center gap-2 font-bold py-2.5 px-4 rounded-btn bg-background text-text-muted border border-border cursor-not-allowed"
+        className="w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-bold text-slate-500"
       >
-        <span>Requested ✓</span>
+        <span>রিকোয়েস্ট পাঠানো হয়েছে ✓</span>
+      </button>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <button
+        type="button"
+        onClick={() => void refreshStatus()}
+        className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-600 transition-colors hover:bg-red-100"
+      >
+        <RefreshCcw className="h-4 w-4" />
+        <span>আবার চেষ্টা করুন</span>
       </button>
     );
   }
@@ -151,10 +154,10 @@ export default function RequestBookButton({
       <button
         type="button"
         onClick={() => setIsModalOpen(true)}
-        className="w-full inline-flex items-center justify-center gap-2 font-bold py-2.5 px-4 rounded-btn transition-base shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-primary-focus bg-primary hover:bg-primary-hover text-text-inverse"
+        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#35858E] px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#2c6e76]"
       >
-        <HandHelping className="w-4 h-4" />
-        <span>Request This Book</span>
+        <HandHelping className="h-4 w-4" />
+        <span>রিকোয়েস্ট পাঠান</span>
       </button>
 
       <RequestBookModal
@@ -164,7 +167,6 @@ export default function RequestBookButton({
         requesterId={requesterId}
         postTitle={postTitle}
         sellerName={sellerName}
-        defaultRequesterName={requesterName}
         defaultRequesterPhone={requesterPhone}
         onSuccess={handleRequestSuccess}
       />
