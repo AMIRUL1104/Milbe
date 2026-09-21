@@ -74,7 +74,6 @@ export default function NearbyBooks({
               আপনার এলাকা সেট করা নেই
             </h3>
 
-            {/* Single Meaningful & Direct Message */}
             <p className="mt-2 text-xs sm:text-sm text-text-secondary mb-6">
               তাৎক্ষণিকভাবে কাছাকাছি বই খুঁজতে জেলা বা এলাকা নির্বাচন করুন।
             </p>
@@ -93,10 +92,10 @@ export default function NearbyBooks({
   return (
     <section className="py-8 sm:py-10 lg:py-14 bg-background overflow-visible">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
-        {/* Dynamic Section Header */}
-        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4 sm:pb-5 relative z-30 overflow-visible">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2.5 flex-wrap">
+        {/* Responsive Section Header: Centered on mobile, flex-row on desktop */}
+        <div className="mb-6 sm:mb-8 flex flex-col items-center sm:flex-row sm:items-center justify-between text-center sm:text-left gap-4 border-b border-border pb-4 sm:pb-5 relative z-30 overflow-visible">
+          <div className="space-y-1.5 flex flex-col items-center sm:items-start">
+            <div className="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-text-primary">
                 আপনার কাছাকাছি বই
               </h2>
@@ -111,7 +110,8 @@ export default function NearbyBooks({
             <p className="text-xs sm:text-sm text-text-secondary font-medium">
               {district ? (
                 <>
-                  <span className="font-semibold text-primary">{district}</span> এলাকায় সহজলভ্য বইগুলো দেখানো হচ্ছে
+                  <span className="font-semibold text-primary">{district}</span>{" "}
+                  এলাকায় সহজলভ্য বইগুলো দেখানো হচ্ছে
                 </>
               ) : (
                 "কাছাকাছি সহজলভ্য বইগুলো দেখতে আপনার এলাকা সিলেক্ট করুন"
@@ -119,8 +119,10 @@ export default function NearbyBooks({
             </p>
           </div>
 
-          {/* Inline Location Search Component */}
-          <LocationDropdown currentLocation={district} />
+          {/* Inline Location Search Component (Centered on mobile) */}
+          <div className="w-full sm:w-auto flex justify-center sm:justify-end">
+            <LocationDropdown currentLocation={district} />
+          </div>
         </div>
 
         {/* Empty State */}
@@ -131,10 +133,11 @@ export default function NearbyBooks({
             </div>
 
             <h3 className="text-base sm:text-lg font-bold text-text-primary">
-              {district ? `${district} এলাকায় কোনো বই পাওয়া যায়নি` : "কোনো বই পাওয়া যায়নি"}
+              {district
+                ? `${district} এলাকায় কোনো বই পাওয়া যায়নি`
+                : "কোনো বই পাওয়া যায়নি"}
             </h3>
 
-            {/* Single Meaningful Empty State Message */}
             <p className="mt-2 text-xs sm:text-sm text-text-secondary mb-6">
               অন্য কোনো জেলা সিলেক্ট করে কাছাকাছি বইগুলো খুঁজে নিন।
             </p>

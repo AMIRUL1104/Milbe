@@ -1,4 +1,3 @@
-// src/app/page.tsx
 import { Metadata } from "next";
 import { getPosts } from "@/services/features/posts";
 import { getUserSession } from "@/services/core/session";
@@ -72,12 +71,14 @@ export default async function HomePage({
 }) {
   const { search, location, category, type, condition, page } = await searchParams;
   const currentPage = Number(page) || 1;
-  const hasActiveFilters = Boolean(
+
+  // ১. লোকেশন ছাড়া কনটেন্ট ভিত্তিক অন্যান্য সক্রিয় ফিল্টার আছে কিনা চেক করা
+  const hasActiveContentFilters = Boolean(
     search?.trim() ||
     category?.trim() ||
     condition?.trim() ||
     type === "sell" ||
-    type === "donate",
+    type === "donate"
   );
 
   // --- Nearby Books: user-centric logic ---
@@ -101,12 +102,10 @@ export default async function HomePage({
   let allBooksError = false;
 
   // Both requests are independent — run them in parallel to halve SSR wait time.
-  // Each result keeps its own isolated error state so one failing section
-  // never breaks the other (spec §18: homepage must never fully break).
   const [nearbyResult, allBooksResult] = await Promise.allSettled([
-    // 1) Nearby books (only meaningful when a district is known and no filters active)
+    // ১) Nearby books (শুধুমাত্র যখন কনটেন্ট ফিল্টার নেই এবং ডিস্ট্রিক্ট সিলেক্টেড আছে)
     (async () => {
-      if (!hasActiveFilters && selectedDistrict) {
+      if (!hasActiveContentFilters && selectedDistrict) {
         return getPosts({
           district: selectedDistrict,
           page: 1,
@@ -115,11 +114,11 @@ export default async function HomePage({
       }
       return null;
     })(),
-    // 2) All books / unified filtered results
+    // ২) All books / unified filtered results
     getPosts({
       search,
       category,
-      district: hasActiveFilters ? selectedDistrict : undefined,
+      district: selectedDistrict,
       type: (type || "") as "sell" | "donate" | "",
       condition,
       sort: "newest",
@@ -138,8 +137,7 @@ export default async function HomePage({
   } else if (nearbyResult.status === "rejected") {
     nearbyDistrict = selectedDistrict;
     nearbyState = "error";
-  } else if (!hasActiveFilters && session && !selectedDistrict) {
-    // Nearby request intentionally skipped: logged-in user without a district.
+  } else if (!hasActiveContentFilters && session && !selectedDistrict) {
     nearbyState = "needs-profile";
   }
 
@@ -155,15 +153,19 @@ export default async function HomePage({
   return (
     <div className="w-full min-h-screen bg-[#F5F7F8] font-sans antialiased overflow-x-hidden">
       <main>
+        {/* ১. ফিল্টার ও সার্চ বার (সর্বদা উপরে থাকবে) */}
         <HeaderFilters
           activeType={type || ""}
           category={category}
           condition={condition}
           search={search}
         />
-        {/* 1. New SEO & Content Hero Section */}
-        <Hero />
-        {!hasActiveFilters && (
+
+        {/* ২. হিরো সেকশন (শুধুমাত্র কনটেন্ট ফিল্টার না থাকলে দেখাবে) */}
+        {!hasActiveContentFilters && <Hero />}
+
+        {/* ৩. নিয়ারবাই বুকস সেকশন (শুধুমাত্র কনটেন্ট ফিল্টার না থাকলে দেখাবে) */}
+        {!hasActiveContentFilters && (
           <NearbyBooks
             key={nearbyDistrict || nearbyState}
             state={nearbyState}
@@ -174,12 +176,12 @@ export default async function HomePage({
           />
         )}
 
-
+        {/* ৪. বইয়ের গ্রিড ও প্যাজিনেশন (সকল ফিল্টার্ড/ডিফল্ট রেজাল্ট দেখাবে) */}
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <BooksGrid
             books={books}
             error={allBooksError}
-            isFiltered={hasActiveFilters}
+            isFiltered={hasActiveContentFilters}
             search={search}
             category={category}
             condition={condition}
@@ -191,14 +193,14 @@ export default async function HomePage({
           </div>
         </div>
 
-        {/* 4. How Milbe Works Section */}
-        <HowItWorks />
-
-        {/* 5. Why Choose Milbe Section */}
-        <WhyChooseUs />
-
-        {/* 6. CTA Section */}
-        <CTA />
+        {/* ৫, ৬, ৭. অতিরিক্ত ইনফরমেশন সেকশনসমূহ (শুধুমাত্র কনটেন্ট ফিল্টার না থাকলে দেখাবে) */}
+        {!hasActiveContentFilters && (
+          <>
+            <HowItWorks />
+            <WhyChooseUs />
+            <CTA />
+          </>
+        )}
       </main>
     </div>
   );

@@ -77,9 +77,9 @@ export default function HeaderFilters({
   );
 
   return (
-    <div id="filter-controls" className="w-full bg-[#F5F7F8]/90 backdrop-blur border-b border-border px-3">
-      <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8">
-        <div className="hidden lg:flex items-center gap-3 bg-surface border border-border rounded-btn p-2 my-3">
+    <div id="filter-controls" className="w-full  backdrop-blur border-b border-border px-3 bg-surface">
+      <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8 bg-surface">
+        <div className="hidden lg:flex items-center gap-3  rounded-btn px-2 py-1.5  ">
           <div className="relative flex items-center">
             <BookOpen className="absolute left-3 w-4 h-4 text-text-muted pointer-events-none" />
             <select

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search, MapPin, X } from "lucide-react";
 import { DISTRICTS } from "@/lib/constant/location";
 
-type SearchMode = "default" | "search";
+type SearchMode = "default" | "search" | "desktop";
 
 interface HeaderSearchProps {
   mode?: SearchMode;
@@ -24,26 +24,22 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const locationDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Sync selected location from URL query params
   useEffect(() => {
     setSelectedLocation(searchParams.get("location") || "");
   }, [searchParams]);
 
-  // Focus search input when in search mode
   useEffect(() => {
     if (mode === "search" && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [mode]);
 
-  // Custom event listener for external open trigger
   useEffect(() => {
     const openLocationSelector = () => setIsLocationOpen(true);
     window.addEventListener("open-location-selector", openLocationSelector);
     return () => window.removeEventListener("open-location-selector", openLocationSelector);
   }, []);
 
-  // Handle outside click to close location dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -51,7 +47,7 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
         !locationDropdownRef.current.contains(event.target as Node)
       ) {
         setIsLocationOpen(false);
-        setLocationSearch(""); // Reset search when closed
+        setLocationSearch("");
       }
     };
 
@@ -101,7 +97,7 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   };
 
   const handleClearLocation = (e?: React.MouseEvent) => {
-    if (e) e.stopPropagation(); // Prevents opening dropdown when clearing
+    if (e) e.stopPropagation();
     setLocationSearch("");
     updateSearchParams({ location: undefined });
   };
@@ -109,7 +105,7 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   const handleClearSearch = () => {
     setSearchQuery("");
     updateSearchParams({ search: undefined });
-    if (mode === "search" && searchInputRef.current) {
+    if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
   };
@@ -118,20 +114,19 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
     district.toLowerCase().includes(locationSearch.toLowerCase())
   );
 
-  // Reusable Location Dropdown Component
   const renderLocationDropdown = () => (
-    <div className="relative" ref={locationDropdownRef}>
+    <div className="relative shrink-0" ref={locationDropdownRef}>
       <button
         type="button"
         onClick={() => {
           setIsLocationOpen((prev) => !prev);
           if (isLocationOpen) setLocationSearch("");
         }}
-        className="flex items-center justify-between gap-2 px-2 sm:px-3 py-2 bg-surface border border-border rounded-btn text-text-primary hover:border-primary transition-base focus-visible:outline-2 focus-visible:outline-primary-focus min-w-[110px] sm:min-w-[140px]"
+        className="flex items-center justify-between gap-1.5 px-2.5 py-1.5 bg-surface border border-border rounded-btn text-text-primary hover:border-primary transition-base focus-visible:outline-2 focus-visible:outline-primary-focus min-w-[100px] sm:min-w-[120px]"
       >
         <div className="flex items-center gap-1.5 truncate">
-          <MapPin className="w-4 h-4 text-text-muted shrink-0" />
-          <span className="truncate text-xs sm:text-sm">
+          <MapPin className="w-3.5 h-3.5 text-text-muted shrink-0" />
+          <span className="truncate text-xs sm:text-sm font-medium">
             {selectedLocation || "Location"}
           </span>
         </div>
@@ -149,13 +144,13 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
               }
             }}
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-3 h-3" />
           </span>
         )}
       </button>
 
       {isLocationOpen && (
-        <div className="absolute top-full right-0 sm:left-0 mt-1 bg-surface border border-border rounded-btn shadow-lg overflow-hidden z-30 w-52 sm:w-64">
+        <div className="absolute top-full right-0 mt-1 bg-surface border border-border rounded-btn shadow-lg overflow-hidden z-50 w-52 sm:w-60">
           <div className="p-2 border-b border-border bg-background sticky top-0 z-10">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted pointer-events-none" />
@@ -169,7 +164,7 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
               />
             </div>
           </div>
-          <div className="max-h-56 overflow-y-auto">
+          <div className="max-h-52 overflow-y-auto">
             {filteredDistricts.length > 0 ? (
               filteredDistricts.map((district) => (
                 <button
@@ -195,16 +190,18 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
     </div>
   );
 
+  // Mobile Minimal Location View
   if (mode === "default") {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-end">
         {renderLocationDropdown()}
       </div>
     );
   }
 
+  // Integrated Desktop & Mobile Full Search View
   return (
-    <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 flex-1">
+    <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full">
       <div className="relative flex-1">
         <label htmlFor="header-search" className="sr-only">
           বই খুঁজুন
@@ -216,17 +213,17 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
           placeholder="বই, লেখক বা ISBN খুঁজুন..."
-          className="w-full px-4 py-2 pl-10 pr-10 text-sm text-text-primary bg-surface border border-border rounded-btn focus:outline-none focus:ring-2 focus:ring-primary-focus focus:border-transparent placeholder:text-text-placeholder transition-base"
+          className="w-full px-3.5 py-1.5 pl-9 pr-8 text-xs sm:text-sm text-text-primary bg-surface border border-border rounded-btn focus:outline-none focus:ring-2 focus:ring-primary-focus focus:border-transparent placeholder:text-text-placeholder transition-base"
         />
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
         {searchQuery && (
           <button
             type="button"
             onClick={handleClearSearch}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors"
             aria-label="Clear search"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         )}
       </div>
