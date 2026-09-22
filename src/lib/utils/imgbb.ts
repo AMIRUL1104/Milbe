@@ -28,7 +28,7 @@ export async function uploadImageToImgBB(
   });
 
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
 
   if (!response.ok || !data?.success) {
     const message =

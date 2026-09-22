@@ -15,20 +15,11 @@ export const authHeader = async (): Promise<HeadersInit> => {
   };
 };
 
-// async function handleResponse<T>(res: Response): Promise<ApiResponse<T>> {
-//   const responseData = (await res.json()) as ApiResponse<T>;
-//   // console.log(responseData);
-//   if (!res.ok) {
-//     throw new ApiError(responseData, res.status);
-//   }
-
-//   return responseData;
-// }
 async function handleResponse<T>(res: Response): Promise<ApiResponse<T>> {
   const responseData = (await res.json()) as ApiResponse<T>;
 
   if (!res.ok) {
-    console.log("FULL ERROR RESPONSE:", JSON.stringify(responseData, null, 2)); // <-- এই লাইনটা যোগ করো
+    // console.log("FULL ERROR RESPONSE:", JSON.stringify(responseData, null, 2));
     throw new ApiError(responseData, res.status);
   }
 
@@ -66,32 +57,6 @@ export async function serverFetch<T>(
   }
 }
 
-// export async function protectedFetch<T>(path: string): Promise<ApiResponse<T>> {
-//   try {
-//     const res = await fetch(`${baseUrl}${path}`, {
-//       headers: {
-//         "Content-Type": "application/json",
-//         ...(await authHeader()),
-//       },
-//       cache: "no-store",
-//     });
-
-//     return handleResponse<T>(res);
-//   } catch (error) {
-//     if (error instanceof ApiError) {
-//       throw error;
-//     }
-//     console.error("Fetch error:", error);
-//     throw new ApiError(
-//       {
-//         success: false,
-//         statusCode: 0,
-//         message: error instanceof Error ? error.message : "Network error",
-//       },
-//       0,
-//     );
-//   }
-// }
 export async function protectedFetch<T>(path: string): Promise<ApiResponse<T>> {
   try {
     const res = await fetch(`${baseUrl}${path}`, {
@@ -105,11 +70,11 @@ export async function protectedFetch<T>(path: string): Promise<ApiResponse<T>> {
     const responseData = (await res.json()) as ApiResponse<T>;
 
     if (!res.ok) {
-      console.log("PATH:", path); // <-- কোন request সেটা শনাক্ত করতে
-      console.log(
-        "FULL ERROR RESPONSE:",
-        JSON.stringify(responseData, null, 2),
-      );
+      // console.log("PATH:", path); // <-- কোন request সেটা শনাক্ত করতে
+      // console.log(
+      //   "FULL ERROR RESPONSE:",
+      //   JSON.stringify(responseData, null, 2),
+      // );
       throw new ApiError(responseData, res.status);
     }
 
@@ -118,7 +83,7 @@ export async function protectedFetch<T>(path: string): Promise<ApiResponse<T>> {
     if (error instanceof ApiError) {
       throw error;
     }
-    console.error("Fetch error:", error);
+    // console.error("Fetch error:", error);
     throw new ApiError(
       {
         success: false,

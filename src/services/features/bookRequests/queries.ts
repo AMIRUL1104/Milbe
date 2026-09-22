@@ -8,7 +8,7 @@ import { ApiResponse } from "@/interface/apiResponse";
 export async function checkBookRequest(
   postId: string,
 ): Promise<CheckBookRequestResponse> {
-  console.log(encodeURIComponent(postId));
+  // console.log(encodeURIComponent(postId));
   return protectedFetch<NonNullable<CheckBookRequestResponse["data"]>>(
     `/api/book-requests/check?postId=${postId}`,
   );

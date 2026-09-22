@@ -38,9 +38,9 @@ function toSentRequest(request: BookRequest): SentRequest {
     sellerContact:
       request.status === "accepted" && request.sellerContact
         ? {
-            phone: request.sellerContact.phone ?? "",
-            messenger: request.sellerContact.messenger,
-          }
+          phone: request.sellerContact.phone ?? "",
+          messenger: request.sellerContact.messenger,
+        }
         : undefined,
   };
 }
@@ -109,6 +109,8 @@ export default async function RequestsPage() {
     hasError = true;
   }
 
+  // console.log("sentRequests", sentRequests);
+  // console.log("receivedRequests", receivedRequests);
   if (hasError) {
     return <RequestsErrorState />;
   }
