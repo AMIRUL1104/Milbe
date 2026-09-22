@@ -56,6 +56,12 @@ function toReceivedRequest(request: BookRequest): ReceivedRequest {
     requestDate: toIsoDate(request.requestDate),
     status: request.status,
     message: request.message,
+    requesterContact:
+      request.status === "accepted" && request.requesterContact
+        ? {
+          phone: request.requesterContact.phone,
+        }
+        : undefined,
   };
 }
 
@@ -118,10 +124,9 @@ export default async function RequestsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">Requests</h1>
+        <h1 className="text-2xl font-bold text-gray-800">রিকোয়েস্ট</h1>
         <p className="text-sm text-gray-500">
-          Track requests you&apos;ve sent and manage requests you&apos;ve
-          received on your posts.
+          আপনার পাঠানো এবং আপনার পোস্টে আসা রিকোয়েস্টগুলো এখানে দেখতে পারবেন।
         </p>
       </div>
 

@@ -11,9 +11,9 @@ import type {
 import { filterReceivedRequests, sortReceivedRequests } from "../filters";
 import { NoMatchingRequestsEmptyState, NoPostsEmptyState, NoRequestsForPostEmptyState } from "./ReceivedEmptyStates";
 import { PostSelectorMobile } from "./PostSelectorMobile";
-import { ReceivedRequestsToolbar } from "./ReceivedRequestsToolbar";
 import { ReceivedRequestCard } from "./ReceivedRequestCard";
 import { PostListPanel } from "./PostListPanel";
+import { ReceivedRequestsToolbar } from "./ReceivedRequestsToolbar";
 
 interface ReceivedRequestsClientProps {
   posts: PostSummary[];

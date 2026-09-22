@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Calendar, MessageSquare, Phone, ShieldCheck } from "lucide-react";
 import type { SentRequest } from "@/interface/dashboard/request";
+import { ContactActions } from "../ContactActions";
 import { StatusBadge } from "../StatusBadge";
 import SentRequestActions from "./SentRequestActions";
 
@@ -18,6 +19,11 @@ function formatDate(isoDate: string): string {
 }
 
 export function SentRequestCard({ request }: SentRequestCardProps) {
+  // Contact info unlocks ONLY when the seller accepts the request —
+  // the server redacts `sellerContact` for every other status.
+  const contact =
+    request.status === "accepted" ? request.sellerContact : undefined;
+  const phone = contact?.phone;
   return (
     <div className="flex gap-4 rounded-card border border-border-light bg-surface p-4 shadow-sm transition-shadow hover:shadow-md sm:p-5">
       <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded-lg bg-background sm:h-28 sm:w-20">
@@ -56,18 +62,24 @@ export function SentRequestCard({ request }: SentRequestCardProps) {
             </p>
           )}
 
-          {request.status === "accepted" && request.sellerContact && (
-            <div className="flex items-start gap-1.5 rounded-lg border border-success-border bg-success-light p-2.5 text-xs text-success-text">
-              <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-              <div className="flex flex-col gap-0.5">
-                <span className="font-bold">Contact info unlocked</span>
-                <span className="flex items-center gap-1">
-                  <Phone className="h-3 w-3" />
-                  {request.sellerContact.phone}
-                  {request.sellerContact.messenger &&
-                    ` · ${request.sellerContact.messenger}`}
-                </span>
+          {contact && (
+            <div className="flex items-start justify-between gap-2 rounded-lg border border-success-border bg-success-light p-2.5 text-xs text-success-text">
+              <div className="flex min-w-0 items-start gap-1.5">
+                <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <span className="font-bold">Contact info unlocked</span>
+                  <span className="flex min-w-0 items-center gap-1">
+                    <Phone className="h-3 w-3 shrink-0" />
+                    <span className="truncate">
+                      {phone}
+                      {contact.messenger && ` · ${contact.messenger}`}
+                    </span>
+                  </span>
+                </div>
               </div>
+
+              {/* Call + Copy actions — same as Received Requests */}
+              {phone && <ContactActions phone={phone} />}
             </div>
           )}
         </div>
@@ -76,7 +88,7 @@ export function SentRequestCard({ request }: SentRequestCardProps) {
 
           <Link
             href={`/books/${request.postId}`}
-            className="inline-flex w-fit items-center gap-1.5 rounded-btn border border-primary px-3.5 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-text-inverse"
+            className="inline-flex w-fit items-center gap-1.5 rounded-btn border border-primary px-3.5 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-text-inverse max-sm:bg-primary max-sm:text-text-inverse"
           >
             View Post
           </Link>

@@ -44,7 +44,7 @@ export default function SentRequestActions({ status, id }: SentRequestActionsPro
             type="button"
             onClick={handleCancelBookRequest}
             disabled={isPending}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-btn border border-border px-3.5 py-1.5 text-xs font-bold text-text-muted transition-colors hover:border-danger hover:bg-danger-light hover:text-danger disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-btn border border-border px-3.5 py-1.5 text-xs font-bold text-text-muted transition-colors hover:border-danger hover:bg-danger-light hover:text-danger max-sm:text-danger max-sm:bg-danger-light max-sm:border-danger  disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isPending ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />

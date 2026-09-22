@@ -23,6 +23,9 @@ export interface ReceivedRequest {
   requestDate: string; // ISO date string
   status: RequestStatus;
   message?: string;
+  requesterContact?: {
+    phone?: string;
+  };
 }
 
 export interface PostSummary {
