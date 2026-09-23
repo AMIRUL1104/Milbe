@@ -17,6 +17,8 @@ export interface BookRequest {
   // Seller Information
   sellerId: string;
   sellerName: string;
+  sellerDistrict?: string;
+  sellerArea?: string;
   sellerContact?: {
     phone?: string;
     messenger?: string;
@@ -29,6 +31,8 @@ export interface BookRequest {
   requesterContact?: {
     phone?: string;
   };
+  requesterDistrict?: string;
+  requesterArea?: string;
 
   // Request Details
   message?: string;

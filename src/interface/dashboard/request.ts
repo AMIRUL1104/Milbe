@@ -6,6 +6,8 @@ export interface SentRequest {
   postTitle: string;
   bookCoverUrl: string;
   sellerName: string;
+  sellerDistrict?: string;
+  sellerArea?: string;
   requestDate: string; // ISO date string
   status: RequestStatus;
   message?: string;
@@ -20,6 +22,8 @@ export interface ReceivedRequest {
   postId: string;
   requesterName: string;
   requesterAvatarUrl?: string;
+  requesterDistrict?: string;
+  requesterArea?: string;
   requestDate: string; // ISO date string
   status: RequestStatus;
   message?: string;

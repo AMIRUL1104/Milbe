@@ -55,6 +55,8 @@ export default async function BookMetaCard({ post }: BookMetaCardProps) {
           postTitle={post.title}
           sellerName={post.sellerName}
           requesterPhone={session?.phoneNumber ?? undefined}
+          requesterDistrict={session?.district ?? undefined}
+          requesterArea={session?.area ?? undefined}
         />
       </div>
     </Card>

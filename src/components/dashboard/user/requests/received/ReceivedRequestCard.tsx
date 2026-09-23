@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Calendar, MessageSquare, Phone } from "lucide-react";
+import { Calendar, MapPin, MessageSquare, Phone } from "lucide-react";
 import type { ReceivedRequest } from "@/interface/dashboard/request";
 import { ContactActions } from "../ContactActions";
 import { StatusBadge } from "../StatusBadge";
@@ -49,6 +49,14 @@ export function ReceivedRequestCard({ request }: ReceivedRequestCardProps) {
               <Calendar className="h-3.5 w-3.5" />
               {formatDate(request.requestDate)}
             </span>
+            {(request.requesterArea || request.requesterDistrict) && (
+              <span className="mt-0.5 flex items-center gap-1 text-xs text-text-muted">
+                <MapPin className="h-3.5 w-3.5" />
+                {[request.requesterArea, request.requesterDistrict]
+                  .filter(Boolean)
+                  .join(", ")}
+              </span>
+            )}
           </div>
           <StatusBadge status={request.status} />
         </div>

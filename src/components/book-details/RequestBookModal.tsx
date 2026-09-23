@@ -13,6 +13,8 @@ interface RequestBookModalProps {
   sellerName: string;
   defaultRequesterName?: string;
   defaultRequesterPhone?: string;
+  defaultRequesterDistrict?: string;
+  defaultRequesterArea?: string;
   onSuccess: () => void;
 }
 
@@ -25,6 +27,8 @@ export default function RequestBookModal({
   sellerName,
   defaultRequesterName,
   defaultRequesterPhone,
+  defaultRequesterDistrict,
+  defaultRequesterArea,
   onSuccess,
 }: RequestBookModalProps) {
   useEffect(() => {
@@ -135,6 +139,8 @@ export default function RequestBookModal({
               postId={postId}
               requesterId={requesterId}
               defaultRequesterPhone={defaultRequesterPhone}
+              defaultRequesterDistrict={defaultRequesterDistrict}
+              defaultRequesterArea={defaultRequesterArea}
               onCancel={onClose}
               onSuccess={onSuccess}
             />

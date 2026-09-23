@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, MessageSquare, Phone, ShieldCheck } from "lucide-react";
+import { Calendar, MapPin, MessageSquare, Phone, ShieldCheck } from "lucide-react";
 import type { SentRequest } from "@/interface/dashboard/request";
 import { ContactActions } from "../ContactActions";
 import { StatusBadge } from "../StatusBadge";
@@ -49,6 +49,14 @@ export function SentRequestCard({ request }: SentRequestCardProps) {
             <span className="font-medium text-text-secondary">
               Seller: {request.sellerName}
             </span>
+            {request.sellerArea || request.sellerDistrict ? (
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5" />
+                {[request.sellerArea, request.sellerDistrict]
+                  .filter(Boolean)
+                  .join(", ")}
+              </span>
+            ) : null}
             <span className="flex items-center gap-1">
               <Calendar className="h-3.5 w-3.5" />
               {formatDate(request.requestDate)}
