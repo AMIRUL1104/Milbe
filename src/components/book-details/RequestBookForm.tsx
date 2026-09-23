@@ -59,15 +59,13 @@ export default function RequestBookForm({
 
     try {
       const message = values.message?.trim();
-      const district = values.district?.trim();
-      const area = values.area?.trim();
       const payload: CreateBookRequestPayload = {
         postId,
         requesterContact: {
           phone: values.phoneNumber.trim(),
         },
-        ...(district ? { requesterDistrict: district } : {}),
-        ...(area ? { requesterArea: area } : {}),
+        requesterDistrict: values.district.trim(),
+        requesterArea: values.area.trim(),
         ...(message ? { message } : {}),
       };
 
@@ -115,10 +113,7 @@ export default function RequestBookForm({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-              জেলা{" "}
-              <span className="font-normal text-slate-400 normal-case">
-                (ঐচ্ছিক)
-              </span>
+              জেলা <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
               <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
@@ -148,10 +143,7 @@ export default function RequestBookForm({
 
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-              এলাকা{" "}
-              <span className="font-normal text-slate-400 normal-case">
-                (ঐচ্ছিক)
-              </span>
+              এলাকা <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
               <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
