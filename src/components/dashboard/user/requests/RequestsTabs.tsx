@@ -24,8 +24,8 @@ export function RequestsTabs({
           max-lg:border max-lg:border-border-light
           max-lg:rounded-xl
           max-lg:bg-surface
-          max-lg:[&_[aria-label='Scroll_tabs_left']]:hidden
-          max-lg:[&_[aria-label='Scroll_tabs_right']]:hidden
+          [&_[aria-label='Scroll_tabs_left']]:hidden
+          [&_[aria-label='Scroll_tabs_right']]:hidden
         "
       >
         <Tabs.List
