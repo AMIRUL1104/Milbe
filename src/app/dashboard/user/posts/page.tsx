@@ -17,7 +17,7 @@ export default async function MyPostsPage() {
   if (!response.success || !response.data) {
     return (
       <div className="min-h-screen w-full bg-[#F5F7F8] flex items-center justify-center">
-        <p className="text-red-500 font-bold">My Posts not found or data error!</p>
+        <p className="text-red-500 font-bold">পোস্ট লোড করা যায়নি। কিছুক্ষণ পর আবার চেষ্টা করুন।</p>
       </div>
     );
   }
@@ -28,9 +28,9 @@ export default async function MyPostsPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">My Posts</h1>
+        <h1 className="text-2xl font-bold text-gray-800">আমার পোস্ট সমূহ</h1>
         <p className="text-sm text-gray-500 mt-1">
-          Manage the books you&apos;ve listed for sale or donation.
+          আপনার বিক্রি বা দান করা বইগুলোর পোস্ট ম্যানেজ করুন।
         </p>
       </div>
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Search, SlidersHorizontal, ArrowUpDown, X } from "lucide-react";
 import type { MyPostsFilter, MyPostsSort } from "@/interface/post/responses";
+import { toBengaliNumber } from "@/lib/utils/toBengaliNumber";
 
 interface MyPostsToolbarProps {
   search: string;
@@ -62,7 +63,9 @@ export default function MyPostsToolbar({
       {/* ---------------------------------------------------- */}
       <div className="block lg:hidden">
         <p className="text-xs text-text-muted">
-          {resultCount} {resultCount === 1 ? "post" : "posts"} found
+          {resultCount === 0
+            ? "কোনো পোস্ট পাওয়া যায়নি"
+            : `মোট ${toBengaliNumber(resultCount)}টি পোস্ট পাওয়া গেছে`}
         </p>
       </div>
 
@@ -77,7 +80,7 @@ export default function MyPostsToolbar({
             type="text"
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Search by title, category, or book name..."
+            placeholder="শিরোনাম, ক্যাটাগরি বা বইয়ের নাম দিয়ে খুঁজুন..."
             className="w-full bg-surface border border-border focus:border-border-focus rounded-input pl-10 pr-3 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base"
           />
         </div>
@@ -184,7 +187,7 @@ export default function MyPostsToolbar({
               type="text"
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
-              placeholder="Search by title, category, or book name..."
+              placeholder="শিরোনাম, ক্যাটাগরি বা বইয়ের নাম দিয়ে খুঁজুন..."
               className="w-full bg-surface border border-border focus:border-border-focus rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base"
             />
           </div>
@@ -227,7 +230,9 @@ export default function MyPostsToolbar({
         </div>
 
         <p className="text-xs text-text-muted">
-          {resultCount} {resultCount === 1 ? "post" : "posts"} found
+          {resultCount === 0
+            ? "কোনো পোস্ট পাওয়া যায়নি"
+            : `মোট ${toBengaliNumber(resultCount)}টি পোস্ট পাওয়া গেছে`}
         </p>
       </div>
     </div>

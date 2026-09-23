@@ -27,29 +27,25 @@ function PageHeaderSkeleton() {
 function ToolbarSkeleton() {
     return (
         <div className="bg-surface rounded-card border border-border-light shadow-sm p-4 space-y-3 animate-pulse">
-            {/* Search bar and controls row */}
-            <div className="flex flex-col lg:flex-row lg:items-center gap-3">
-                {/* Search Input */}
-                <div className="flex-1">
-                    <div className="w-full h-10 bg-gray-100 rounded-input" />
-                </div>
-
-                {/* Filter and Sort Controls */}
-                <div className="flex gap-3 lg:flex-row lg:items-center">
-                    {/* Filter Dropdown */}
-                    <div className="w-full lg:w-48">
-                        <div className="h-10 bg-gray-100 rounded-input" />
-                    </div>
-
-                    {/* Sort Dropdown */}
-                    <div className="w-full lg:w-48">
-                        <div className="h-10 bg-gray-100 rounded-input" />
-                    </div>
-                </div>
+            {/* Mobile: single row — wide search input + two square icon buttons */}
+            <div className="flex items-center gap-2 lg:hidden">
+                <div className="h-[42px] flex-1 bg-gray-100 rounded-input" />
+                <div className="h-[42px] w-[42px] shrink-0 bg-gray-100 rounded-input" />
+                <div className="h-[42px] w-[42px] shrink-0 bg-gray-100 rounded-input" />
             </div>
 
             {/* Result count text */}
-            <div className="h-3 w-40 bg-gray-100 rounded" />
+            <div className="h-3 w-40 bg-gray-100 rounded lg:hidden" />
+
+            {/* Desktop (lg+): search + two w-48 dropdowns in one row */}
+            <div className="hidden lg:flex lg:flex-row lg:items-center gap-3">
+                <div className="h-10 flex-1 bg-gray-100 rounded-input" />
+                <div className="h-10 w-48 bg-gray-100 rounded-input" />
+                <div className="h-10 w-48 bg-gray-100 rounded-input" />
+            </div>
+
+            {/* Desktop result count text */}
+            <div className="hidden lg:block h-3 w-40 bg-gray-100 rounded" />
         </div>
     );
 }
@@ -63,7 +59,10 @@ function SkeletonCard() {
     return (
         <div className="rounded-2xl border border-[#EDF1F2] overflow-hidden bg-white animate-pulse">
             {/* Image placeholder */}
-            <div className="h-40 bg-gray-100 w-full" />
+            <div className="relative h-40 bg-gray-100 w-full">
+                {/* Post type badge placeholder (top-left — mirrors BookCard badge) */}
+                <div className="absolute top-2 left-2 h-5 w-10 bg-gray-200 rounded-md" />
+            </div>
 
             {/* Text content placeholder */}
             <div className="p-4 space-y-2">
@@ -75,6 +74,12 @@ function SkeletonCard() {
 
                 {/* Additional info line */}
                 <div className="h-3 bg-gray-100 rounded w-1/3" />
+            </div>
+
+            {/* Bottom action bar placeholder (mirrors Edit + Delete flex row) */}
+            <div className="flex items-stretch gap-2 mt-2.5 px-0.5 pb-0.5">
+                <div className="h-10 flex-1 bg-gray-100 rounded-btn" />
+                <div className="h-10 flex-1 bg-gray-100 rounded-btn" />
             </div>
         </div>
     );
