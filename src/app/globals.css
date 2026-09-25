@@ -176,7 +176,6 @@ body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
   line-height: 1.6;
-  padding-bottom: 88px;
 }
 
 @media (min-width: 768px) {
