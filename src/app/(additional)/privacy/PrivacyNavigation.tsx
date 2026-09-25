@@ -8,12 +8,12 @@ interface NavigationItem {
     label: string;
 }
 
-interface TermsNavigationProps {
+interface PrivacyNavigationProps {
     items: NavigationItem[];
 }
 
-export default function TermsNavigation({ items }: TermsNavigationProps) {
-    const [activeId, setActiveId] = useState<string>("acceptance");
+export default function PrivacyNavigation({ items }: PrivacyNavigationProps) {
+    const [activeId, setActiveId] = useState<string>("introduction");
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -57,7 +57,7 @@ export default function TermsNavigation({ items }: TermsNavigationProps) {
         }
     };
 
-    const activeItemLabel = items.find((item) => item.id === activeId)?.label || items[0]?.label || "";
+    const activeItemLabel = items.find((item) => item.id === activeId)?.label || items[0].label;
 
     return (
         <div>

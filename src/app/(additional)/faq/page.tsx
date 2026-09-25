@@ -1,5 +1,5 @@
 // src/app/faq/page.tsx
-import FAQContainer from "@/components/faq/FAQContainer";
+import FAQContainer from "@/app/(additional)/faq/FAQContainer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -35,7 +35,7 @@ const FAQ_DATA: FAQItem[] = [
         category: "General",
         question: "মিলবে কী?",
         answer:
-            "মিলবে শিক্ষার্থীদের জন্য তৈরি একটি সহজ বই কেনাবেচা ও দানের প্ল্যাটফর্ম। এখানে প্রয়োজন নেই এমন একাডেমিক বই বিক্রি বা দান করা যায়, আবার প্রয়োজনের বইও সহজে খুঁজে পাওয়া যায়।",
+            "মিলবে শিক্ষার্থীদের জন্য তৈরি একটি সহজ বই কেনাবেচা ও দানের প্ল্যাটফর্ম। এখানে  প্রয়োজন নেই এমন একাডেমিক বই বিক্রি বা দান করতে পারবেন , আবার প্রয়োজনীয় বইও সহজে খুঁজে পেতে পারেন ।",
     },
     {
         id: "2",
@@ -56,7 +56,7 @@ const FAQ_DATA: FAQItem[] = [
         category: "General",
         question: "লোকেশন না দিলেও কি বই ব্রাউজ করা যায়?",
         answer:
-            "হ্যাঁ। লোকেশন নির্বাচন না করেও বই ব্রাউজ করা যায়। তবে কাছাকাছি এলাকার বই দেখতে হলে আপনার লোকেশন নির্বাচন করা বাধ্যতামূলক। লোকেশন না দিলে Nearby Books-এর মাধ্যমে আপনার কাছাকাছি বই দেখানো সম্ভব হবে না।",
+            "হ্যাঁ। লোকেশন নির্বাচন না করেও বই ব্রাউজ করা যায়। তবে কাছাকাছি এলাকার বই দেখতে হলে আপনার লোকেশন নির্বাচন করা বাধ্যতামূলক। লোকেশন না দিলে আপনার কাছাকাছি বই দেখানো সম্ভব হবে না।",
     },
     {
         id: "5",
@@ -70,21 +70,21 @@ const FAQ_DATA: FAQItem[] = [
         category: "Buying",
         question: "কাছাকাছি এলাকার বই কীভাবে দেখব?",
         answer:
-            "Nearby Books দেখতে আপনার লোকেশন নির্বাচন করতে হবে। লোকেশন নির্বাচন করার পর আপনার কাছাকাছি এলাকার শিক্ষার্থীদের পোস্ট করা available বইগুলো দেখতে পারবেন।",
+            "আপনার কাছাকাছি এলাকার বই দেখতে আপনার লোকেশন নির্বাচন করতে হবে। লোকেশন নির্বাচন করার পর আপনার কাছাকাছি এলাকার শিক্ষার্থীদের পোস্ট করা  বইগুলো দেখতে পারবেন।",
     },
     {
         id: "7",
         category: "Buying",
         question: "অন্য এলাকার বা জেলার বই কি নেওয়া যায়?",
         answer:
-            "হ্যাঁ। Milbe কোনো নির্দিষ্ট এলাকার বই নেওয়ার মধ্যে সীমাবদ্ধ নয়। আপনি অন্য এলাকার বইয়ের মালিকের সঙ্গে যোগাযোগ করে বই নেওয়ার বিষয়টি নিজেদের মধ্যে ঠিক করতে পারেন। বই কীভাবে ও কোথা থেকে সংগ্রহ করবেন, সেটি buyer ও seller নিজেদের মধ্যে ঠিক করবেন।",
+            "হ্যাঁ। Milbe কোনো নির্দিষ্ট এলাকার বই নেওয়ার মধ্যে সীমাবদ্ধ নয়। আপনি অন্য এলাকার বইয়ের মালিকের সঙ্গে যোগাযোগ করে বই নেওয়ার বিষয়টি নিজেদের মধ্যে ঠিক করতে পারেন। বই কীভাবে ও কোথা থেকে সংগ্রহ করবেন, সেটি ক্রেতা ও বিক্রেতা নিজেদের মধ্যে ঠিক করবেন।",
     },
     {
         id: "8",
         category: "Buying",
         question: "রিকোয়েস্ট গ্রহণ হওয়ার পর বই কীভাবে নেব?",
         answer:
-            "রিকোয়েস্ট গ্রহণ হলে buyer ও seller দুজনেই একে অন্যের প্রয়োজনীয় যোগাযোগের তথ্য দেখতে পারবেন। এরপর নিজেদের মধ্যে কথা বলে বইয়ের দাম, স্থান ও বই সংগ্রহের বিষয়টি ঠিক করে নিতে পারবেন।",
+            "রিকোয়েস্ট গ্রহণ হলে ক্রেতা ও বিক্রেতা দুজনেই একে অন্যের প্রয়োজনীয় যোগাযোগের তথ্য দেখতে পারবেন। এরপর নিজেদের মধ্যে কথা বলে বইয়ের দাম, স্থান ও বই সংগ্রহের বিষয়টি ঠিক করে নিতে পারবেন।",
     },
     {
         id: "9",
@@ -175,7 +175,7 @@ const FAQ_DATA: FAQItem[] = [
         category: "Requests",
         question: "একই পোস্টে একাধিক রিকোয়েস্ট এলে কী হয়?",
         answer:
-            "সেলার একজনের রিকোয়েস্ট গ্রহণ করতে পারেন। একজনের রিকোয়েস্ট গ্রহণ হলে সেই buyer-এর জন্য contact করার সুযোগ খুলে যায় এবং একই পোস্টের অন্য pending রিকোয়েস্টগুলো স্বয়ংক্রিয়ভাবে Cancelled হয়ে যায়।",
+            "বিক্রেতা একজনের রিকোয়েস্ট গ্রহণ করতে পারেন। একজনের রিকোয়েস্ট গ্রহণ হলে সেই বিক্রেতার জন্য যোগাযোগ করার সুযোগ খুলে যায় এবং একই পোস্টের অন্য pending রিকোয়েস্টগুলো স্বয়ংক্রিয়ভাবে Cancelled হয়ে যায়।",
     },
     {
         id: "22",
@@ -194,23 +194,23 @@ const FAQ_DATA: FAQItem[] = [
     {
         id: "24",
         category: "Requests",
-        question: "Accepted request-এর পর buyer ও seller কী দেখতে পাবে?",
+        question: "Accepted request-এর পর ক্রেতা ও বিক্রেতা কী দেখতে পাবে?",
         answer:
-            "Accepted request-এর পর buyer ও seller দুজনেই একে অন্যের সংশ্লিষ্ট request দেখতে পারবেন। যোগাযোগের নম্বরও শুধু এই দুইজনের জন্যই দেখা যাবে। অন্য কোনো user এই তথ্য দেখতে পারবেন না।",
+            "Accepted request-এর পর ক্রেতা ও বিক্রেতা দুজনেই একে অন্যের সংশ্লিষ্ট রিকুয়েস্ট দেখতে পারবেন। যোগাযোগের নম্বরও শুধু এই দুইজনের জন্যই দেখা যাবে। অন্য কোনো user এই তথ্য দেখতে পারবেন না।",
     },
     {
         id: "25",
         category: "Requests",
         question: "মিলবে কি বইয়ের টাকা বা payment পরিচালনা করে?",
         answer:
-            "না। মিলবে কোনো payment বা টাকা লেনদেন পরিচালনা করে না। বইয়ের মূল্য এবং টাকা কীভাবে দেওয়া হবে, সেটি buyer ও seller নিজেদের মধ্যে ঠিক করেন।",
+            "না। মিলবে কোনো payment বা টাকা লেনদেন পরিচালনা করে না। বইয়ের মূল্য এবং টাকা কীভাবে দেওয়া হবে, সেটি ক্রেতা ও বিক্রেতা নিজেদের মধ্যে ঠিক করেন।",
     },
     {
         id: "26",
         category: "Requests",
         question: "মিলবে কি বই delivery করে?",
         answer:
-            "না। মিলবে কোনো delivery service পরিচালনা করে না। বই কোথায় এবং কীভাবে দেওয়া-নেওয়া হবে, সেটি buyer ও seller নিজেদের মধ্যে ঠিক করেন।",
+            "না। মিলবে কোনো delivery service পরিচালনা করে না। বই কোথায় এবং কীভাবে দেওয়া-নেওয়া হবে, সেটি ক্রেতা ও বিক্রেতা নিজেদের মধ্যে ঠিক করেন।",
     },
     {
         id: "27",
@@ -243,9 +243,9 @@ const FAQ_DATA: FAQItem[] = [
     {
         id: "31",
         category: "Account",
-        question: "আমি কি অন্য কোনো user-কে ব্লক করতে পারি?",
+        question: "আমি কি অন্য কোনো ইউজারকে ব্লক করতে পারি?",
         answer:
-            "হ্যাঁ। প্রয়োজন হলে অন্য user-কে block করার ব্যবস্থা রয়েছে।",
+            "না আপনি কোনো ইউজারকে ব্লক করতে পারবেন না । তবে প্রয়োজন হলে মিলব কর্তৃপক্ষ যেকোনো ইউজারকে ব্লক করতে পারবে।"
     },
     {
         id: "32",
@@ -358,8 +358,8 @@ export default function FAQContainer() {
                             setExpandedId(null);
                         }}
                         className={`shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-colors ${activeCategory === category.value
-                                ? "bg-[#35858E] text-white shadow-sm"
-                                : "bg-slate-50 border border-slate-200 text-slate-600 hover:border-[#35858E] hover:text-[#35858E]"
+                            ? "bg-[#35858E] text-white shadow-sm"
+                            : "bg-slate-50 border border-slate-200 text-slate-600 hover:border-[#35858E] hover:text-[#35858E]"
                             }`}
                     >
                         {category.label}
@@ -389,8 +389,8 @@ export default function FAQContainer() {
                                         <div className="flex items-center gap-4 min-w-0">
                                             <div
                                                 className={`p-2 rounded-xl transition-colors shrink-0 ${isOpen
-                                                        ? "bg-[#35858E] text-white"
-                                                        : "bg-slate-50 text-[#35858E] group-hover:bg-[#35858E] group-hover:text-white"
+                                                    ? "bg-[#35858E] text-white"
+                                                    : "bg-slate-50 text-[#35858E] group-hover:bg-[#35858E] group-hover:text-white"
                                                     }`}
                                             >
                                                 {getCategoryIcon(faq.category)}
@@ -402,8 +402,8 @@ export default function FAQContainer() {
 
                                         <ChevronDown
                                             className={`w-5 h-5 ml-4 shrink-0 text-slate-400 group-hover:text-[#35858E] transition-transform duration-200 ${isOpen
-                                                    ? "rotate-180 text-[#35858E]"
-                                                    : ""
+                                                ? "rotate-180 text-[#35858E]"
+                                                : ""
                                                 }`}
                                         />
                                     </button>
@@ -411,8 +411,8 @@ export default function FAQContainer() {
                                     <div
                                         id={`faq-answer-${faq.id}`}
                                         className={`grid transition-[grid-template-rows] duration-200 ${isOpen
-                                                ? "grid-rows-[1fr] border-t border-slate-50"
-                                                : "grid-rows-[0fr]"
+                                            ? "grid-rows-[1fr] border-t border-slate-50"
+                                            : "grid-rows-[0fr]"
                                             }`}
                                     >
                                         <div className="overflow-hidden">

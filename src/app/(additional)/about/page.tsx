@@ -133,10 +133,9 @@ export default function AboutUsPage() {
                             </div>
                             <h2 className="text-2xl font-bold text-text-primary">আমাদের ভিশন (Vision)</h2>
                             <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-                                বাংলাদেশের শিক্ষার্থীদের জন্য একটি পরিচিত ও নির্ভরযোগ্য বই শেয়ারিং ও মার্কেটপ্লেস প্ল্যাটফর্ম তৈরি করা।
-                            </p>
+                                বাংলাদেশে বই কেনাবেচা ও শেয়ার করার জন্য একটি পরিচিত, সহজ ও নির্ভরযোগ্য প্ল্যাটফর্ম হয়ে ওঠা।                            </p>
                             <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-                                ভবিষ্যতে আমরা চাই, একজন শিক্ষার্থীর আর প্রয়োজন নেই এমন বই যেন সহজেই অন্য একজন শিক্ষার্থীর কাছে পৌঁছে যায়।
+                                সময়ের সঙ্গে শিক্ষার্থীদের একাডেমিক বইয়ের পাশাপাশি বিভিন্ন ধরনের বইও যেন সহজে কেনা, বিক্রি ও শেয়ার করা যায়—আমরা সেই সুযোগ তৈরি করতে চাই।
                             </p>
                         </div>
                     </div>
@@ -264,7 +263,7 @@ export default function AboutUsPage() {
                     />
                     <ValueCard
                         icon={<Users className="w-6 h-6 text-primary" />}
-                        title="সম্প্রদায়"
+                        title="সহযোগিতা"
                         description="শিক্ষার্থীদের নিজেদের মধ্যে বই আদান-প্রদানের মাধ্যমে একে অন্যকে সহযোগিতা করার সুযোগ তৈরি করা।"
                     />
                     <ValueCard
