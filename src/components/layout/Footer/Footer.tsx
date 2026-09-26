@@ -155,7 +155,7 @@ export default function Footer() {
               যোগাযোগ
             </h3>
             <ul className="flex flex-col gap-2.5 text-sm text-accent-muted">
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2 overflow-hidden">
                 <Mail className="w-4 h-4 text-accent shrink-0" />
                 <span>amirulislam9.f@gmail.com</span>
               </li>
