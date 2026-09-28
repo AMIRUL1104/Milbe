@@ -3,7 +3,7 @@
 import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
-import { FILTER_KEYS } from "@/lib/constants/filters";
+import { FILTER_KEYS } from "@/lib/constant/filters";
 
 interface ActiveFilterChipsProps {
     search?: string;

@@ -3,7 +3,7 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useSession } from "@/lib/auth-client";
+import { useAuthState } from "@/lib/hooks/useAuthState";
 import { User } from "lucide-react";
 
 interface NavItem {
@@ -79,21 +79,21 @@ const getAuthNavItems = (isLoggedIn: boolean): NavItem[] => {
 
 export function BottomNav() {
   const pathname = usePathname();
-  const { data: session } = useSession();
-  const isLoggedIn = !!session?.user;
+  const { isLoggedIn, isReady } = useAuthState();
+
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
 
-  const authNavItems = getAuthNavItems(isLoggedIn);
+  const authNavItems = isReady ? getAuthNavItems(isLoggedIn) : [];
   const allNavItems = [...baseNavItems, ...authNavItems];
   const fabItem = allNavItems.find((item) => item.isFab);
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50" aria-label="Bottom navigation">
-      <div className="relative mx-auto max-w-screen-xl bg-primary border-t border-white-10 shadow-lg rounded-t-[24px]">
+      <div className="relative mx-auto max-w-screen-xl bg-primary border-t border-white/10 shadow-lg rounded-t-[24px]">
 
         {/* FAB Button - Centered absolutely */}
         {fabItem && (
@@ -149,6 +149,16 @@ export function BottomNav() {
               </Link>
             );
           })}
+
+          {!isReady && (
+            <div
+              className="flex flex-col items-center justify-center gap-1 w-full h-full"
+              aria-hidden="true"
+            >
+              <span className="w-6 h-6 rounded-full bg-white/10 animate-pulse" />
+              <span className="h-3 w-10 rounded bg-white/10 animate-pulse" />
+            </div>
+          )}
         </div>
       </div>
     </nav>

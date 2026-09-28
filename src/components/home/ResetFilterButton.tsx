@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RotateCcw } from "lucide-react";
-import { FILTER_KEYS } from "@/lib/constants/filters";
+import { FILTER_KEYS } from "@/lib/constant/filters";
 
 export default function ResetFilterButton() {
     const router = useRouter();

@@ -1,6 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import PrivacyNavigation from "@/app/(additional)/privacy/PrivacyNavigation";
+import PrivacyNavigation from "@/app/(site)/privacy/PrivacyNavigation";
 import {
     Shield,
     UserCheck,

@@ -1,54 +1,51 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect, Suspense } from "react";
+import { Suspense, useCallback, useState } from "react";
 import Link from "next/link";
-import { useSession } from "@/lib/auth-client";
+import { Menu, Search, X } from "lucide-react";
+import { useAuthState } from "@/lib/hooks/useAuthState";
 import { HeaderAuth } from "./HeaderAuth";
 import { HeaderSearch } from "./HeaderSearch";
+import { HelpDropdown } from "./HelpDropdown";
 import { MenuDrawer } from "./MenuDrawer";
-import { Search, Menu, ChevronDown, HelpCircle, FileText, Lock, Info } from "lucide-react";
 
-function HeaderSearchFallback() {
-  return (
-    <div className="h-10 w-full bg-surface/50 rounded-btn animate-pulse" />
-  );
+export type HeaderVariant = "home" | "default";
+
+interface HeaderProps {
+  variant?: HeaderVariant;
 }
 
-export default function Header() {
-  const { data: session } = useSession();
-  const isLoggedIn = !!session?.user;
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/how-it-works", label: "How It Works" },
+  { href: "/about", label: "About Us" },
+  { href: "/contact", label: "Contact" },
+];
+
+const ICON_BUTTON_CLASS =
+  "p-2 rounded-btn text-text-inverse hover:bg-white/10 transition-base focus-visible:outline-2 focus-visible:outline-primary-focus shrink-0";
+
+function HeaderSearchFallback() {
+  return <div className="h-10 w-full bg-surface/50 rounded-btn animate-pulse" />;
+}
+
+export default function Header({ variant = "default" }: HeaderProps) {
+  const { user, isLoggedIn, isReady } = useAuthState();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
-  const helpDropdownRef = useRef<HTMLDivElement>(null);
+  const closeMenu = useCallback(() => setIsMenuOpen(false), []);
 
-  // Close Help Dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        helpDropdownRef.current &&
-        !helpDropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsHelpOpen(false);
-      }
-    };
-    if (isHelpOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isHelpOpen]);
+  const showSearch = variant === "home";
+  const isMobileSearchOpen = showSearch && isSearchOpen;
 
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-60 w-full bg-primary border-b border-white/10 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 lg:gap-6">
-
-          {/* LEFT: Logo & Desktop Primary Navigation Links */}
+          {/* LEFT: Logo + desktop nav */}
           <div className="flex items-center gap-6 shrink-0">
-            {!isSearchOpen && (
+            {!isMobileSearchOpen && (
               <Link
                 href="/"
                 className="flex items-center gap-1 focus-visible:outline-2 focus-visible:outline-primary-focus rounded-md transition-base shrink-0"
@@ -60,138 +57,88 @@ export default function Header() {
               </Link>
             )}
 
-            {/* Desktop Quick Nav Links */}
             <nav className="hidden lg:flex items-center gap-4 text-xs xl:text-sm font-medium text-text-inverse/90">
-              <Link
-                href="/how-it-works"
-                className="hover:text-text-inverse transition-colors whitespace-nowrap py-1 px-2 rounded-md hover:bg-white/10"
-              >
-                How It Works
-              </Link>
-              <Link
-                href="/about"
-                className="hover:text-text-inverse transition-colors whitespace-nowrap py-1 px-2 rounded-md hover:bg-white/10"
-              >
-                About Us
-              </Link>
-
-              {/* Help & Policies Dropdown for Desktop */}
-              <div className="relative" ref={helpDropdownRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsHelpOpen((prev) => !prev)}
-                  className="flex items-center gap-1 hover:text-text-inverse transition-colors py-1 px-2 rounded-md hover:bg-white/10 focus:outline-none"
+              {NAV_LINKS.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="hover:text-text-inverse transition-colors whitespace-nowrap py-1 px-2 rounded-md hover:bg-white/10"
                 >
-                  <span>Help</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${isHelpOpen ? "rotate-180" : ""
-                      }`}
-                  />
-                </button>
-
-                {isHelpOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-surface border border-border rounded-btn shadow-lg py-2 z-50 text-text-primary text-xs sm:text-sm">
-                    <Link
-                      href="/faq"
-                      onClick={() => setIsHelpOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 hover:bg-background transition-colors"
-                    >
-                      <HelpCircle className="w-4 h-4 text-primary shrink-0" />
-                      <span>Help Center</span>
-                    </Link>
-                    <Link
-                      href="/terms"
-                      onClick={() => setIsHelpOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 hover:bg-background transition-colors"
-                    >
-                      <FileText className="w-4 h-4 text-primary shrink-0" />
-                      <span>Terms & Conditions</span>
-                    </Link>
-                    <Link
-                      href="/privacy"
-                      onClick={() => setIsHelpOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 hover:bg-background transition-colors"
-                    >
-                      <Lock className="w-4 h-4 text-primary shrink-0" />
-                      <span>Privacy Policy</span>
-                    </Link>
-                  </div>
-                )}
-              </div>
+                  {label}
+                </Link>
+              ))}
+              <HelpDropdown />
             </nav>
           </div>
 
-          {/* CENTER: Search Bar & Location Component */}
-          {isSearchOpen ? (
-            /* Mobile Expanded Search View */
-            <div className="flex items-center gap-2 flex-1 md:hidden">
-              <Suspense fallback={<HeaderSearchFallback />}>
-                <HeaderSearch mode="search" />
-              </Suspense>
-              <button
-                type="button"
-                onClick={() => setIsSearchOpen(false)}
-                className="p-2 rounded-btn text-text-inverse hover:bg-white/10 transition-base focus-visible:outline-2 focus-visible:outline-primary-focus shrink-0"
-                aria-label="Close search"
+          {/* CENTER: Search + Location (শুধু home variant) */}
+          {showSearch &&
+            (isSearchOpen ? (
+              <div className="flex items-center gap-2 flex-1 md:hidden">
+                <Suspense fallback={<HeaderSearchFallback />}>
+                  <HeaderSearch mode="search" />
+                </Suspense>
+                <button
+                  type="button"
+                  onClick={() => setIsSearchOpen(false)}
+                  className={ICON_BUTTON_CLASS}
+                  aria-label="Close search"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 flex-1 justify-end md:justify-center">
+                <div className="hidden md:block flex-1 max-w-lg lg:max-w-xl">
+                  <Suspense fallback={<HeaderSearchFallback />}>
+                    <HeaderSearch mode="desktop" />
+                  </Suspense>
+                </div>
+
+                <div className="md:hidden flex-1">
+                  <Suspense fallback={<HeaderSearchFallback />}>
+                    <HeaderSearch mode="default" />
+                  </Suspense>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsSearchOpen(true)}
+                  className={`md:hidden ${ICON_BUTTON_CLASS}`}
+                  aria-label="Open search"
+                >
+                  <Search className="w-5 h-5" />
+                </button>
+              </div>
+            ))}
+
+          {/* RIGHT: Actions + Menu */}
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="hidden md:flex items-center gap-3 lg:gap-4">
+              <Link
+                href="/add-post"
+                className="px-4 lg:px-5 py-2 text-xs lg:text-sm font-semibold text-primary bg-accent hover:bg-accent-hover rounded-btn transition-base shadow-sm focus-visible:outline-2 focus-visible:outline-primary-focus whitespace-nowrap"
               >
-                <span className="text-lg font-bold">✕</span>
-              </button>
+                Sell/Donate
+              </Link>
+              <HeaderAuth user={user} isLoggedIn={isLoggedIn} isReady={isReady} />
             </div>
-          ) : (
-            /* Desktop Integrated Search & Mobile Minimal Controls */
-            <div className="flex items-center gap-2 flex-1 justify-end md:justify-center">
-              {/* Desktop / Tablet Search & Location Container */}
-              <div className="hidden md:block flex-1 max-w-lg lg:max-w-xl">
-                <Suspense fallback={<HeaderSearchFallback />}>
-                  <HeaderSearch mode="desktop" />
-                </Suspense>
-              </div>
 
-              {/* Mobile Default Location Display */}
-              <div className="md:hidden flex-1">
-                <Suspense fallback={<HeaderSearchFallback />}>
-                  <HeaderSearch mode="default" />
-                </Suspense>
-              </div>
-
-              {/* Mobile Search Toggle Icon */}
-              <button
-                type="button"
-                onClick={() => setIsSearchOpen(true)}
-                className="md:hidden p-2 rounded-btn text-text-inverse hover:bg-white/10 transition-base focus-visible:outline-2 focus-visible:outline-primary-focus shrink-0"
-                aria-label="Open search"
-              >
-                <Search className="w-5 h-5" />
-              </button>
-
-              {/* Mobile Menu Drawer Toggle */}
+            {!isMobileSearchOpen && (
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(true)}
-                className="p-2 rounded-btn text-text-inverse hover:bg-white/10 transition-base focus-visible:outline-2 focus-visible:outline-primary-focus shrink-0 md:hidden"
+                className={`lg:hidden ${ICON_BUTTON_CLASS}`}
                 aria-label="Open menu"
               >
                 <Menu className="w-5 h-5" />
               </button>
-            </div>
-          )}
-
-          {/* RIGHT: User Actions & Post Creation */}
-          <div className="hidden md:flex items-center gap-3 lg:gap-4 shrink-0">
-            <Link
-              href="/add-post"
-              className="px-4 lg:px-5 py-2 text-xs lg:text-sm font-semibold text-primary bg-accent hover:bg-accent-hover rounded-btn transition-base shadow-sm focus-visible:outline-2 focus-visible:outline-primary-focus whitespace-nowrap"
-            >
-              Sell/Donate
-            </Link>
-
-            <HeaderAuth user={session?.user ?? null} isLoggedIn={isLoggedIn} />
+            )}
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Drawer */}
-      <MenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <MenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />
     </>
   );
 }

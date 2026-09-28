@@ -25,7 +25,7 @@ export default function SidebarClient({ navItems, user }: SidebarClientProps) {
         type="button"
         onClick={() => setIsMobileOpen(true)}
         aria-label="Open sidebar"
-        className="lg:hidden fixed top-4 left-4 z-40 p-2.5 bg-surface rounded-xl shadow-md border border-border-light text-primary cursor-pointer"
+        className="lg:hidden fixed top-20 left-4 z-40 p-2.5 bg-surface rounded-xl shadow-md border border-border-light text-primary cursor-pointer"
       >
         <Menu className="w-5 h-5" />
       </button>
@@ -34,19 +34,18 @@ export default function SidebarClient({ navItems, user }: SidebarClientProps) {
         <div
           onClick={() => setIsMobileOpen(false)}
           aria-hidden="true"
-          className="lg:hidden fixed inset-0 bg-overlay-dark z-40 transition-opacity duration-300"
-        />
+          className="lg:hidden fixed inset-0 bg-overlay-dark z-65 transition-opacity duration-300" />
       )}
 
       <aside
         className={`
-          fixed lg:sticky top-0 left-0 h-screen z-50
-          flex flex-col bg-surface border-r border-border-light
-          transition-all duration-300 ease-in-out
-          ${isCollapsed ? "lg:w-20" : "lg:w-64"}
-          w-64
-          ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-        `}
+              fixed top-0 left-0 h-screen z-70 w-64
+              lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:z-30
+              flex flex-col bg-surface border-r border-border-light
+              transition-all duration-300 ease-in-out
+              ${isCollapsed ? "lg:w-20" : "lg:w-64"}
+              ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+            `}
       >
         <div className="flex items-center justify-between px-4 py-5">
           <SidebarLogo isCollapsed={isCollapsed} />

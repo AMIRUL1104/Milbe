@@ -1,49 +1,63 @@
+import { cache } from "react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { UserSession } from "@/interface/user/userSession";
 
-// ১. ইউজার সেশন পাওয়ার ফাংশন
-export async function getUserSession(): Promise<UserSession | null> {
+// ভেতরের helper: blocked হলেও user ফেরত দেয় (এক request-এ একবারই fetch হয়)
+const getSessionUser = cache(async (): Promise<UserSession | null> => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  // সেশন বা ইউজার না থাকলে null রিটার্ন করবে
-  if (!session || !session.user) {
-    return null;
-  }
+  if (!session || !session.user) return null;
 
-  const user = session.user as UserSession;
+  return session.user as UserSession;
+});
 
-  // Blocked users are denied at the server-session layer as well.
-  // (The Express API enforces the same flag in `auth.middleware.ts`.)
-  if (user.isBlocked) {
-    return null;
-  }
+// ১. ইউজার সেশন পাওয়ার ফাংশন
+// Blocked users are denied at the server-session layer as well.
+// (The Express API enforces the same flag in `auth.middleware.ts`.)
+export async function getUserSession(): Promise<UserSession | null> {
+  const user = await getSessionUser();
 
-  // টাইপ কাস্টিং করে সঠিক স্ট্রাকচার রিটার্ন
+  if (!user || user.isBlocked) return null;
+
   return user;
 }
 
-// ২. ইউজার টোকেন পাওয়ার ফাংশন
+// ২. ইউজার টোকেন পাওয়ার ফাংশন
 export const getUserToken = async (): Promise<string | null> => {
   const sessionData = await auth.api.getSession({
     headers: await headers(),
   });
-  // console.log(sessionData);
   return sessionData?.session?.token || null;
 };
 
-// ৩. রোল চেক করার ফাংশন (টাইপ ফিক্সড)
-export const requireRole = async (allowedRole: "user" | "admin") => {
-  const user = await getUserSession();
-  // console.log(user);
+// ৩. লগইন বাধ্যতামূলক: session নেই → signin, blocked → unauthorized
+export const requireSession = async (): Promise<UserSession> => {
+  const user = await getSessionUser();
 
-  // যদি ইউজার লগইন করা না থাকে অথবা রোল না মিলে, তবে রিডাইরেক্ট হবে
-  if (!user || user.role !== allowedRole) {
-    return redirect("/unauthorized");
+  if (!user) {
+    redirect("/auth/signin");
   }
 
-  return user; // রোল মিললে ইউজার অবজেক্ট রিটার্ন করতে পারেন
+  if (user.isBlocked) {
+    redirect("/unauthorized");
+  }
+
+  return user;
+};
+
+// ৪. রোল চেক: login নেই → signin, blocked বা রোল না মিললে → unauthorized
+export const requireRole = async (
+  allowedRole: "user" | "admin",
+): Promise<UserSession> => {
+  const user = await requireSession();
+
+  if (user.role !== allowedRole) {
+    redirect("/unauthorized");
+  }
+
+  return user;
 };

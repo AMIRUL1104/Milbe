@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono, Hind_Siliguri, Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/layout/navbar/Header";
-import Footer from "@/components/layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
-import { BottomNav } from "@/components/layout/navbar/BottomNav";
+
 
 const inter = Inter({
   variable: "--font-inter",
@@ -71,11 +69,9 @@ const jsonLd = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="bn"
@@ -87,14 +83,11 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col font-sans" style={{ fontFamily: 'var(--font-hind-siliguri), var(--font-inter), sans-serif' }}>
-        <Header />
-        <div className="flex-1 pt-16">
-          {children}
-        </div>
-        <BottomNav />
-        <Footer />
-
+      <body
+        className="min-h-full flex flex-col font-sans"
+        style={{ fontFamily: "var(--font-hind-siliguri), var(--font-inter), sans-serif" }}
+      >
+        {children}
         <ToastContainer />
       </body>
     </html>

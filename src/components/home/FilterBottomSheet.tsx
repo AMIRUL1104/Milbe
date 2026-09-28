@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X, GripHorizontal } from "lucide-react";
-import { FILTER_KEYS } from "@/lib/constants/filters";
+import { FILTER_KEYS } from "@/lib/constant/filters";
 
 interface FilterBottomSheetProps {
   isOpen: boolean;

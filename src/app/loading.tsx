@@ -57,43 +57,68 @@ function HeaderFiltersSkeleton() {
 
 function HeroSkeleton() {
     return (
-        <section className="relative w-full overflow-hidden border-b border-[#EDF1F2] bg-[#F5F7F8] py-10 md:py-16">
-            <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#35858E]/10 blur-3xl" aria-hidden="true" />
-            <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-[#F6CE71]/15 blur-3xl" aria-hidden="true" />
+        <section className="relative isolate overflow-hidden bg-gradient-to-b from-[#F5F7F8] via-[#F8F9FA] to-[#F3EFE2] px-4 pb-8 pt-6 sm:px-6 sm:py-10 md:py-16 lg:py-20 animate-pulse">
+            {/* Background Soft Gradients Placeholder */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-20 -top-20 -z-20 h-72 w-72 rounded-full bg-[#35858E]/10 blur-3xl sm:h-[28rem] sm:w-[28rem]"
+            />
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-24 -left-20 -z-20 h-72 w-72 rounded-full bg-[#F6CE71]/15 blur-3xl sm:h-[28rem] sm:w-[28rem]"
+            />
 
-            <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
-                    <div className="space-y-5 text-center sm:text-left lg:col-span-7">
-                        <div className="mx-auto inline-flex h-9 items-center rounded-full border border-[#35858E]/20 bg-[#35858E]/10 px-3 text-xs font-semibold text-[#35858E] sm:mx-0 sm:text-sm">
-                            <div className="mr-2 h-4 w-4 rounded-full bg-[#35858E]/20" />
-                            <div className="h-3 w-36 rounded-full bg-[#35858E]/20" />
+            <div className="mx-auto max-w-7xl">
+                {/* 1. Badge Placeholder */}
+                <div className="mb-4 flex justify-center sm:mb-5 md:justify-start">
+                    <div className="h-8 w-64 rounded-full bg-slate-200/80" />
+                </div>
+
+                <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-12 md:gap-8 lg:gap-12">
+                    {/* LEFT COLUMN */}
+                    <div className="flex flex-col items-center md:col-span-6 md:items-start lg:col-span-7">
+                        {/* Heading Placeholder */}
+                        <div className="h-10 w-3/4 max-w-md rounded-xl bg-slate-200 md:hidden sm:h-12" />
+                        <div className="hidden h-14 w-full max-w-lg rounded-2xl bg-slate-200 md:block" />
+
+                        {/* Subtitle Placeholder (Desktop only) */}
+                        <div className="mt-3 hidden w-full max-w-xl space-y-2 md:block">
+                            <div className="h-4 w-full rounded-md bg-slate-200" />
+                            <div className="h-4 w-4/5 rounded-md bg-slate-200" />
                         </div>
 
-                        <div className="space-y-3">
-                            <div className="mx-auto h-9 w-full max-w-xl rounded-xl bg-slate-200 sm:mx-0 sm:h-10 lg:h-12" />
-                            <div className="mx-auto h-9 w-[88%] max-w-lg rounded-xl bg-slate-200 sm:mx-0 sm:h-10 lg:h-12" />
-                        </div>
+                        {/* Search Bar Placeholder (Desktop only) */}
+                        <div className="mt-6 hidden h-[54px] w-full max-w-xl rounded-2xl bg-white/80 border border-gray-200/80 md:block" />
 
-                        <div className="mx-auto h-5 w-full max-w-xl rounded bg-slate-200 sm:mx-0" />
-                        <div className="mx-auto h-5 w-[72%] max-w-lg rounded bg-slate-200 sm:mx-0" />
-
-                        <div className="pt-2">
-                            <div className="mx-auto h-12 w-44 rounded-lg bg-[#35858E]/30 sm:mx-0" />
+                        {/* Desktop CTAs Placeholder */}
+                        <div className="mt-7 hidden items-center gap-4 md:flex">
+                            <div className="h-13 w-48 rounded-xl bg-[#35858E]/30" />
+                            <div className="h-13 w-48 rounded-xl bg-[#35858E]/15 border border-[#35858E]/20" />
                         </div>
                     </div>
 
-                    <div className="hidden grid-cols-2 gap-3.5 sm:grid lg:col-span-5 lg:gap-4">
-                        {Array.from({ length: 4 }).map((_, index) => (
-                            <div
-                                key={index}
-                                className="rounded-xl border border-[#EDF1F2] bg-white p-4 shadow-[0_12px_28px_rgba(15,23,42,0.05)]"
-                            >
-                                <div className="mb-2.5 h-9 w-9 rounded-lg bg-[#35858E]/10" />
-                                <div className="mb-2 h-4 w-24 rounded bg-slate-200" />
-                                <div className="h-3 w-full rounded bg-slate-200" />
-                                <div className="mt-1 h-3 w-4/5 rounded bg-slate-200" />
-                            </div>
-                        ))}
+                    {/* RIGHT COLUMN (HeroActions Wrapper) */}
+                    <div className="md:col-span-6 lg:col-span-5">
+                        <div className="rounded-3xl border border-white/70 bg-white/65 p-2 shadow-sm backdrop-blur-xl sm:p-3">
+                            <ul className="flex flex-col">
+                                {Array.from({ length: 3 }).map((_, index) => (
+                                    <li
+                                        key={index}
+                                        className={`flex items-center gap-3.5 px-3.5 py-3.5 sm:py-4 ${index !== 2 ? "border-b border-[#35858E]/10" : ""
+                                            }`}
+                                    >
+                                        <div className="h-11 w-11 shrink-0 rounded-xl bg-[#35858E]/15" />
+                                        <div className="h-5 w-48 rounded-lg bg-slate-200" />
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Mobile CTAs Placeholder */}
+                        <div className="mt-4 flex flex-col gap-3 md:hidden">
+                            <div className="h-13 w-full rounded-xl bg-[#35858E]/30" />
+                            <div className="h-13 w-full rounded-xl bg-[#35858E]/15 border border-[#35858E]/20" />
+                        </div>
                     </div>
                 </div>
             </div>

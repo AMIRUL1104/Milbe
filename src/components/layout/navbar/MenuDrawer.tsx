@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { X, Info, HelpCircle, FileText, Lock } from "lucide-react";
+import { X, Home, Info, Lightbulb, Mail, HelpCircle, FileText, Lock } from "lucide-react";
+
 
 interface MenuDrawerProps {
   isOpen: boolean;
@@ -10,8 +11,10 @@ interface MenuDrawerProps {
 }
 
 const menuItems = [
+  { href: "/", label: "Home", icon: Home },
   { href: "/about", label: "About Milbe", icon: Info },
-  { href: "/how-it-works", label: "How It Works", icon: HelpCircle },
+  { href: "/how-it-works", label: "How It Works", icon: Lightbulb },
+  { href: "/contact", label: "Contact", icon: Mail },
   { href: "/faq", label: "Help Center", icon: HelpCircle },
   { href: "/terms", label: "Terms & Conditions", icon: FileText },
   { href: "/privacy", label: "Privacy Policy", icon: Lock },
