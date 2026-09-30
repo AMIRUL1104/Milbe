@@ -2,7 +2,12 @@ import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { z } from "zod";
-import { sendVerifyMail, sendExistingAccountMail } from "./email";
+import {
+  sendVerifyMail,
+  sendExistingAccountMail,
+  sendResetPasswordMail,
+  sendPasswordChangedMail,
+} from "./email";
 
 const uri = process.env.MONGODB_URI;
 
@@ -35,6 +40,19 @@ export const auth = betterAuth({
         loginUrl: `${baseUrl}/auth/signin`,
       });
     },
+    // ── পাসওয়ার্ড রিসেট ───────────────────────────────────────────────
+    sendResetPassword: async ({ user, url }) => {
+      sendResetPasswordMail({ to: user.email, name: user.name, url });
+    },
+    onPasswordReset: async ({ user }) => {
+      sendPasswordChangedMail({
+        to: user.email,
+        name: user.name,
+        forgotUrl: `${baseUrl}/auth/forgot-password`,
+      });
+    },
+    // পাসওয়ার্ড রিসেট হলে অন্য সব ডিভাইস থেকে logout হয়ে যাবে
+    revokeSessionsOnPasswordReset: true,
   },
   emailVerification: {
     sendOnSignUp: true,

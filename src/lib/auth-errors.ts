@@ -9,6 +9,8 @@ const MESSAGES: Record<string, string> = {
   PASSWORD_TOO_SHORT: "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।",
   PASSWORD_TOO_LONG: "পাসওয়ার্ড অনেক বড় হয়ে গেছে।",
   INVALID_EMAIL: "সঠিক ইমেইল ঠিকানা দিন।",
+  INVALID_TOKEN:
+    "লিংকটির মেয়াদ শেষ হয়ে গেছে অথবা এটি আগেই ব্যবহার করা হয়েছে।",
 };
 
 export function getAuthErrorMessage(error: AuthError, fallback: string) {

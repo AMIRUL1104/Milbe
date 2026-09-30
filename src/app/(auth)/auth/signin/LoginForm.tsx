@@ -122,7 +122,7 @@ export default function LoginForm() {
             <span>মনে রাখুন</span>
           </label>
           <Link
-            href="/forgot-password"
+            href="/auth/forgot-password"
             className="font-semibold text-primary hover:text-primary-hover transition-colors"
           >
             পাসওয়ার্ড ভুলে গেছেন?
