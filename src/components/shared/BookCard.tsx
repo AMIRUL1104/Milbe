@@ -121,7 +121,7 @@ export default function BookCard({ book }: BookCardProps) {
 
           {/* Button: Solid color on Mobile, Hover effect on Laptop/Desktop */}
           <Link
-            href={`/books/${book._id}`}
+            href={`/books/${book.slug || book._id}`}
             className="inline-flex items-center gap-1 text-xs max-[390px]:text-[10px] font-bold max-[390px]:px-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 bg-primary text-white md:bg-primary/10 md:text-primary md:hover:bg-primary md:hover:text-white group/btn shrink-0"
           >
             <span>বিস্তারিত</span>

@@ -1,25 +1,30 @@
 import { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { permanentRedirect } from "next/navigation";
 import BookInformation from "@/components/book-details/BookInformation";
 import SellerCard from "@/components/book-details/SellerCard";
 import BookMetaCard from "@/components/book-details/BookMetaCard";
 import BookHero from "@/components/book-details/BookHero";
 import type { PostItem } from "@/interface/post/types";
-import { getPostById } from "@/services/features/posts";
+import { getPostById, getPostBySlug } from "@/services/features/posts";
 
 interface BookDetailsPageProps {
   params: Promise<{
-    id: string;
+    slug: string;
   }>;
 }
+
+const isObjectId = (value: string): boolean => /^[a-f\d]{24}$/i.test(value);
 
 export async function generateMetadata({
   params,
 }: BookDetailsPageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { slug } = await params;
   try {
-    const response = await getPostById(id);
+    const response = isObjectId(slug)
+      ? await getPostById(slug)
+      : await getPostBySlug(slug);
     const post = response?.data;
     if (!post) {
       return {
@@ -29,6 +34,9 @@ export async function generateMetadata({
     return {
       title: `${post.title} | Milbe`,
       description: post.description || `${post.title} - বইটির বিস্তারিত দেখুন Milbe-তে।`,
+      ...(post.slug
+        ? { alternates: { canonical: `https://milbe.shop/books/${post.slug}` } }
+        : {}),
     };
   } catch {
     return {
@@ -38,16 +46,25 @@ export async function generateMetadata({
 }
 
 export default async function BookDetailsPage({ params }: BookDetailsPageProps) {
-  const { id } = await params;
+  const { slug } = await params;
 
   let post: PostItem | null = null;
   let isError = false;
 
   try {
-    const response = await getPostById(id);
-    post = response?.data || null;
+    if (isObjectId(slug)) {
+      const response = await getPostById(slug);
+      post = response?.data || null;
+    } else {
+      const response = await getPostBySlug(slug);
+      post = response?.data || null;
+    }
   } catch {
     isError = true;
+  }
+
+  if (!isError && isObjectId(slug) && post?.slug) {
+    permanentRedirect(`/books/${post.slug}`);
   }
 
   if (isError || !post) {

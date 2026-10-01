@@ -20,6 +20,7 @@ export interface PostItem {
   sellerName: string;
   sellerEmail: string;
   title: string;
+  slug?: string;
   category: string;
   type: PostType;
   image: string;

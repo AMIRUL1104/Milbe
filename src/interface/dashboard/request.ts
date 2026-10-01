@@ -3,6 +3,7 @@ export type RequestStatus = "pending" | "accepted" | "rejected" | "cancelled";
 export interface SentRequest {
   id: string;
   postId: string;
+  postSlug?: string;
   postTitle: string;
   bookCoverUrl: string;
   sellerName: string;

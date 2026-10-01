@@ -1,8 +1,8 @@
-// src/app/books/[id]/loading.tsx
+// src/app/books/[slug]/loading.tsx
 
 /**
  * Skeleton Loading Component for Book Details Page
- * Displays a responsive loading state that mirrors the structure of books/[id]/page.tsx
+ * Displays a responsive loading state that mirrors the structure of books/[slug]/page.tsx
  * Includes: Back button, BookHero, BookInformation, BookMetaCard and SellerCard skeletons
  */
 

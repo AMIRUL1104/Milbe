@@ -16,6 +16,7 @@ type ButtonStatus =
 
 interface RequestBookButtonProps {
   postId: string;
+  postSlug: string;
   requesterId?: string;
   postTitle: string;
   sellerName: string;
@@ -26,6 +27,7 @@ interface RequestBookButtonProps {
 
 export default function RequestBookButton({
   postId,
+  postSlug,
   requesterId,
   postTitle,
   sellerName,
@@ -98,7 +100,7 @@ export default function RequestBookButton({
   if (status === "not-logged-in") {
     return (
       <Link
-        href={`/auth/signin?callbackUrl=/books/${postId}`}
+        href={`/auth/signin?callbackUrl=${encodeURIComponent(`/books/${postSlug}`)}`}
         className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#35858E] px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#2c6e76]"
       >
         <LogIn className="h-4 w-4" />

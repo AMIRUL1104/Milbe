@@ -51,6 +51,7 @@ export default async function BookMetaCard({ post }: BookMetaCardProps) {
       <div className="w-full pt-1">
         <RequestBookButton
           postId={post._id}
+          postSlug={post.slug || post._id}
           requesterId={session?.id}
           postTitle={post.title}
           sellerName={post.sellerName}

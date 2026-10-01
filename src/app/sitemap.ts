@@ -1,7 +1,10 @@
 import type { MetadataRoute } from "next";
+import { getPosts } from "@/services/features/posts";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const entries: MetadataRoute.Sitemap = [
     {
       url: "https://milbe.shop",
       lastModified: new Date(),
@@ -33,4 +36,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ];
+
+  try {
+    let page = 1;
+    let totalPages = 1;
+
+    do {
+      const response = await getPosts({ page, limit: 50 });
+      for (const post of response.data ?? []) {
+        if (!post.slug) continue;
+        entries.push({
+          url: `https://milbe.shop/books/${post.slug}`,
+          lastModified: post.updatedAt || post.publishedAt,
+          changeFrequency: "weekly",
+          priority: 0.7,
+        });
+      }
+
+      totalPages = response.meta?.totalPages ?? page;
+      page += 1;
+    } while (page <= totalPages);
+  } catch {
+    return entries;
+  }
+
+  return entries;
 }

@@ -47,6 +47,10 @@ export async function getPostById(id: string): Promise<PostResponse> {
   return serverFetch<PostItem>(`/api/posts/${id}`);
 }
 
+export async function getPostBySlug(slug: string): Promise<PostResponse> {
+  return serverFetch<PostItem>(`/api/posts/slug/${encodeURIComponent(slug)}`);
+}
+
 export async function getFeaturedPosts(): Promise<PostItem[]> {
   return unwrapResponse<PostItem[]>(
     await serverFetch<PostItem[]>("/api/posts/featured"),
