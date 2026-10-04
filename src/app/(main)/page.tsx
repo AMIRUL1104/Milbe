@@ -31,14 +31,14 @@ export const metadata: Metadata = {
   ],
 
   alternates: {
-    canonical: "https://milbe.shop",
+    canonical: "https://milbe.vercel.app",
   },
 
   openGraph: {
     title: "milbe.shop | Bangladesh's Student Book Hub",
     description:
       "Buy, sell, and donate used academic books with students across Bangladesh.",
-    url: "https://milbe.shop",
+    url: "https://milbe.vercel.app",
     siteName: "milbe.shop",
     locale: "en_US",
     type: "website",

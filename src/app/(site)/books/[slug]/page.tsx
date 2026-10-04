@@ -35,7 +35,7 @@ export async function generateMetadata({
       title: `${post.title} | Milbe`,
       description: post.description || `${post.title} - বইটির বিস্তারিত দেখুন Milbe-তে।`,
       ...(post.slug
-        ? { alternates: { canonical: `https://milbe.shop/books/${post.slug}` } }
+        ? { alternates: { canonical: `https://milbe.vercel.app/books/${post.slug}` } }
         : {}),
     };
   } catch {

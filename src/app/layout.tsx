@@ -33,14 +33,14 @@ const notoSerifBengali = Noto_Serif_Bengali({
 export const metadata: Metadata = {
   title: "Milbe",
   description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
-  metadataBase: new URL("https://milbe.shop"),
+  metadataBase: new URL("https://milbe.vercel.app"),
   alternates: {
-    canonical: "https://milbe.shop",
+    canonical: "https://milbe.vercel.app",
   },
   openGraph: {
     title: "Milbe",
     description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
-    url: "https://milbe.shop",
+    url: "https://milbe.vercel.app",
     siteName: "Milbe",
     locale: "en_US",
     type: "website",
@@ -60,11 +60,11 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Milbe",
-  url: "https://milbe.shop",
+  url: "https://milbe.vercel.app",
   description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
   potentialAction: {
     "@type": "SearchAction",
-    target: "https://milbe.shop?search={search_term_string}",
+    target: "https://milbe.vercel.app?search={search_term_string}",
     "query-input": "required name=search_term_string",
   },
 };

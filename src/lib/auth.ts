@@ -15,11 +15,18 @@ if (!uri) {
   throw new Error("MONGODB_URI is not defined in the .env file.");
 }
 
-// ভেরিফিকেশন লিংক এই URL থেকে বানানো হয়। production-এ অবশ্যই https://milbe.shop হতে হবে।
+// ভেরিফিকেশন লিংক এই URL থেকে বানানো হয়। production-এ অবশ্যই https://milbe.vercel.app হতে হবে।
 const baseUrl = process.env.BETTER_AUTH_URL ?? process.env.NEXT_PUBLIC_BASE_URL;
 
 const client = new MongoClient(uri);
 const db = client.db("BookBridgeDB");
+
+/**
+ * Shared MongoDB connection singleton. Better Auth uses this pool for auth
+ * data; other server-only modules (e.g. `app/sitemap.ts`) reuse the same
+ * client so a single process never opens a second connection pool.
+ */
+export { client, db };
 
 export const auth = betterAuth({
   baseURL: baseUrl,
