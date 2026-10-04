@@ -78,7 +78,7 @@ export default async function BookDetailsPage({ params }: BookDetailsPageProps) 
             বইয়ের তথ্য পাওয়া যায়নি!
           </h2>
           <p className="text-sm text-slate-500 mb-6">
-            পোস্টটি হয়তো মুছে ফেলা হয়েছে অথবা ইউআরএল (URL) টি সঠিক নয়।
+            পোস্টটি হয়তো ডিলিট করে ফেলা হয়েছে অথবা ইউআরএল (URL) টি সঠিক নয়।
           </p>
           <Link
             href="/"
