@@ -1,9 +1,0 @@
-{
-  "name": "Milbe",
-  "short_name": "Milbe",
-  "description": "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#35858E"
-}

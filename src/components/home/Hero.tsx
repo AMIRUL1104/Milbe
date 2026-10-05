@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CirclePlus, Download, GraduationCap, Sparkles } from "lucide-react";
 import HeroSearchBar from "./HeroSearch";
 import HeroActions from "./Heroactions";
+import { marketConfig } from "@/config/market";
 
 
 const APP_DOWNLOAD_URL = "#download";
@@ -111,7 +112,7 @@ export default function Hero() {
                 <div className="hero-fade-up mb-4 flex justify-center sm:mb-5 md:justify-start">
                     <span className="inline-flex items-center gap-2 rounded-full border border-[#35858E]/25 bg-white/80 px-4 py-1.5 text-xs font-bold text-[#35858E] shadow-2xs backdrop-blur-md sm:text-sm">
                         <GraduationCap className="h-4 w-4 shrink-0" />
-                        <span>শিক্ষার্থীদের পুরোনো বইয়ের মার্কেটপ্লেস</span>
+                        <span>{marketConfig.positioning.badgeBn}</span>
                         <Sparkles className="h-3.5 w-3.5 shrink-0 text-[#F6CE71]" />
                     </span>
                 </div>
@@ -124,7 +125,7 @@ export default function Hero() {
                         </h1>
 
                         <p className="mt-3 hidden max-w-xl text-sm leading-relaxed text-gray-600 sm:text-xl md:block">
-                            বাংলাদেশের শিক্ষার্থীদের একাডেমিক বই কেনাবেচা ও দান করার একমাত্র নির্ভরযোগ্য প্ল্যাটফর্ম।
+                            {marketConfig.positioning.taglineBn}
                         </p>
 
                         {/* Search (desktop only). useSearchParams needs a Suspense boundary */}

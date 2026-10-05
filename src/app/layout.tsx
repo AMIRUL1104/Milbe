@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono, Hind_Siliguri, Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
+import { marketConfig } from "@/config/market";
 
 
 const inter = Inter({
@@ -30,25 +31,40 @@ const notoSerifBengali = Noto_Serif_Bengali({
   display: "swap",
 });
 
+const { seo, region } = marketConfig;
+
 export const metadata: Metadata = {
-  title: "Milbe",
-  description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
-  metadataBase: new URL("https://milbe.vercel.app"),
-  alternates: {
-    canonical: "https://milbe.vercel.app",
+  title: {
+    default: seo.defaultTitle,
+    template: seo.titleTemplate,
   },
+  description: seo.description,
+  metadataBase: new URL(seo.canonicalBaseUrl),
+  alternates: {
+    canonical: seo.canonicalBaseUrl,
+  },
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/manifest.webmanifest",
   openGraph: {
-    title: "Milbe",
-    description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
-    url: "https://milbe.vercel.app",
-    siteName: "Milbe",
-    locale: "en_US",
+    title: seo.defaultTitle,
+    description: seo.description,
+    url: seo.canonicalBaseUrl,
+    siteName: seo.siteName,
+    locale: seo.ogLocale,
     type: "website",
+    images: [{ url: seo.ogImage, alt: seo.defaultTitle }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Milbe",
-    description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
+    title: seo.defaultTitle,
+    description: seo.description,
+    images: [seo.ogImage],
   },
   robots: {
     index: true,
@@ -56,17 +72,46 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * JSON-LD structured data — সব মান marketConfig থেকে ডেরাইভ।
+ * @graph: WebSite (SearchAction সহ) + Organization (Sylhet, Bangladesh)।
+ * Organization ব্যবহার (LocalBusiness নয়) কারণ মিলবে একটি অনলাইন প্ল্যাটফর্ম।
+ */
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "Milbe",
-  url: "https://milbe.vercel.app",
-  description: "A trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh.",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: "https://milbe.vercel.app?search={search_term_string}",
-    "query-input": "required name=search_term_string",
-  },
+  "@graph": [
+    {
+      "@type": "WebSite",
+      name: "Milbe",
+      alternateName: "মিলবে",
+      url: seo.canonicalBaseUrl,
+      description: seo.description,
+      inLanguage: "bn",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${seo.canonicalBaseUrl}?search={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": "Organization",
+      name: "Milbe",
+      alternateName: "মিলবে",
+      url: seo.canonicalBaseUrl,
+      logo: `${seo.canonicalBaseUrl}${seo.ogImage}`,
+      description: seo.description,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: region.nameEn,
+        addressRegion: region.nameEn,
+        addressCountry: "BD",
+      },
+      areaServed: {
+        "@type": "City",
+        name: region.nameEn,
+      },
+    },
+  ],
 };
 
 export default function RootLayout({

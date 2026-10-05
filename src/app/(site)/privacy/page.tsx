@@ -1,5 +1,5 @@
 import React from "react";
-import { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import PrivacyNavigation from "@/app/(site)/privacy/PrivacyNavigation";
 import {
     Shield,
@@ -19,10 +19,7 @@ import {
     Trash2
 } from "lucide-react";
 
-export const metadata: Metadata = {
-    title: "গোপনীয়তা নীতি | Milbe",
-    description: "মিলবে কীভাবে আপনার তথ্য সংগ্রহ, ব্যবহার এবং সুরক্ষিত রাখে তা বিস্তারিত জানুন।",
-};
+export const metadata = buildPageMetadata("privacy");
 
 // ১২টি ক্যাটাগরির আপডেট নেভিগেশন তালিকা
 const NAVIGATION_ITEMS = [

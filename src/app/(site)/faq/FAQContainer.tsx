@@ -13,6 +13,7 @@ import {
     ShieldCheck,
     BookOpen,
 } from "lucide-react";
+import { marketConfig } from "@/config/market";
 
 type FAQCategory =
     | "General"
@@ -35,7 +36,7 @@ const FAQ_DATA: FAQItem[] = [
         category: "General",
         question: "মিলবে কী?",
         answer:
-            "মিলবে শিক্ষার্থীদের জন্য তৈরি একটি সহজ বই কেনাবেচা ও দানের প্ল্যাটফর্ম। এখানে  প্রয়োজন নেই এমন একাডেমিক বই বিক্রি বা দান করতে পারবেন , আবার প্রয়োজনীয় বইও সহজে খুঁজে পেতে পারেন ।",
+            `${marketConfig.positioning.shortDescriptionBn} এখানে প্রয়োজন নেই এমন একাডেমিক বই বিক্রি বা দান করতে পারবেন, আবার প্রয়োজনীয় বইও সহজে খুঁজে পেতে পারেন।`,
     },
     {
         id: "2",

@@ -1,11 +1,8 @@
 // src/app/faq/page.tsx
 import FAQContainer from "@/app/(site)/faq/FAQContainer";
-import { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
-    title: "FAQ | Milbe",
-    description: "Find answers to frequently asked questions about buying, selling, and donating books on Milbe.",
-};
+export const metadata = buildPageMetadata("faq");
 
 export default function FAQPage() {
     return (

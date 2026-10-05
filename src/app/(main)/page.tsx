@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { getPosts } from "@/services/features/posts";
 import { getUserSession } from "@/services/core/session";
 import { PostItem } from "@/interface/post/types";
@@ -12,50 +12,7 @@ import WhyChooseUs from "@/components/home/WhyChooseUs";
 import CTA from "@/components/home/CTA";
 import Hero from "@/components/home/Hero";
 
-export const metadata: Metadata = {
-  title: "milbe.shop | Bangladesh's Student Book Hub",
-  description:
-    "milbe is a trusted marketplace for students to buy, sell, and donate used academic books across Bangladesh. Discover affordable textbooks or share books with others.",
-
-  keywords: [
-    "milbe",
-    "milbe.shop",
-    "academic books",
-    "used books",
-    "buy books",
-    "sell books",
-    "donate books",
-    "textbooks",
-    "student marketplace",
-    "Bangladesh",
-  ],
-
-  alternates: {
-    canonical: "https://milbe.vercel.app",
-  },
-
-  openGraph: {
-    title: "milbe.shop | Bangladesh's Student Book Hub",
-    description:
-      "Buy, sell, and donate used academic books with students across Bangladesh.",
-    url: "https://milbe.vercel.app",
-    siteName: "milbe.shop",
-    locale: "en_US",
-    type: "website",
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "milbe.shop | Bangladesh's Student Book Hub",
-    description:
-      "A student marketplace for buying, selling, and donating academic books.",
-  },
-
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+export const metadata = buildPageMetadata("home");
 
 export default async function HomePage({
   searchParams,

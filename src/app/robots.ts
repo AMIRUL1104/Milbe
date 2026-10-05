@@ -1,10 +1,12 @@
 import type { MetadataRoute } from "next";
+import { marketConfig } from "@/config/market";
 
 /**
- * Canonical site origin. Override with `NEXT_PUBLIC_SITE_URL` wherever the
- * public origin differs from the production default.
+ * Canonical site origin. `NEXT_PUBLIC_SITE_URL` (if set) wins over the
+ * market-config default (`seo.canonicalBaseUrl`).
  */
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://milbe.vercel.app";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? marketConfig.seo.canonicalBaseUrl;
 
 export default function robots(): MetadataRoute.Robots {
   return {

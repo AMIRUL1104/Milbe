@@ -1,5 +1,5 @@
 import React from "react";
-import { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import TermsNavigation from "./TermsNavigation";
 import {
     FileText,
@@ -20,11 +20,7 @@ import {
     Copyright,
 } from "lucide-react";
 
-export const metadata: Metadata = {
-    title: "Terms & Conditions | Milbe",
-    description:
-        "মিলবে প্ল্যাটফর্ম ব্যবহারের নিয়মাবলী, আইনি শর্তাবলী ও ব্যবহারকারীর দায়িত্ব সম্পর্কে জানুন।",
-};
+export const metadata = buildPageMetadata("terms");
 
 const NAVIGATION_ITEMS = [
     { id: "acceptance", label: "১. শর্তাবলী গ্রহণ" },

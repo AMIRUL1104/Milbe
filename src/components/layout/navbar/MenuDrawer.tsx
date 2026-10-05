@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { X, Home, Info, Lightbulb, Mail, HelpCircle, FileText, Lock } from "lucide-react";
+import { marketConfig } from "@/config/market";
 
 
 interface MenuDrawerProps {
@@ -82,7 +83,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
         </nav>
 
         <div className="p-4 border-t border-border text-xs text-text-muted text-center">
-          Milbe Student Book Marketplace
+          {marketConfig.positioning.drawerTaglineBn}
         </div>
       </div>
     </div>

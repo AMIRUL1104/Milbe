@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { marketConfig } from "@/config/market";
 import { db } from "@/lib/auth";
 import { getPosts } from "@/services/features/posts";
 
@@ -22,7 +23,8 @@ export const revalidate = 3600;
  * Canonical site origin. `NEXT_PUBLIC_SITE_URL` (if set, e.g. to the upcoming
  * custom domain) wins over the production default.
  */
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://milbe.vercel.app";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? marketConfig.seo.canonicalBaseUrl;
 
 /** Slugs are generated server-side as [a-z0-9-]+ — anything else is legacy/test junk. */
 const SLUG_PATTERN = /^[a-z0-9-]+$/;

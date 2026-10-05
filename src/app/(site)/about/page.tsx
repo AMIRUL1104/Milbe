@@ -1,5 +1,7 @@
 import React from "react";
 import Link from "next/link";
+import { marketConfig } from "@/config/market";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import {
     BookOpen,
     Search,
@@ -17,10 +19,7 @@ import {
     Compass
 } from "lucide-react";
 
-export const metadata = {
-    title: "আমাদের সম্পর্কে | Milbe",
-    description: "মিলবে শিক্ষার্থীদের জন্য তৈরি একটি সহজ বই কেনাবেচা ও দানের প্ল্যাটফর্ম।",
-};
+export const metadata = buildPageMetadata("about");
 
 export default function AboutUsPage() {
     return (
@@ -117,7 +116,7 @@ export default function AboutUsPage() {
                             </div>
                             <h2 className="text-2xl font-bold text-primary">আমাদের লক্ষ্য (Mission)</h2>
                             <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-                                বাংলাদেশের শিক্ষার্থীদের জন্য প্রয়োজনীয় একাডেমিক বই আরও সহজে এবং কম খরচে পাওয়া সম্ভব করা।
+                                {marketConfig.positioning.missionBn}
                             </p>
                             <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
                                 একই সঙ্গে, অব্যবহৃত বইগুলোকে আবার শিক্ষার্থীদের কাজে লাগানোর সুযোগ তৈরি করা—যাতে একটি বই একজনের পড়াশোনা শেষ হওয়ার পরও অন্য কারও কাজে আসে।
@@ -133,7 +132,7 @@ export default function AboutUsPage() {
                             </div>
                             <h2 className="text-2xl font-bold text-text-primary">আমাদের ভিশন (Vision)</h2>
                             <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-                                বাংলাদেশে বই কেনাবেচা ও শেয়ার করার জন্য একটি পরিচিত, সহজ ও নির্ভরযোগ্য প্ল্যাটফর্ম হয়ে ওঠা।                            </p>
+                                {marketConfig.positioning.visionBn}                            </p>
                             <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
                                 সময়ের সঙ্গে শিক্ষার্থীদের একাডেমিক বইয়ের পাশাপাশি বিভিন্ন ধরনের বইও যেন সহজে কেনা, বিক্রি ও শেয়ার করা যায়—আমরা সেই সুযোগ তৈরি করতে চাই।
                             </p>

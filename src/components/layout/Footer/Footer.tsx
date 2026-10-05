@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { marketConfig } from "@/config/market";
 
 // ==========================================
 // Custom SVG Icons for Social Platforms
@@ -79,7 +80,7 @@ export default function Footer() {
             Milbe<span className="text-accent">.</span>
           </Link>
           <p className="text-sm text-accent-muted max-w-md leading-relaxed">
-            বাংলাদেশের শিক্ষার্থীদের জন্য একাডেমিক বই কেনাবেচা ও আদান-প্রদানের নির্ভরযোগ্য প্ল্যাটফর্ম।
+            {marketConfig.positioning.footerTaglineBn}
           </p>
         </div>
 
@@ -165,7 +166,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-                <span>সিলেট, বাংলাদেশ</span>
+                <span>{marketConfig.region.addressLineBn}</span>
               </li>
             </ul>
           </div>
