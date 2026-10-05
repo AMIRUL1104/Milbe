@@ -1,8 +1,10 @@
 import { betterAuth } from "better-auth";
+import { createAuthMiddleware } from "better-auth/api";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { z } from "zod";
 import {
+  sendLoginAlertMail,
   sendVerifyMail,
   sendExistingAccountMail,
   sendResetPasswordMail,
@@ -67,6 +69,33 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }) => {
       sendVerifyMail({ to: user.email, name: user.name, url });
     },
+  },
+  // ── লগইন সিকিউরিটি নোটিফিকেশন ─────────────────────────────────────────────
+  // শুধু ইমেইল+পাসওয়ার্ড দিয়ে সফল লগইনেই নোটিফিকেশন ইমেইল যায় (ভেরিফিকেশন-
+  // পরবর্তী auto sign-in বা ভবিষ্যতের social login এখানে ধরা পড়ে না)। ইমেইল
+  // পাঠানো background-এ চলে — await করা হয় না, তাই response-এ কোনো ঝুল যোগ হয় না।
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      try {
+        if (ctx.path !== "/sign-in/email") return;
+
+        // সফল লগইনেই কেবল newSession সেট হয়; ব্যর্থ চেষ্টায় এটি থাকে না।
+        const newSession = ctx.context.newSession;
+        if (!newSession) return;
+
+        sendLoginAlertMail({
+          to: newSession.user.email,
+          name: newSession.user.name,
+          loginAt: new Date(),
+          userAgent: newSession.session.userAgent,
+          ip: newSession.session.ipAddress,
+          forgotUrl: `${baseUrl}/auth/forgot-password`,
+        });
+      } catch (error) {
+        // নোটিফিকেশনে যা-ই হোক, লগইন কখনোই ব্লক হবে না
+        console.error("[auth] লগইন নোটিফিকেশন ইমেইল পাঠানো যায়নি:", error);
+      }
+    }),
   },
   // need to add some additional field . role , isblocked,
   user: {
