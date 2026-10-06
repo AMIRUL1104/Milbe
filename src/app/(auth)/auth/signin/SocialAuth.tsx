@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -16,31 +16,29 @@ type SocialAuthProps = {
 export default function SocialAuth({ mode }: SocialAuthProps) {
   const action = mode === "login" ? "লগইন করুন" : "সাইন আপ করুন";
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const router = useRouter();
+
+  // Dynamic redirect path resolution
+  const searchParams = useSearchParams();
+  const rawRedirect = searchParams.get("redirect") || searchParams.get("callbackUrl");
+  const redirectUrl = getSafeRedirect(rawRedirect, "/dashboard");
 
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     try {
-      const { data, error } = await authClient.signIn.social({
+      const { error } = await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: redirectUrl,
       });
 
       if (error) {
         console.error("[SocialAuth] Google login error:", error.code, error.message);
         toast.error(getAuthErrorMessage(error, "গুগল লগইনে সমস্যা হয়েছে। আবার চেষ্টা করুন।"));
-        return;
+        setIsGoogleLoading(false);
       }
-
-      if (data?.user) {
-        toast.success("মিলবেতে স্বাগতম।");
-        router.push("/dashboard");
-        router.refresh();
-      }
+      // Note: Success flow-তে Better Auth নিজে থেকেই Google OAuth-এ রিডাইরেক্ট করবে।
     } catch (err) {
       console.error("[SocialAuth] Unexpected Google login error:", err);
       toast.error("ইন্টারনেট সংযোগ চেক করুন এবং আবার চেষ্টা করুন।");
-    } finally {
       setIsGoogleLoading(false);
     }
   };
@@ -76,7 +74,8 @@ export default function SocialAuth({ mode }: SocialAuthProps) {
           )
         }
       />
-      {/* ফেসবুক: শুধু বাটন, এখনো কোনো কাজ যুক্ত করা হয়নি */}
+
+      {/* ফেসবুক লগইন বাটন */}
       <SocialButton
         label={`ফেসবুক দিয়ে ${action}`}
         icon={
