@@ -18,7 +18,7 @@ if (!uri) {
 }
 
 // ভেরিফিকেশন লিংক এই URL থেকে বানানো হয়। production-এ অবশ্যই https://milbe.vercel.app হতে হবে।
-const baseUrl = process.env.BETTER_AUTH_URL ?? process.env.NEXT_PUBLIC_BASE_URL;
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const client = new MongoClient(uri);
 const db = client.db("BookBridgeDB");

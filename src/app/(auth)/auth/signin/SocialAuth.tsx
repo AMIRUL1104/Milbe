@@ -14,13 +14,13 @@ type SocialAuthProps = {
 };
 
 export default function SocialAuth({ mode }: SocialAuthProps) {
-  const action = mode === "login" ? "লগইন করুন" : "সাইন আপ করুন";
+  const action = mode === "login" ? "লগইন করুন" : "রেজিস্ট্রেশন করুন";
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   // Dynamic redirect path resolution
   const searchParams = useSearchParams();
   const rawRedirect = searchParams.get("redirect") || searchParams.get("callbackUrl");
-  const redirectUrl = getSafeRedirect(rawRedirect, "/dashboard");
+  const redirectUrl = getSafeRedirect(rawRedirect, "/");
 
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
@@ -76,7 +76,7 @@ export default function SocialAuth({ mode }: SocialAuthProps) {
       />
 
       {/* ফেসবুক লগইন বাটন */}
-      <SocialButton
+      {/* <SocialButton
         label={`ফেসবুক দিয়ে ${action}`}
         icon={
           <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
@@ -86,7 +86,7 @@ export default function SocialAuth({ mode }: SocialAuthProps) {
             />
           </svg>
         }
-      />
+      /> */}
     </div>
   );
 }
