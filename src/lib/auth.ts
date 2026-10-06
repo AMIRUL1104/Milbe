@@ -97,6 +97,17 @@ export const auth = betterAuth({
       }
     }),
   },
+  // ── Google OAuth Provider ─────────────────────────────────────────────────
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      // Optional: নির্দিষ্ট Google Workspace domain এর জন্য
+      // hd: "your-company.com",
+      // Optional: সবসময় account select করতে বলুন
+      // prompt: "select_account",
+    },
+  },
   // need to add some additional field . role , isblocked,
   user: {
     additionalFields: {
