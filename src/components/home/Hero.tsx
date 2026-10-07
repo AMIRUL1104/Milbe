@@ -1,12 +1,10 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { CirclePlus, Download, GraduationCap, Sparkles } from "lucide-react";
+import { CirclePlus, GraduationCap, Sparkles } from "lucide-react";
 import HeroSearchBar from "./HeroSearch";
 import HeroActions from "./Heroactions";
+import InstallAppButton from "./InstallAppButton";
 import { marketConfig } from "@/config/market";
-
-
-const APP_DOWNLOAD_URL = "#download";
 
 function SellButton({ className = "" }: { className?: string }) {
     return (
@@ -17,18 +15,6 @@ function SellButton({ className = "" }: { className?: string }) {
             <CirclePlus className="h-5 w-5 text-[#F6CE71]" />
             <span>আপনার বই বিক্রি করুন</span>
         </Link>
-    );
-}
-
-function DownloadButton({ className = "" }: { className?: string }) {
-    return (
-        <a
-            href={APP_DOWNLOAD_URL}
-            className={`inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#35858E]  px-6 py-3.5 text-base font-bold text-[#35858E] backdrop-blur-sm transition-all bg-[#35858E]/10 active:scale-[0.98] ${className}`}
-        >
-            <Download className="h-5 w-5" />
-            <span>অ্যাপটি ডাউনলোড করুন</span>
-        </a>
     );
 }
 
@@ -142,7 +128,7 @@ export default function Hero() {
                         {/* Desktop CTAs */}
                         <div className="hero-fade-up hero-delay-3 mt-7 hidden items-center gap-4 md:flex">
                             <SellButton />
-                            <DownloadButton />
+                            <InstallAppButton />
                         </div>
                     </div>
 
@@ -155,7 +141,7 @@ export default function Hero() {
                         {/* Mobile CTAs: sell is the primary action */}
                         <div className="hero-fade-up hero-delay-3 mt-4 flex flex-col gap-3 md:hidden">
                             <SellButton className="w-full py-4" />
-                            <DownloadButton className="w-full py-3.5" />
+                            <InstallAppButton className="w-full py-3.5" />
                         </div>
                     </div>
                 </div>
