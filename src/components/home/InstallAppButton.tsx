@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { Download, X, Share2, Smartphone } from "lucide-react";
-import { usePWAInstall } from "@/hooks/usePWAInstall";
+import { usePWAInstall } from "@/lib/hooks/usePWAInstall";
 
 interface InstallAppButtonProps {
   className?: string;
 }
 
 export default function InstallAppButton({ className = "" }: InstallAppButtonProps) {
-  const { isInstallable, isInstalled, isIOS, promptInstall } = usePWAInstall();
+  const { isInstallable, isInstalled, isIOS, isDev, promptInstall } = usePWAInstall();
   const [showIOSModal, setShowIOSModal] = useState(false);
 
   if (!isInstallable || isInstalled) return null;
@@ -18,7 +18,11 @@ export default function InstallAppButton({ className = "" }: InstallAppButtonPro
     if (isIOS) {
       setShowIOSModal(true);
     } else {
-      await promptInstall();
+      const installed = await promptInstall();
+      // Development fallback: Fake prompt trigger না করে নোটিফাই করা
+      if (!installed && isDev) {
+        alert("Development Mode: Native PWA install prompt is only triggered by real browsers supporting installability criteria.");
+      }
     }
   };
 
@@ -34,7 +38,9 @@ export default function InstallAppButton({ className = "" }: InstallAppButtonPro
         aria-label="অ্যাপটি ইনস্টল করুন"
       >
         <Download className="h-5 w-5" />
-        <span>অ্যাপটি ডাউনলোড করুন</span>
+        <span>
+          অ্যাপটি ডাউনলোড করুন {isDev && <span className="text-xs text-amber-600 font-normal">(Dev Test)</span>}
+        </span>
       </button>
 
       {isIOS && showIOSModal && (
@@ -71,7 +77,7 @@ export default function InstallAppButton({ className = "" }: InstallAppButtonPro
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#35858E]/10 text-[#35858E]">
                       <span className="text-xs font-bold">১</span>
                     </span>
-                    <span>নিচের শেয়ার বাটনে চাপ দিন</span>
+                    <span>নিচের শেয়ার বাটনে চাপ দিন</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#35858E]/10 text-[#35858E]">
@@ -91,7 +97,7 @@ export default function InstallAppButton({ className = "" }: InstallAppButtonPro
               <div className="rounded-lg bg-gray-50 p-4 text-xs text-gray-500">
                 <p className="flex items-center gap-1.5 justify-center">
                   <Share2 className="h-4 w-4" />
-                  <span>শেয়ার বাটনটি ব্রাউজারের নিচের বারের মধ্যে থাকে</span>
+                  <span>শেয়ার বাটনটি ব্রাউজারের নিচের বারের মধ্যে থাকে</span>
                 </p>
               </div>
 

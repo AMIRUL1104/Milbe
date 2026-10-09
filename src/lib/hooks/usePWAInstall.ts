@@ -16,16 +16,35 @@ export function usePWAInstall() {
   const [isInstallable, setIsInstallable] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isDev, setIsDev] = useState(false);
 
   useEffect(() => {
-    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as unknown as { MSStream?: unknown }).MSStream;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsIOS(isIOSDevice);
+    // 1. Safe Client-Side Guard & VS Code / Dev Check
+    if (typeof window === "undefined") return;
 
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-    const isIOSStandalone = (navigator as NavigatorStandalone).standalone === true;
-    setIsInstalled(isStandalone || isIOSStandalone);
+    const isDevelopment = process.env.NODE_ENV === "development";
+    setIsDev(isDevelopment);
 
+    // 2. Safely detect iOS
+    try {
+      const isIOSDevice =
+        /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+        !(window as unknown as { MSStream?: unknown }).MSStream;
+      setIsIOS(Boolean(isIOSDevice));
+    } catch {
+      setIsIOS(false);
+    }
+
+    // 3. Safely detect Standalone / Installed state
+    try {
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+      const isIOSStandalone = (navigator as NavigatorStandalone).standalone === true;
+      setIsInstalled(Boolean(isStandalone || isIOSStandalone));
+    } catch {
+      setIsInstalled(false);
+    }
+
+    // 4. Register Event Listeners safely
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       const promptEvent = e as BeforeInstallPromptEvent;
@@ -67,9 +86,11 @@ export function usePWAInstall() {
   }, [deferredPrompt]);
 
   return {
-    isInstallable: isInstallable || isIOS,
+    // Dev environment-এ UI টেস্টের জন্য `isDev` ফ্ল্যাগসহ Safe condition
+    isInstallable: isInstallable || isIOS || isDev,
     isInstalled,
     isIOS,
+    isDev,
     promptInstall,
   };
 }

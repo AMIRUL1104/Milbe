@@ -20,18 +20,22 @@ export default function manifest(): MetadataRoute.Manifest {
     id: "/",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
+    background_color: "#F5F7F8",
     theme_color: "#35858E",
+    orientation: "portrait-primary",
+    categories: ["shopping", "education", "books"],
     icons: [
       {
         src: "/android-chrome-192x192.png",
         sizes: "192x192",
         type: "image/png",
+        purpose: "maskable",
       },
       {
         src: "/android-chrome-512x512.png",
         sizes: "512x512",
         type: "image/png",
+        purpose: "maskable",
       },
     ],
   };
