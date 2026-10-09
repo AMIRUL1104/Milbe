@@ -47,8 +47,8 @@ export async function getAdminDashboard(): Promise<AdminDashboardResponse> {
   return protectedFetch<AdminDashboardData>("/api/dashboard/admin");
 }
 
-export type GetAllPostsResponse = ApiResponse<{ data: PostItem[] }>;
+export type GetAllPostsResponse = ApiResponse<PostItem[]>;
 
 export async function getAllPosts(): Promise<GetAllPostsResponse> {
-  return protectedFetch<{ data: PostItem[] }>("/api/posts/admin");
+  return protectedFetch<PostItem[]>("/api/posts/admin");
 }
