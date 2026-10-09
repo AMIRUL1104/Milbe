@@ -3,10 +3,11 @@
 // src/components/dashboard/admin/ManagePostsTable.tsx
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Trash2, X, BookOpen } from "lucide-react";
 import { PostItem } from "@/interface/post/types";
-import { deletePost } from "@/services/features/posts";
+import { deletePostAsAdmin } from "@/services/features/admin/postActions";
 
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -90,7 +91,7 @@ function Toast({
 interface DeleteModalProps {
   postTitle: string;
   isDeleting: boolean;
-  onConfirm: () => void;
+  onConfirm: (reason: string) => void;
   onCancel: () => void;
 }
 
@@ -100,6 +101,9 @@ function DeleteModal({
   onConfirm,
   onCancel,
 }: DeleteModalProps) {
+  const [reason, setReason] = useState("");
+  const canConfirm = reason.trim().length > 0;
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
@@ -134,9 +138,29 @@ function DeleteModal({
         >
           Delete Post?
         </h2>
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-gray-500 mb-4">
           <span className="font-medium text-gray-700">{postTitle} </span> will
           be permanently deleted. This action cannot be undone.
+        </p>
+
+        <label
+          htmlFor="delete-reason"
+          className="block text-sm font-semibold text-gray-700 mb-1.5"
+        >
+          Reason for deletion <span className="text-red-500">*</span>
+        </label>
+        <textarea
+          id="delete-reason"
+          value={reason}
+          onChange={(event) => setReason(event.target.value)}
+          maxLength={500}
+          rows={3}
+          disabled={isDeleting}
+          placeholder="Explain why this post is being deleted…"
+          className="w-full rounded-xl border border-[#EDF1F2] bg-[#F5F7F8] px-3.5 py-2.5 text-sm text-gray-800 outline-none transition-colors placeholder:text-gray-400 focus:border-red-300 disabled:opacity-60"
+        />
+        <p className="mt-1 mb-5 text-xs text-gray-400">
+          The post owner will be emailed this reason. {reason.length}/500
         </p>
 
         <div className="flex gap-3">
@@ -148,9 +172,9 @@ function DeleteModal({
             Cancel
           </button>
           <button
-            onClick={onConfirm}
-            disabled={isDeleting}
-            className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-red-500 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            onClick={() => onConfirm(reason)}
+            disabled={isDeleting || !canConfirm}
+            className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-red-500 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isDeleting ? (
               <>
@@ -195,6 +219,7 @@ interface ManagePostsTableProps {
 export default function ManagePostsTable({
   initialPosts,
 }: ManagePostsTableProps) {
+  const router = useRouter();
   const [posts, setPosts] = useState<PostItem[]>(initialPosts);
   const [targetPost, setTargetPost] = useState<PostItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -205,22 +230,24 @@ export default function ManagePostsTable({
     setTimeout(() => setToast(null), 3500);
   }
 
-  async function handleConfirmDelete() {
+  async function handleConfirmDelete(reason: string) {
     if (!targetPost) return;
     setIsDeleting(true);
     try {
-      const res = await deletePost(targetPost._id);
-      if (res.success) {
+      const res = await deletePostAsAdmin(targetPost._id, reason);
+      if (res.ok) {
         setPosts((prev) => prev.filter((p) => p._id !== targetPost._id));
+        router.refresh();
         showToast("Post deleted successfully.", "success");
+        setTargetPost(null);
       } else {
-        showToast(res.message, "error");
+        // Keep the modal open so the typed reason is not lost.
+        showToast(res.error ?? "Failed to delete post.", "error");
       }
     } catch {
       showToast("Failed to delete post. Please try again.", "error");
     } finally {
       setIsDeleting(false);
-      setTargetPost(null);
     }
   }
 

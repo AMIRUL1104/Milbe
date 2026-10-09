@@ -49,8 +49,14 @@ function layout(
   // সিকিউরিটি অ্যালার্টের মতো কাঠামোবদ্ধ ডেটা (সময়/ডিভাইস/IP) দেখানোর জন্য
   // optional সারি — পুরনো মেইলগুলো এটি পাঠায় না, তাই তাদের লেআউট অপরিবর্তিত থাকে।
   details?: { label: string; value: string }[],
+  // optional image (e.g. a deleted post's cover) — older mails pass nothing,
+  // so their layout stays byte-for-byte identical.
+  image?: { src: string; alt: string },
 ) {
   const url = escapeHtml(button.url);
+  const imageHtml = image
+    ? `<img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" style="display:block;width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin:0 0 16px" />`
+    : "";
   const body = paragraphs
     .map(
       (p) =>
@@ -72,7 +78,7 @@ function layout(
   <div style="max-width:480px;margin:0 auto;background:#ffffff;border:1px solid #DDE5E7;border-radius:16px;padding:28px">
     <p style="margin:0 0 16px;font-size:20px;font-weight:800;color:#35858E">Milbe</p>
     <p style="margin:0 0 12px;color:#111827;font-size:16px;font-weight:700">${greeting}</p>
-    ${body}${detailsHtml}
+    ${imageHtml}${body}${detailsHtml}
     <a href="${url}" style="display:inline-block;margin:8px 0 16px;background:#35858E;color:#ffffff;text-decoration:none;font-weight:700;padding:12px 20px;border-radius:12px">${button.label}</a>
     <p style="margin:0;color:#6B7280;font-size:12px;line-height:1.5;word-break:break-all">বাটন কাজ না করলে এই লিংকটি ব্রাউজারে পেস্ট করুন:<br/>${url}</p>
   </div>
@@ -172,6 +178,50 @@ export function sendPasswordChangedMail({
       { label: "পাসওয়ার্ড রিসেট করুন", url: forgotUrl },
     ),
     text: `হ্যালো ${name},\n\nআপনার মিলবে একাউন্টের পাসওয়ার্ড এইমাত্র বদলানো হয়েছে। আপনি না করে থাকলে এখনই রিসেট করুন:\n${forgotUrl}`,
+  });
+}
+
+// ── অ্যাডমিন দ্বারা পোস্ট ডিলিট নোটিফিকেশন ─────────────────────────────────
+
+// Admin Manage Posts থেকে ডিলিট করার সময় seller-কে যায়। Soft delete-এর পর
+// admin list-এ doc থাকে না, তাই title/image/seller caller snapshot নিয়ে
+// এখানে পাঠায়। SMTP failure মূল ডিলিট কখনো ব্যর্থ করে না (background send)।
+export function sendPostDeletedMail({
+  to,
+  sellerName,
+  postTitle,
+  imageUrl,
+  deletedAt,
+  reason,
+  repostUrl,
+}: {
+  to: string;
+  sellerName: string;
+  postTitle: string;
+  imageUrl?: string | null;
+  deletedAt: Date;
+  reason: string;
+  repostUrl: string;
+}) {
+  sendEmailInBackground({
+    to,
+    subject: "মিলবে: আপনার পোস্টটি ডিলিট করা হয়েছে",
+    html: layout(
+      `প্রিয় ${escapeHtml(sellerName)},`,
+      [
+        "আপনার মিলবে (Milbe)-এর একটি পোস্ট অ্যাডমিন কর্তৃক ডিলিট করা হয়েছে।",
+        "পোস্টের বিস্তারিত তথ্য ও ডিলিট করার কারণ নিচে উল্লেখ করা হলো।",
+        "প্ল্যাটফর্মের নিয়ম মেনে পোস্টটি সংশোধন করে আবার পাবলিশ করতে নিচের বাটনে ক্লিক করুন।",
+      ],
+      { label: "পুনরায় পোস্ট করুন", url: repostUrl },
+      [
+        { label: "পোস্টের শিরোনাম", value: postTitle },
+        { label: "ডিলিটের সময়", value: formatLoginTime(deletedAt) },
+        { label: "ডিলিট করার কারণ", value: reason },
+      ],
+      imageUrl ? { src: imageUrl, alt: postTitle } : undefined,
+    ),
+    text: `প্রিয় ${sellerName},\n\nআপনার মিলবে (Milbe)-এর পোস্টটি অ্যাডমিন কর্তৃক ডিলিট করা হয়েছে।\n\nপোস্টের বিবরণ:\n• পোস্টের শিরোনাম: ${postTitle}\n• ডিলিটের সময়: ${formatLoginTime(deletedAt)}\n• ডিলিট করার কারণ: ${reason}\n\nনিয়ম মেনে পুনরায় পোস্ট করতে ভিসিট করুন:\n${repostUrl}\n\nধন্যবাদ,\nমিলবে টিম`,
   });
 }
 
