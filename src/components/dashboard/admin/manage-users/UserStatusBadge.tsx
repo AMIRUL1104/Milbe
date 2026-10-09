@@ -1,9 +1,9 @@
 interface UserStatusBadgeProps {
-  isBlocked: boolean;
+  banned: boolean;
 }
 
-export function UserStatusBadge({ isBlocked }: UserStatusBadgeProps) {
-  if (isBlocked) {
+export function UserStatusBadge({ banned }: UserStatusBadgeProps) {
+  if (banned) {
     return (
       <span className="inline-flex items-center gap-1.5 rounded-full border border-danger-border bg-danger-light px-2.5 py-0.5 text-xs font-bold text-danger-text">
         <span className="h-1.5 w-1.5 rounded-full bg-danger" />

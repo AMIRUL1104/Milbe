@@ -20,7 +20,8 @@ interface ManageUsersClientProps {
   search: string;
   roleFilter: RoleFilter;
   statusFilter: StatusFilter;
-  sortOption: SortOption
+  sortOption: SortOption;
+  currentUserId: string;
 }
 
 export function ManageUsersClient({
@@ -32,6 +33,7 @@ export function ManageUsersClient({
   roleFilter,
   statusFilter,
   sortOption,
+  currentUserId,
 }: ManageUsersClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -94,12 +96,19 @@ export function ManageUsersClient({
       ) : (
         <>
           <div className="hidden md:block">
-            <UsersTable users={users} />
+            <UsersTable
+              users={users}
+              currentUserId={currentUserId}
+            />
           </div>
 
           <div className="flex flex-col gap-3 md:hidden">
             {users.map((user) => (
-              <UserMobileCard key={user._id} user={user} />
+              <UserMobileCard
+                key={user._id}
+                user={user}
+                currentUserId={currentUserId}
+              />
             ))}
           </div>
 

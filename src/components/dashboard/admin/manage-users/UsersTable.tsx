@@ -3,6 +3,7 @@ import { UsersTableRow } from "./UsersTableRow";
 
 interface UsersTableProps {
   users: UserProfile[];
+  currentUserId: string;
 }
 
 const COLUMNS = [
@@ -15,7 +16,10 @@ const COLUMNS = [
   { key: "actions", label: "" },
 ];
 
-export function UsersTable({ users }: UsersTableProps) {
+export function UsersTable({
+  users,
+  currentUserId,
+}: UsersTableProps) {
   return (
     <div className="overflow-hidden rounded-card border border-border-light bg-surface shadow-sm">
       <div className="overflow-x-auto">
@@ -39,7 +43,11 @@ export function UsersTable({ users }: UsersTableProps) {
           </thead>
           <tbody>
             {users.map((user) => (
-              <UsersTableRow key={user._id} user={user} />
+              <UsersTableRow
+                key={user._id}
+                user={user}
+                currentUserId={currentUserId}
+              />
             ))}
           </tbody>
         </table>

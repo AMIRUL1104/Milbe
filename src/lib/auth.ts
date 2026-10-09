@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { admin } from "better-auth/plugins";
 import { createAuthMiddleware } from "better-auth/api";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
@@ -108,7 +109,20 @@ export const auth = betterAuth({
       // prompt: "select_account",
     },
   },
-  // need to add some additional field . role , isblocked,
+  // Better Auth admin plugin — powers the admin user-management actions
+  // (ban/unban, set-role, remove-user) with server-side permission checks,
+  // automatic session revocation on ban and login blocking for banned users.
+  // NOTE: every role listed in `adminRoles` must exist in the role config
+  // (defaults "user"/"admin"); adding an undefined role (e.g. "superadmin")
+  // throws at boot.
+  plugins: [
+    admin({
+      defaultRole: "user",
+      adminRoles: ["admin"],
+    }),
+  ],
+
+  // additional user fields (role, profile flags and Milbe profile data)
   user: {
     additionalFields: {
       role: {
@@ -123,18 +137,13 @@ export const auth = betterAuth({
         input: false,
       },
 
-      isBlocked: {
-        type: "boolean",
-        defaultValue: false,
-        input: false,
-      },
-
       // ── Milbe profile fields ────────────────────────────────────────────────
       // Formerly stored in the separate `userProfile` collection; consolidated
       // onto the Better Auth `user` document.
       // User-editable profile fields (`input: true` → the user may update them
-      // through Better Auth's `updateUser`). `role`, `isBlocked` and
-      // `profileCompleted` stay `input: false` so users can never set them.
+      // through Better Auth's `updateUser`). `role` and `profileCompleted`
+      // stay `input: false` so users can never set them. Suspension lives on
+      // the admin plugin's `banned` field (single source of truth).
       phoneNumber: {
         type: "string",
         defaultValue: "",

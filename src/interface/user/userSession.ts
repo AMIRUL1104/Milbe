@@ -4,6 +4,11 @@ export interface UserSession {
   name?: string | null;
   image?: string | null;
   role: "user" | "admin" | null;
+  /** Suspension flag (Better Auth admin plugin) — single source of truth. */
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: string | Date | null;
+  /** @deprecated Transitional fallback while legacy docs migrate to `banned`. */
   isBlocked?: boolean | null;
   // ── Milbe profile fields (consolidated onto the Better Auth `user` doc) ──
   // Note: server-side `auth.api.getSession()` returns `createdAt` as a Date;

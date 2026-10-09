@@ -4,6 +4,7 @@ import { ManageUsersClient } from "@/components/dashboard/admin/manage-users/Man
 import { UsersStatsCards } from "@/components/dashboard/admin/manage-users/UsersStatsCards";
 import { UsersErrorFallback } from "@/components/dashboard/admin/manage-users/UsersErrorFallback";
 import { getAllUsers, GetUsersParams } from "@/services/features/admin";
+import { requireRole } from "@/services/core/session";
 
 interface ManageUsersPageProps {
   searchParams: Promise<{
@@ -18,6 +19,10 @@ interface ManageUsersPageProps {
 export default async function ManageUsersPage({
   searchParams,
 }: ManageUsersPageProps) {
+  // The admin layout already guards this route; re-reading the cached session
+  // gives us the caller's id for self-action protection in the action menu.
+  const session = await requireRole("admin");
+
   const params = await searchParams;
 
   const search = params.search ?? "";
@@ -54,6 +59,7 @@ export default async function ManageUsersPage({
 
       <ManageUsersClient
         users={response.data}
+        currentUserId={session.id}
         total={response.meta?.total ?? 0}
         totalPages={response.meta?.totalPages ?? 1}
         currentPage={response.meta?.currentPage ?? 1}

@@ -23,6 +23,6 @@ export function toUserProfile(user: UserSession): UserProfile {
     avatarUrl: user.image ?? null,
     role: user.role ?? "user",
     memberSince: user.createdAt ? new Date(user.createdAt).toISOString() : new Date(0).toISOString(),
-    isBlocked: user.isBlocked ?? false,
+    banned: user.banned ?? user.isBlocked ?? false,
   };
 }

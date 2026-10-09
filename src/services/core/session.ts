@@ -16,12 +16,12 @@ const getSessionUser = cache(async (): Promise<UserSession | null> => {
 });
 
 // ১. ইউজার সেশন পাওয়ার ফাংশন
-// Blocked users are denied at the server-session layer as well.
+// Suspended (banned) users are denied at the server-session layer as well.
 // (The Express API enforces the same flag in `auth.middleware.ts`.)
 export async function getUserSession(): Promise<UserSession | null> {
   const user = await getSessionUser();
 
-  if (!user || user.isBlocked) return null;
+  if (!user || (user.banned ?? user.isBlocked)) return null;
 
   return user;
 }
@@ -42,7 +42,7 @@ export const requireSession = async (): Promise<UserSession> => {
     redirect("/auth/signin");
   }
 
-  if (user.isBlocked) {
+  if (user.banned ?? user.isBlocked) {
     redirect("/unauthorized");
   }
 

@@ -28,6 +28,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
+  const [banned, setBanned] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -60,8 +61,13 @@ export default function LoginForm() {
         console.error("[LoginForm] Better Auth error:", error.code, error.message);
 
         // ইমেইল ভেরিফাই না করা থাকলে Better Auth 403 দেয়
-        if (error.status === 403 || error.code === "EMAIL_NOT_VERIFIED") {
+        if (error.status === 403 && error.code === "EMAIL_NOT_VERIFIED") {
           setUnverifiedEmail(userData.email);
+          return;
+        }
+        // user banned  করা থাকলে Better Auth 403 দেয়
+        if (error.status === 403 && error.code === "BANNED_USER") {
+          setBanned(userData.email);
           return;
         }
 
@@ -147,6 +153,31 @@ export default function LoginForm() {
               </div>
             </div>
             <ResendVerification key={unverifiedEmail} email={unverifiedEmail} startCooldown={60} />
+          </div>
+        )}
+        {banned && (
+          <div
+            role="alert"
+            className="flex flex-col gap-3 rounded-xl border border-[#FCDE70] bg-[#FCDE70]/15 p-3.5"
+          >
+            <div className="flex items-start gap-2.5">
+              <MailWarning className="w-5 h-5 text-text-secondary shrink-0 mt-0.5" />
+              <div className="flex flex-col gap-0.5">
+                <p className="text-sm font-bold text-danger">
+                  আপনার অ্যাকাউন্ট বন্ধ ।
+                </p>
+                <p className="text-xs text-text-secondary leading-relaxed">
+                  আপনার অ্যাকাউন্টটি বন্ধ করা হয়েছে। আপনি এখনো লগইন করতে পারবেন না।
+                </p>
+
+                <Link
+                  href="/contact"
+                  className="border border-primary mt-5 p-2.5 rounded-2xl text-center font-semibold text-primary hover:text-primary-hover transition-colors text-xs"
+                >
+                  আমাদের সাথে যোগাযোগ করুন
+                </Link>
+              </div>
+            </div>
           </div>
         )}
 

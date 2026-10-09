@@ -13,7 +13,10 @@ function formatDate(iso: string): string {
   });
 }
 
-export function UserMobileCard({ user }: UserMobileCardProps) {
+export function UserMobileCard({
+  user,
+  currentUserId,
+}: UserMobileCardProps) {
   return (
     <div className="flex items-start gap-3 rounded-card border border-border-light bg-surface p-4 shadow-sm">
       <UserAvatar name={user.fullName} image={user.avatarUrl} />
@@ -24,12 +27,12 @@ export function UserMobileCard({ user }: UserMobileCardProps) {
             <p className="truncate font-bold text-text-primary">{user.fullName}</p>
             <p className="truncate text-xs text-text-muted">{user.email}</p>
           </div>
-          <UserActionsMenu user={user} />
+          <UserActionsMenu user={user} currentUserId={currentUserId} />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <UserRoleBadge role={user.role} />
-          <UserStatusBadge isBlocked={user.isBlocked ?? false} />
+          <UserStatusBadge banned={user.banned} />
         </div>
 
         <span className="flex items-center gap-1 text-xs text-text-muted">
@@ -43,4 +46,5 @@ export function UserMobileCard({ user }: UserMobileCardProps) {
 
 interface UserMobileCardProps {
   user: UserProfile;
+  currentUserId: string;
 }

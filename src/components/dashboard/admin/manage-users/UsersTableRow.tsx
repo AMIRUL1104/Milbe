@@ -6,6 +6,7 @@ import { UserActionsMenu } from "./UserActionsMenu";
 
 interface UsersTableRowProps {
   user: UserProfile;
+  currentUserId: string;
 }
 
 function formatDate(iso: string): string {
@@ -16,7 +17,10 @@ function formatDate(iso: string): string {
   });
 }
 
-export function UsersTableRow({ user }: UsersTableRowProps) {
+export function UsersTableRow({
+  user,
+  currentUserId,
+}: UsersTableRowProps) {
   return (
     <tr className="border-b border-border-light transition-colors hover:bg-background/60">
       <td className="py-3.5 pl-5 pr-3">
@@ -38,7 +42,7 @@ export function UsersTableRow({ user }: UsersTableRowProps) {
       </td>
 
       <td className="px-3 py-3.5">
-        <UserStatusBadge isBlocked={user.isBlocked ?? false} />
+        <UserStatusBadge banned={user.banned} />
       </td>
 
       <td className="px-3 py-3.5">
@@ -48,7 +52,7 @@ export function UsersTableRow({ user }: UsersTableRowProps) {
       </td>
 
       <td className="py-3.5 pl-3 pr-5 text-right">
-        <UserActionsMenu user={user} />
+        <UserActionsMenu user={user} currentUserId={currentUserId} />
       </td>
     </tr>
   );
