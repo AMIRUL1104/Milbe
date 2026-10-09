@@ -150,9 +150,46 @@ export function HeaderAuth({ user, isLoggedIn, isReady }: HeaderAuthProps) {
             </>
           )}
 
+          {user.role === "admin" && (
+            <>
+              <Link
+                href="/dashboard/admin/users"
+                onClick={close}
+                className={MENU_ITEM_CLASS}
+              >
+                <BookOpen className="w-5 h-5" />
+                Users
+              </Link>
+              <Link
+                href="/dashboard/admin/posts"
+                onClick={close}
+                className={MENU_ITEM_CLASS}
+              >
+                <MessageSquare className="w-5 h-5" />
+                All Posts
+              </Link>
+              <Link
+                href="/dashboard/admin/requests"
+                onClick={close}
+                className={MENU_ITEM_CLASS}
+              >
+                <Settings className="w-5 h-5" />
+                Requests
+              </Link>
+              <Link
+                href="/dashboard/admin/settings"
+                onClick={close}
+                className={MENU_ITEM_CLASS}
+              >
+                <Settings className="w-5 h-5" />
+                Settings
+              </Link>
+            </>
+          )}
+
           <Link href="/profile" onClick={close} className={MENU_ITEM_CLASS}>
             <Settings className="w-5 h-5" />
-            Profile সেটিংস
+            Profile
           </Link>
 
           <hr className="border-border my-1" />
