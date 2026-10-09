@@ -21,6 +21,7 @@ export interface PostItem {
   sellerEmail: string;
   title: string;
   slug?: string;
+  searchSlug?: string;
   category: string;
   type: PostType;
   image: string;

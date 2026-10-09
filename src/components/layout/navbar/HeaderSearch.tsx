@@ -209,7 +209,7 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
         <input
           ref={searchInputRef}
           id="header-search"
-          type="search"
+          type="text"
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
           placeholder="বই, লেখক বা ISBN খুঁজুন..."
