@@ -37,11 +37,12 @@ function statusBadge(status: string) {
 }
 
 function conditionBadge(condition: string) {
+  // Real enum values: new / like_new / good / fair (post-level overallCondition).
   const map: Record<string, string> = {
-    excellent: "bg-[#35858E]/10 text-[#35858E]",
-    good: "bg-blue-50 text-blue-600",
+    new: "bg-[#35858E]/10 text-[#35858E]",
+    like_new: "bg-blue-50 text-blue-600",
+    good: "bg-emerald-50 text-emerald-600",
     fair: "bg-orange-50 text-orange-500",
-    poor: "bg-red-50 text-red-400",
   };
   const cls = map[condition.toLowerCase()] ?? "bg-gray-100 text-gray-500";
   return (
@@ -326,19 +327,19 @@ export default function ManagePostsTable({
                         )}
                       </td>
 
-                      {/* Price */}
+                      {/* Price (post-level; donate → null → ফ্রি) */}
                       <td className="px-5 py-4 font-semibold text-gray-800 whitespace-nowrap">
-                        {book?.price != null ? (
-                          <>৳{book.price.toLocaleString()}</>
+                        {post.totalPrice != null ? (
+                          <>৳{post.totalPrice.toLocaleString()}</>
                         ) : (
-                          <span className="text-gray-300 font-normal">—</span>
+                          <span className="text-[#35858E] font-semibold">ফ্রি</span>
                         )}
                       </td>
 
-                      {/* Condition */}
+                      {/* Condition (post-level overallCondition) */}
                       <td className="px-5 py-4 whitespace-nowrap">
-                        {book?.condition ? (
-                          conditionBadge(book.condition)
+                        {post.overallCondition ? (
+                          conditionBadge(post.overallCondition)
                         ) : (
                           <span className="text-gray-300">—</span>
                         )}

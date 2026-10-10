@@ -29,6 +29,14 @@ export default async function AddPostPage({ searchParams }: AddPostPageProps) {
     redirect(`/auth/signin?redirect=${encodeURIComponent(signinTarget)}`);
   }
 
+  // Profile prefill for the location/contact step (all editable).
+  const initialProfile = {
+    fullName: user.name ?? "",
+    phoneNumber: user.phoneNumber ?? "",
+    district: user.district ?? "",
+    area: user.area ?? "",
+  };
+
   // Edit Mode: `/add-post?edit=<postId>` → fetch the existing post and make
   // sure the signed-in user owns it.
   if (editId) {
@@ -47,9 +55,11 @@ export default async function AddPostPage({ searchParams }: AddPostPageProps) {
       redirect("/dashboard/user/posts");
     }
 
-    return <AddPostForm mode="edit" postId={editId} initialPost={post} />;
+    return (
+      <AddPostForm mode="edit" postId={editId} initialPost={post} initialProfile={initialProfile} />
+    );
   }
 
   // Create Mode: existing behavior unchanged.
-  return <AddPostForm />;
+  return <AddPostForm initialProfile={initialProfile} />;
 }

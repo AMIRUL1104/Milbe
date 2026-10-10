@@ -3,6 +3,7 @@
 import PreviewCard from "./PreviewCard";
 import TipsCard from "./TipsCard";
 import { Button } from "@/components/ui/Button";
+import type { BookCondition } from "@/lib/constant/post";
 
 interface SidebarProps {
   imageUrl: string | null;
@@ -12,6 +13,7 @@ interface SidebarProps {
   meta: string;
   bookCount: number;
   totalPrice: number | null;
+  overallCondition: BookCondition;
   isSubmitting: boolean;
   isUploading: boolean;
   renderSubmitButton?: () => React.ReactNode;
@@ -25,6 +27,7 @@ export default function Sidebar({
   meta,
   bookCount,
   totalPrice,
+  overallCondition,
   isSubmitting,
   isUploading,
   renderSubmitButton,
@@ -39,6 +42,7 @@ export default function Sidebar({
         meta={meta}
         bookCount={bookCount}
         totalPrice={totalPrice}
+        overallCondition={overallCondition}
       />
       <TipsCard />
       {renderSubmitButton && <div className="hidden lg:block">{renderSubmitButton()}</div>}

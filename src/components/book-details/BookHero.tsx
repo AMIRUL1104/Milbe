@@ -73,7 +73,7 @@ export default function BookHero({ post }: BookHeroProps) {
               {post.type === "donate" ? (
                 <span>ফ্রি / বিনামূল্যে</span>
               ) : (
-                <span>৳{post.books.reduce((acc, b) => acc + (b.price ?? 0), 0)}</span>
+                <span>৳{post.totalPrice ?? 0}</span>
               )}
             </div>
           </div>

@@ -4,13 +4,20 @@ import { useFormContext } from "react-hook-form";
 import { MapPin, Home } from "lucide-react";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 import { DISTRICTS } from "../../../lib/constant/location";
+import ContactSection from "./ContactSection";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
-const labelBase = "text-xs font-bold text-text-secondary uppercase tracking-wider";
 const errorText = "text-xs font-medium text-danger mt-0.5";
 
-export default function LocationSection() {
+interface LocationSectionProps {
+  /** Create mode only — the save-to-profile checkbox is hidden in edit. */
+  showSaveToProfile?: boolean;
+}
+
+export default function LocationSection({
+  showSaveToProfile = true,
+}: LocationSectionProps) {
   const {
     register,
     formState: { errors },
@@ -24,8 +31,8 @@ export default function LocationSection() {
   return (
     <section id="step-location" className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
       <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">3</div>
-        <h2 className="text-base font-semibold text-text-secondary">অবস্থান</h2>
+        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">2</div>
+        <h2 className="text-base font-semibold text-text-secondary">অবস্থান ও যোগাযোগ</h2>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -72,6 +79,9 @@ export default function LocationSection() {
           {errors.area && <p className={errorText}>{errors.area.message}</p>}
         </div>
       </div>
+
+      {/* Phone / messenger / WhatsApp + save-to-profile: same step. */}
+      <ContactSection showSaveToProfile={showSaveToProfile} />
     </section>
   );
 }

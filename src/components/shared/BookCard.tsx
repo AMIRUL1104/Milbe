@@ -4,6 +4,7 @@ import { MapPin, BookOpen, Tag, ArrowUpRight } from "lucide-react";
 
 import { PostItem } from "@/interface/post/types";
 import { toBengaliNumber } from "@/lib/utils/toBengaliNumber";
+import { CONDITION_LABELS_BN } from "@/lib/constant/post";
 
 interface BookCardProps {
   book: PostItem;
@@ -13,21 +14,18 @@ export default function BookCard({ book }: BookCardProps) {
   const primaryBook = book.books?.[0];
   const totalBooks = book.books?.length || 0;
 
-  const totalPrice =
-    book.books?.reduce((sum, item) => sum + (item.price || 0), 0) || 0;
+  // Post-level total price (no per-book price anymore; donate → null).
+  const totalPrice = book.totalPrice ?? 0;
 
   const publisherText = primaryBook?.publisherName || "প্রকাশনী উল্লেখ নেই";
 
-  // Condition Mapper in Bangla
+  // Condition mapper in Bangla (shared constant).
   const formatCondition = (condition?: string) => {
     if (!condition) return "নতুন";
-    const condMap: Record<string, string> = {
-      new: "একদম নতুন",
-      like_new: "নতুন মত",
-      good: "ভালো",
-      fair: "মোটামুটি",
-    };
-    return condMap[condition.toLowerCase()] || condition.replace("_", " ");
+    return (
+      CONDITION_LABELS_BN[condition as keyof typeof CONDITION_LABELS_BN] ||
+      condition.replace("_", " ")
+    );
   };
 
   return (
@@ -99,7 +97,7 @@ export default function BookCard({ book }: BookCardProps) {
 
             <div className="inline-flex items-center gap-1 bg-surface-hover/80 border border-border/50 px-2 py-0.5 rounded-md">
               <Tag className="w-3 h-3 text-accent shrink-0" />
-              <span>{formatCondition(primaryBook?.condition)}</span>
+              <span>{formatCondition(book.overallCondition)}</span>
             </div>
           </div>
         </div>

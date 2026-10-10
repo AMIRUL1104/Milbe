@@ -1,5 +1,7 @@
 "use client";
 
+import { CONDITION_LABELS_BN, type BookCondition } from "@/lib/constant/post";
+
 interface PreviewCardProps {
   imageUrl: string | null;
   badge: string;
@@ -8,6 +10,7 @@ interface PreviewCardProps {
   meta: string;
   bookCount: number;
   totalPrice: number | null;
+  overallCondition: BookCondition;
 }
 
 export default function PreviewCard({
@@ -18,8 +21,10 @@ export default function PreviewCard({
   meta,
   bookCount,
   totalPrice,
+  overallCondition,
 }: PreviewCardProps) {
   const priceDisplay = isDonate ? "ফ্রি" : `৳${(totalPrice ?? 0).toLocaleString("en-US")}`;
+  const conditionLabel = CONDITION_LABELS_BN[overallCondition] ?? "ভালো";
 
   return (
     <div className="bg-surface border border-border-light rounded-card overflow-hidden">
@@ -57,7 +62,7 @@ export default function PreviewCard({
         <p className="text-xs text-text-muted mb-3.5">
           {meta || "জেলা যোগ করা হয়নি"}
         </p>
-        <div className="flex border-t border-border-light pt-3 gap-3">
+        <div className="flex border-t border-border-light pt-3 gap-4">
           <div>
             <div className="text-[11px] text-text-muted mb-0.5">মোট বই</div>
             <div className="text-sm font-bold font-en">{bookCount}</div>
@@ -65,6 +70,10 @@ export default function PreviewCard({
           <div>
             <div className="text-[11px] text-text-muted mb-0.5">মোট মূল্য</div>
             <div className="text-sm font-bold font-en">{priceDisplay}</div>
+          </div>
+          <div>
+            <div className="text-[11px] text-text-muted mb-0.5">অবস্থা</div>
+            <div className="text-sm font-bold">{conditionLabel}</div>
           </div>
         </div>
       </div>

@@ -1,18 +1,14 @@
 import { z } from "zod";
 
+// Per-book data contract: only three optional text fields. Price and
+// condition live at the POST level (totalPrice / overallCondition);
+// `availableStatus` is a hidden carried field (server/request lifecycle).
 export const bookEntrySchema = z.object({
   bookId: z.string().optional().default(""),
   publisherId: z.string().optional().default(""),
-  bookName: z.string().min(1, "বইয়ের নাম দিন"),
-  publisherName: z.string().min(1, "পাবলিশারের নাম দিন"),
-  image: z.string().nullable().default(null),
-  condition: z.enum(["new", "like_new", "good", "fair"], {
-    message: "অবস্থা বেছে নিন",
-  }),
-  price: z
-    .union([z.number(), z.nan(), z.null()])
-    .transform((val) => (Number.isNaN(val) ? null : val))
-    .default(null),
+  bookName: z.string().optional().default(""),
+  author: z.string().optional().default(""),
+  publisherName: z.string().optional().default(""),
   availableStatus: z.enum(["available", "unavailable"]).default("available"),
 });
 
@@ -24,6 +20,16 @@ export const addPostSchema = z
       message: "পোস্টের ধরন বেছে নিন",
     }),
     image: z.string().min(1, "পোস্টের একটি ছবি দিন"),
+    // Post-level total price. NaN (cleared number input) → null.
+    totalPrice: z
+      .union([z.number(), z.nan(), z.null()])
+      .transform((val) => (Number.isNaN(val) ? null : val))
+      .default(null),
+    overallCondition: z
+      .enum(["new", "like_new", "good", "fair"], {
+        message: "বইয়ের অবস্থা বেছে নিন",
+      })
+      .default("good"),
     district: z.string().min(1, "জেলা নির্বাচন করুন"),
     area: z.string().min(1, "এলাকা নির্বাচন করুন"),
     phone: z
@@ -33,19 +39,27 @@ export const addPostSchema = z
     messenger: z.string().optional().default(""),
     whatsappOnly: z.boolean().default(false),
     description: z.string().optional().default(""),
-    books: z.array(bookEntrySchema).min(1, "কমপক্ষে একটি বই যোগ করুন"),
+    // Form-only checkbox: saves district/area/phone to the profile AFTER a
+    // successful post create. Never sent to the post API.
+    saveToProfile: z.boolean().default(false),
+    // Book list is fully optional — an empty list is valid.
+    books: z.array(bookEntrySchema).default([]),
   })
   .superRefine((data, ctx) => {
     if (data.type === "sell") {
-      data.books.forEach((book, index) => {
-        if (book.price === null || book.price === undefined || book.price < 0) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message:
-              "বিক্রয় পোস্টে মূল্য দিতে হবে এবং তা ০ বা তার বেশি হতে হবে",
-            path: ["books", index, "price"],
-          });
-        }
+      if (data.totalPrice === null || data.totalPrice < 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "বিক্রয় পোস্টে মোট দাম দিন (০ বা তার বেশি)",
+          path: ["totalPrice"],
+        });
+      }
+    } else if (data.totalPrice !== null) {
+      // Donate posts always store totalPrice: null (backend enforces too).
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "দান পোস্টে মূল্য লাগবে না",
+        path: ["totalPrice"],
       });
     }
   });

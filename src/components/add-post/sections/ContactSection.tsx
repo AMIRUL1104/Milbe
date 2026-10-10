@@ -7,10 +7,16 @@ import Switch from "../Switch";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
-const labelBase = "text-xs font-bold text-text-secondary uppercase tracking-wider";
 const errorText = "text-xs font-medium text-danger mt-0.5";
 
-export default function ContactSection() {
+interface ContactSectionProps {
+  /** Create mode only — save-to-profile checkbox is hidden in edit mode. */
+  showSaveToProfile?: boolean;
+}
+
+export default function ContactSection({
+  showSaveToProfile = true,
+}: ContactSectionProps) {
   const {
     register,
     control,
@@ -23,12 +29,7 @@ export default function ContactSection() {
       : "border-border focus:border-border-focus focus-visible:outline-primary-focus";
 
   return (
-    <section id="step-contact" className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
-      <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">4</div>
-        <h2 className="text-base font-semibold text-text-secondary">যোগাযোগ</h2>
-      </div>
-
+    <>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
         <div className="mb-3.5">
           <label htmlFor="phone" className="block text-sm font-medium text-text-primary mb-1.5">
@@ -81,6 +82,26 @@ export default function ContactSection() {
           )}
         />
       </div>
-    </section>
+
+      {showSaveToProfile && (
+        <div className="mb-1">
+          <label className="flex items-start gap-2.5 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              {...register("saveToProfile")}
+              className="mt-0.5 w-4 h-4 accent-primary cursor-pointer"
+            />
+            <span>
+              <span className="block text-sm font-medium text-text-primary">
+                ঠিকানা ও যোগাযোগ নম্বর প্রোফাইলে সংরক্ষণ করুন
+              </span>
+              <span className="block text-xs text-text-muted mt-0.5">
+                পরবর্তীতে দ্রুত পোস্ট দিতে এই তথ্য প্রোফাইলে থেকে যাবে
+              </span>
+            </span>
+          </label>
+        </div>
+      )}
+    </>
   );
 }

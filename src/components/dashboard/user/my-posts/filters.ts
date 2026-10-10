@@ -13,7 +13,11 @@ export function filterPosts(
       !query ||
       post.title.toLowerCase().includes(query) ||
       post.category.toLowerCase().includes(query) ||
-      post.books.some((book) => book.bookName.toLowerCase().includes(query));
+      post.books.some(
+        (book) =>
+          book.bookName?.toLowerCase().includes(query) ||
+          book.author?.toLowerCase().includes(query),
+      );
 
     const matchesFilter =
       filter === "all" ||

@@ -2,6 +2,7 @@ import { Card } from "@heroui/react";
 import RequestBookButton from "./RequestBookButton";
 import { PostItem } from "@/interface/post/types";
 import { getUserSession } from "@/services/core/session";
+import { CONDITION_LABELS_BN } from "@/lib/constant/post";
 
 interface BookMetaCardProps {
   post: PostItem;
@@ -9,7 +10,7 @@ interface BookMetaCardProps {
 
 export default async function BookMetaCard({ post }: BookMetaCardProps) {
   const session = await getUserSession();
-  const totalBundlePrice = post.books.reduce((acc, book) => acc + (book.price ?? 0), 0);
+  const conditionLabel = CONDITION_LABELS_BN[post.overallCondition] ?? "ভালো";
 
   return (
     <Card className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-5">
@@ -23,17 +24,20 @@ export default async function BookMetaCard({ post }: BookMetaCardProps) {
               {post.type === "donate" ? (
                 <span className="text-[#35858E]">ফ্রি / বিনামূল্যে</span>
               ) : (
-                `৳${totalBundlePrice}`
+                `৳${post.totalPrice ?? 0}`
               )}
             </span>
           </div>
 
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end gap-1.5">
             <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
               স্ট্যাটাস
             </span>
             <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-md uppercase tracking-wide">
               {post.status || "এভেইলএবল"}
+            </span>
+            <span className="text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-md">
+              অবস্থা: {conditionLabel}
             </span>
           </div>
         </div>

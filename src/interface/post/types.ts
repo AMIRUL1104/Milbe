@@ -6,11 +6,9 @@ export type AvailableStatus = "available" | "unavailable";
 export interface PostBookEntry {
   bookId?: string;
   publisherId?: string;
-  bookName: string;
-  publisherName: string;
-  image: string | null;
-  condition: BookCondition;
-  price: number | null;
+  bookName?: string;
+  author?: string;
+  publisherName?: string;
   availableStatus: AvailableStatus;
 }
 
@@ -25,6 +23,8 @@ export interface PostItem {
   category: string;
   type: PostType;
   image: string;
+  totalPrice: number | null;
+  overallCondition: BookCondition;
   district: string;
   area: string;
   phone?: string;
@@ -45,6 +45,8 @@ export type NewPostPayload = Pick<
   | "category"
   | "type"
   | "image"
+  | "totalPrice"
+  | "overallCondition"
   | "district"
   | "area"
   | "phone"

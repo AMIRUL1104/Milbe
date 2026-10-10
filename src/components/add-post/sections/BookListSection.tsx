@@ -11,10 +11,8 @@ const emptyBook = {
   bookId: "",
   publisherId: "",
   bookName: "",
+  author: "",
   publisherName: "",
-  image: null,
-  condition: "good" as const,
-  price: null,
   availableStatus: "available" as const,
 };
 
@@ -62,10 +60,24 @@ export default function BookListSection({
   return (
     <section id="step-books" className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
       <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">2</div>
-        <h2 className="text-base font-semibold text-text-secondary">বইসমূহ</h2>
-        <span className="ml-auto text-xs text-text-muted font-en">{fields.length} বই</span>
+        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">4</div>
+        <h2 className="text-base font-semibold text-text-secondary">বইয়ের তালিকা</h2>
+        <span className="ml-auto text-xs text-text-muted">
+          {fields.length === 0 ? "কোনো বই নেই" : `${fields.length} বই`}
+        </span>
       </div>
+
+      <p className="text-xs text-text-muted mb-3">
+        ঐচ্ছিক — বইয়ের তালিকা ছাড়াও পোস্ট করা যাবে। চাইলে নিচে বই যোগ করুন;
+        প্রতিটি বইয়ের নাম, লেখক ও প্রকাশনী সবই ঐচ্ছিক। দাম ও অবস্থা পুরো
+        পোস্টের জন্য ধাপ ১-এ দিলেই হবে।
+      </p>
+
+      {fields.length === 0 && (
+        <div className="border border-dashed border-border rounded-card px-4 py-6 text-center text-sm text-text-muted mb-3">
+          এখনো কোনো বই যোগ করা হয়নি — নিচের বাটনে ক্লিক করে বই যোগ করুন।
+        </div>
+      )}
 
       <div className="flex flex-col gap-3.5">
         {fields.map((field, index) => (
@@ -73,7 +85,6 @@ export default function BookListSection({
             key={field.id}
             index={index}
             onRemove={() => remove(index)}
-            canRemove={fields.length > 1}
           />
         ))}
       </div>
@@ -96,7 +107,7 @@ export default function BookListSection({
         >
           <path d="M12 5v14M5 12h14" />
         </svg>
-        আরেকটি বই যোগ করুন
+        {fields.length === 0 ? "বই যোগ করুন" : "আরেকটি বই যোগ করুন"}
       </button>
     </section>
   );

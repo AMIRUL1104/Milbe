@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,40 +11,50 @@ import Sidebar from "./Sidebar";
 import BasicInfoSection from "./sections/BasicInfoSection";
 import BookListSection from "./sections/BookListSection";
 import LocationSection from "./sections/LocationSection";
-import ContactSection from "./sections/ContactSection";
 import DescriptionSection from "./sections/DescriptionSection";
 
 import { NewPostPayload, PostItem } from "@/interface/post/types";
 import { addNewPost, updatePost } from "@/services/features/posts";
+import { updateUserProfile } from "@/services/features/userProfile";
 import { getFriendlyApiError } from "@/lib/apiErrorMap";
 import { AddPostFormValues, addPostSchema } from "@/lib/validations/add-post-schema";
+import { STEP_SECTIONS } from "@/lib/constant/post";
 import SubmitButton from "./sections/SubmitButton";
 
 type AddPostFormInput = z.input<typeof addPostSchema>;
 
-const defaultValues: AddPostFormInput = {
-  title: "",
-  category: "",
-  type: "sell",
-  image: "",
+interface AddPostProfile {
+  fullName: string;
+  phoneNumber: string;
+  district: string;
+  area: string;
+}
+
+const EMPTY_PROFILE: AddPostProfile = {
+  fullName: "",
+  phoneNumber: "",
   district: "",
   area: "",
-  phone: "",
-  messenger: "",
-  whatsappOnly: false,
-  description: "",
-  books: [
-    {
-      bookId: "",
-      publisherId: "",
-      bookName: "",
-      publisherName: "",
-      image: null,
-      condition: "good",
-      price: null,
-    },
-  ],
 };
+
+function buildDefaultValues(profile: AddPostProfile): AddPostFormInput {
+  return {
+    title: "",
+    category: "",
+    type: "sell",
+    image: "",
+    totalPrice: null,
+    overallCondition: "good",
+    district: profile.district,
+    area: profile.area,
+    phone: profile.phoneNumber,
+    messenger: "",
+    whatsappOnly: false,
+    description: "",
+    saveToProfile: false,
+    books: [],
+  };
+}
 
 function buildPayload(values: AddPostFormValues): NewPostPayload {
   return {
@@ -52,22 +62,30 @@ function buildPayload(values: AddPostFormValues): NewPostPayload {
     category: values.category,
     type: values.type,
     image: values.image,
+    totalPrice: values.type === "donate" ? null : values.totalPrice,
+    overallCondition: values.overallCondition,
     district: values.district,
     area: values.area,
     phone: values.phone,
     messenger: values.messenger ?? "",
     whatsappOnly: values.whatsappOnly,
     description: values.description ?? "",
-    books: values.books.map((book) => ({
-      bookId: book.bookId || undefined,
-      publisherId: book.publisherId || undefined,
-      bookName: book.bookName,
-      publisherName: book.publisherName,
-      image: book.image,
-      condition: book.condition,
-      price: book.price ?? 0,
-      availableStatus: book.availableStatus,
-    })),
+    books: values.books
+      // Drop entries where the user added a card but filled nothing.
+      .filter(
+        (book) =>
+          book.bookName?.trim() ||
+          book.author?.trim() ||
+          book.publisherName?.trim(),
+      )
+      .map((book) => ({
+        bookId: book.bookId || undefined,
+        publisherId: book.publisherId || undefined,
+        bookName: book.bookName?.trim(),
+        author: book.author?.trim(),
+        publisherName: book.publisherName?.trim(),
+        availableStatus: book.availableStatus,
+      })),
   };
 }
 
@@ -75,6 +93,7 @@ interface AddPostFormProps {
   mode?: "create" | "edit";
   postId?: string;
   initialPost?: PostItem;
+  initialProfile?: AddPostProfile;
 }
 
 /** Maps a fetched PostItem into the shape the add-post form expects. */
@@ -84,41 +103,43 @@ function postToForm(post: PostItem): AddPostFormValues {
     category: post.category ?? "",
     type: post.type,
     image: post.image,
+    totalPrice: post.totalPrice,
+    overallCondition: post.overallCondition,
     district: post.district,
     area: post.area,
     phone: post.phone ?? "",
     messenger: post.messenger ?? "",
     whatsappOnly: post.whatsappOnly ?? false,
     description: post.description ?? "",
+    saveToProfile: false,
     books: post.books.map((book) => ({
       bookId: book.bookId ?? "",
       publisherId: book.publisherId ?? "",
-      bookName: book.bookName,
-      publisherName: book.publisherName,
-      image: book.image || null,
-      condition: book.condition,
-      price: book.price ?? null,
-      availableStatus: book.availableStatus,
+      bookName: book.bookName ?? "",
+      author: book.author ?? "",
+      publisherName: book.publisherName ?? "",
+      availableStatus: book.availableStatus ?? "available",
     })),
   };
 }
-
-const STEP_SECTIONS = [
-  "step-basic",
-  "step-books",
-  "step-location",
-  "step-contact",
-];
 
 export default function AddPostForm({
   mode = "create",
   postId,
   initialPost,
+  initialProfile = EMPTY_PROFILE,
 }: AddPostFormProps) {
   const isEditMode = mode === "edit";
   const [isUploadPending, setIsUploadPending] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [draftTimestamp, setDraftTimestamp] = useState<string | null>(null);
+
+  // Profile-prefilled defaults; memoized so the reference stays stable across
+  // renders (RHF only reads defaultValues on mount/reset anyway).
+  const defaultValues = useMemo(
+    () => buildDefaultValues(initialProfile),
+    [initialProfile],
+  );
 
   const methods = useForm<AddPostFormInput, unknown, AddPostFormValues>({
     resolver: zodResolver(addPostSchema),
@@ -140,12 +161,8 @@ export default function AddPostForm({
   const district = watch("district");
   const area = watch("area");
   const books = watch("books");
-
-  const totalPrice =
-    books?.reduce((sum, book) => {
-      if (isDonate) return 0;
-      return sum + (Number(book.price) || 0);
-    }, 0) ?? 0;
+  const totalPrice = watch("totalPrice");
+  const overallCondition = watch("overallCondition") ?? "good";
 
   const meta = [area, district].filter(Boolean).join(", ") || "";
 
@@ -194,7 +211,11 @@ export default function AddPostForm({
     return () => clearTimeout(timer);
   }, [watchedValues, isSubmitting, isEditMode]);
 
-  // Submit Handler (edit mode → PATCH, create mode → POST)
+  // Submit Handler — fixed sequential order:
+  //   1) post create/update first; on failure NOTHING else runs,
+  //   2) success toast immediately,
+  //   3) then (create mode + checkbox) a silent profile update —
+  //      no rollback, no re-submit, no extra notification on failure.
   const onSubmit = async (values: AddPostFormValues) => {
     try {
       const payload = buildPayload(values);
@@ -219,17 +240,33 @@ export default function AddPostForm({
 
       const response = await addNewPost(payload);
 
-      if (response?.success) {
-        toast.success("পোস্ট সফলভাবে প্রকাশিত হয়েছে!");
-
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("addPostDraft");
-          localStorage.removeItem("addPostDraftTimestamp");
-        }
-        setDraftTimestamp(null);
-        reset(defaultValues);
-      } else {
+      if (!response?.success) {
         toast.error(response?.message ?? "পোস্ট প্রকাশ করা যায়নি।");
+        return;
+      }
+
+      // Post created — inform immediately, before the profile call.
+      toast.success("পোস্ট সফলভাবে প্রকাশিত হয়েছে!");
+
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("addPostDraft");
+        localStorage.removeItem("addPostDraftTimestamp");
+      }
+      setDraftTimestamp(null);
+      reset(buildDefaultValues(initialProfile));
+
+      // Save-to-profile is create-mode only (checkbox is hidden in edit).
+      if (values.saveToProfile) {
+        try {
+          await updateUserProfile({
+            fullName: initialProfile.fullName,
+            phoneNumber: values.phone,
+            district: values.district,
+            area: values.area,
+          });
+        } catch {
+          // Silent by design: the post stays; no toast, no rollback.
+        }
       }
     } catch (error) {
       toast.error(getFriendlyApiError(error));
@@ -298,10 +335,11 @@ export default function AddPostForm({
 
           <FormProvider {...methods}>
             <BasicInfoSection onUploadingChange={setIsUploadPending} />
-            <BookListSection isEditing={isEditMode} />
-            <LocationSection />
-            <ContactSection />
+            {/* Step 2: location + contact in ONE section (ContactSection
+                renders inside LocationSection so progress stays at 4 steps). */}
+            <LocationSection showSaveToProfile={!isEditMode} />
             <DescriptionSection />
+            <BookListSection isEditing={isEditMode} />
             <SubmitButton
               isSubmitting={isSubmitting}
               isUploading={isUploadPending}
@@ -316,8 +354,9 @@ export default function AddPostForm({
           isDonate={isDonate}
           title={title}
           meta={meta}
-          bookCount={books?.length ?? 1}
-          totalPrice={isDonate ? null : totalPrice}
+          bookCount={books?.length ?? 0}
+          totalPrice={isDonate ? null : totalPrice ?? null}
+          overallCondition={overallCondition}
           isSubmitting={isSubmitting}
           isUploading={isUploadPending}
           renderSubmitButton={() => (
