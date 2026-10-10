@@ -2,17 +2,21 @@ import nodemailer from "nodemailer";
 import { after } from "next/server";
 import { toBengaliDigits } from "./utils/toBengaliDigits";
 
+// ১. পরিবেশের ভেরিয়েবল থেকে এসএমটিপি পোর্ট সেট করা (ডিফল্ট ৪৬৫)
 const port = Number(process.env.SMTP_PORT ?? 465);
 
+// ২. নোডমেইলার ট্রান্সপোর্টার কনফিগারেশন
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port,
-  secure: port === 465,
+  secure: port === 465, // এসএসএল/টিএলএস সিকিউরিটি চেক
   auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
 });
 
+// ৩. মেইল অপশনসের টাইপ ডেফিনেশন
 type MailOptions = { to: string; subject: string; html: string; text: string };
 
+// ৪. মূল ইমেইল পাঠানোর অ্যাসিনক্রোনাস ফাংশন
 async function sendEmail({ to, subject, html, text }: MailOptions) {
   await transporter.sendMail({
     from: process.env.EMAIL_FROM ?? `Milbe <${process.env.SMTP_USER}>`,
@@ -23,18 +27,27 @@ async function sendEmail({ to, subject, html, text }: MailOptions) {
   });
 }
 
-// await করা হয় না (timing attack এড়াতে)। after() serverless-এ কাজ শেষ হওয়া পর্যন্ত process বাঁচিয়ে রাখে।
+// ৫. ব্যাকগ্রাউন্ডে ইমেইল পাঠানোর নিরাপদ ফাংশন (যা মূল রিকোয়েস্ট ব্লক করে না)
 function sendEmailInBackground(options: MailOptions) {
-  const task = sendEmail(options).catch((err) =>
-    console.error("[email] পাঠানো যায়নি:", err),
-  );
   try {
-    after(task);
-  } catch {
-    // request scope-এর বাইরে চললে task আগেই শুরু হয়ে গেছে, তাই সমস্যা নেই
+    // প্রমিজ রিজেকশন বা ত্রুটি ক্যাচ করার জন্য .catch() ব্যবহার করা হয়েছে যাতে অ্যাপ ক্র্যাশ না করে
+    const task = sendEmail(options).catch((err) => {
+      console.error(
+        "[email] ব্যাকগ্রাউন্ডে ইমেইল পাঠাতে গিয়ে সমস্যা হয়েছে:",
+        err,
+      );
+    });
+
+    // Next.js-এর after() ফাংশন দিয়ে সার্ভারলেস এনভায়রনমেন্টে প্রসেস বাঁচিয়ে রাখা হয়
+    if (typeof after === "function") {
+      after(task);
+    }
+  } catch (err) {
+    console.error("[email] after() এক্সিকিউট করার সময় ত্রুটি:", err);
   }
 }
 
+// ৬. এক্সএসএস (XSS) আক্রমণ প্রতিরোধের জন্য এইচটিএমএল স্কেপ করার ফাংশন
 const escapeHtml = (value: string) =>
   value
     .replace(/&/g, "&amp;")
@@ -42,21 +55,23 @@ const escapeHtml = (value: string) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
+// ৭. সব ধরনের ইমেইলের জন্য কমন রেসপন্সিভ HTML লেআউট জেনারেটর
 function layout(
   greeting: string,
   paragraphs: string[],
   button: { label: string; url: string },
-  // সিকিউরিটি অ্যালার্টের মতো কাঠামোবদ্ধ ডেটা (সময়/ডিভাইস/IP) দেখানোর জন্য
-  // optional সারি — পুরনো মেইলগুলো এটি পাঠায় না, তাই তাদের লেআউট অপরিবর্তিত থাকে।
   details?: { label: string; value: string }[],
-  // optional image (e.g. a deleted post's cover) — older mails pass nothing,
-  // so their layout stays byte-for-byte identical.
   image?: { src: string; alt: string },
 ) {
   const url = escapeHtml(button.url);
-  const imageHtml = image
-    ? `<img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" style="display:block;width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin:0 0 16px" />`
-    : "";
+
+  // পোস্ট বা অন্য কোনো ইমেজ থাকলে তার নিরাপদ ট্যাগ তৈরি, না থাকলে খালি স্ট্রিং
+  const imageHtml =
+    image && image.src
+      ? `<img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt || "")}" style="display:block;width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin:0 0 16px" />`
+      : "";
+
+  // প্যারাগ্রাফ বা মূল লেখার বডি ফরম্যাট করা
   const body = paragraphs
     .map(
       (p) =>
@@ -64,7 +79,7 @@ function layout(
     )
     .join("");
 
-  // label/value এখানেই escape করা হয় — কলার কাঁচা মান পাঠালেও নিরাপদ থাকে।
+  // সিকিউরিটি অ্যালার্ট বা অতিরিক্ত তথ্য দেখানোর জন্য ডিটেইলস টেবিল রো তৈরি
   const detailsHtml = details?.length
     ? `<div style="margin:0 0 16px;border:1px solid #DDE5E7;border-radius:12px;overflow:hidden">${details
         .map(
@@ -74,6 +89,7 @@ function layout(
         .join("")}</div>`
     : "";
 
+  // মূল ইমেইল টেমপ্লেট রিটার্ন করা
   return `<div style="background:#F5F7F8;padding:24px 12px;font-family:Arial,sans-serif">
   <div style="max-width:480px;margin:0 auto;background:#ffffff;border:1px solid #DDE5E7;border-radius:16px;padding:28px">
     <p style="margin:0 0 16px;font-size:20px;font-weight:800;color:#35858E">Milbe</p>
@@ -85,6 +101,7 @@ function layout(
 </div>`;
 }
 
+// ৮. অ্যাকাউন্ট ভেরিফিকেশন মেইল পাঠানোর ফাংশন
 export function sendVerifyMail({
   to,
   name,
@@ -109,6 +126,7 @@ export function sendVerifyMail({
   });
 }
 
+// ৯. বিদ্যমান অ্যাকাউন্ট দিয়ে সাইন-আপ চেষ্টার নোটিফিকেশন মেইল
 export function sendExistingAccountMail({
   to,
   name,
@@ -133,6 +151,7 @@ export function sendExistingAccountMail({
   });
 }
 
+// ১০. পাসওয়ার্ড রিসেট করার অনুরোধের মেইল
 export function sendResetPasswordMail({
   to,
   name,
@@ -157,6 +176,7 @@ export function sendResetPasswordMail({
   });
 }
 
+// ১১. পাসওয়ার্ড সফলভাবে পরিবর্তনের কনফার্মেশন মেইল
 export function sendPasswordChangedMail({
   to,
   name,
@@ -181,11 +201,7 @@ export function sendPasswordChangedMail({
   });
 }
 
-// ── অ্যাডমিন দ্বারা পোস্ট ডিলিট নোটিফিকেশন ─────────────────────────────────
-
-// Admin Manage Posts থেকে ডিলিট করার সময় seller-কে যায়। Soft delete-এর পর
-// admin list-এ doc থাকে না, তাই title/image/seller caller snapshot নিয়ে
-// এখানে পাঠায়। SMTP failure মূল ডিলিট কখনো ব্যর্থ করে না (background send)।
+// ১২. অ্যাডমিন কর্তৃক কোনো পোস্ট ডিলিট করা হলে সেলারকে নোটিফিকেশন পাঠানোর মেইল
 export function sendPostDeletedMail({
   to,
   sellerName,
@@ -207,26 +223,25 @@ export function sendPostDeletedMail({
     to,
     subject: "মিলবে: আপনার পোস্টটি ডিলিট করা হয়েছে",
     html: layout(
-      `প্রিয় ${escapeHtml(sellerName)},`,
+      `প্রিয় ${escapeHtml(sellerName)},`,
       [
-        "আপনার মিলবে (Milbe)-এর একটি পোস্ট অ্যাডমিন কর্তৃক ডিলিট করা হয়েছে।",
+        "আপনার মিলবে (Milbe)-এর একটি পোস্ট অ্যাডমিন কর্তৃক ডিলিট করা হয়েছে।",
         "পোস্টের বিস্তারিত তথ্য ও ডিলিট করার কারণ নিচে উল্লেখ করা হলো।",
-        "প্ল্যাটফর্মের নিয়ম মেনে পোস্টটি সংশোধন করে আবার পাবলিশ করতে নিচের বাটনে ক্লিক করুন।",
+        "প্ল্যাটফর্মের নিয়ম মেনে পোস্টটি সংশোধন করে আবার পাবলিশ করতে নিচের বাটনে ক্লিক করুন।",
       ],
-      { label: "পুনরায় পোস্ট করুন", url: repostUrl },
+      { label: "পুনরায় পোস্ট করুন", url: repostUrl },
       [
         { label: "পোস্টের শিরোনাম", value: postTitle },
-        { label: "ডিলিটের সময়", value: formatLoginTime(deletedAt) },
+        { label: "ডিলিটের সময়", value: formatLoginTime(deletedAt) },
         { label: "ডিলিট করার কারণ", value: reason },
       ],
       imageUrl ? { src: imageUrl, alt: postTitle } : undefined,
     ),
-    text: `প্রিয় ${sellerName},\n\nআপনার মিলবে (Milbe)-এর পোস্টটি অ্যাডমিন কর্তৃক ডিলিট করা হয়েছে।\n\nপোস্টের বিবরণ:\n• পোস্টের শিরোনাম: ${postTitle}\n• ডিলিটের সময়: ${formatLoginTime(deletedAt)}\n• ডিলিট করার কারণ: ${reason}\n\nনিয়ম মেনে পুনরায় পোস্ট করতে ভিসিট করুন:\n${repostUrl}\n\nধন্যবাদ,\nমিলবে টিম`,
+    text: `প্রিয় ${sellerName},\n\nআপনার মিলবে (Milbe)-এর পোস্টটি অ্যাডমিন কর্তৃক ডিলিট করা হয়েছে।\n\nপোস্টের বিবরণ:\nপোস্টের শিরোনাম: ${postTitle}\nডিলিটের সময়: ${formatLoginTime(deletedAt)}\nডিলিট করার কারণ: ${reason}\n\nনিয়ম মেনে পুনরায় পোস্ট করতে ভিসিট করুন:\n${repostUrl}\n\nধন্যবাদ,\nমিলবে টিম`,
   });
 }
 
-// ── লগইন সিকিউরিটি নোটিফিকেশন ─────────────────────────────────────────────
-
+// ১৩. বাংলা মাসের তালিকা (তারিখ ফরম্যাট করার জন্য)
 const BN_MONTHS = [
   "জানুয়ারি",
   "ফেব্রুয়ারি",
@@ -242,8 +257,7 @@ const BN_MONTHS = [
   "ডিসেম্বর",
 ];
 
-// Asia/Dhaka (UTC+6, DST নেই) টাইমজোনে বাংলা তারিখ-সময়। Intl/ICU-এর উপর
-// নির্ভরতা এড়াতে ম্যানুয়াল অফসেটে সময় বের করা হয়।
+// ১৪. ইউটিসি টাইমকে এশিয়া/ঢাকা (UTC+6) জোনে কনভার্ট করে বাংলা সংখ্যা ও বারে রূপান্তর করার ফাংশন
 export function formatLoginTime(date: Date): string {
   const dhaka = new Date(date.getTime() + 6 * 60 * 60 * 1000);
   const day = dhaka.getUTCDate();
@@ -272,12 +286,11 @@ export function formatLoginTime(date: Date): string {
   );
 }
 
-// User-Agent স্ট্রিং থেকে ছোট, পড়ার মতো ডিভাইস বর্ণনা — নতুন dependency ছাড়াই।
+// ১৫. ইউজার এজেন্ট স্ট্রিং বিশ্লেষণ করে সুন্দর ডিভাইস ও ব্রাউজারের নাম বের করার ফাংশন
 export function describeUserAgent(ua?: string | null): string {
   if (!ua) return "অজানা ডিভাইস";
   const uaLower = ua.toLowerCase();
 
-  // Edge/Opera/Samsung-এর UA-তে Chrome থাকে, তাই ওগুলো আগে চেক করা হয়।
   const browser = uaLower.includes("edg/")
     ? "Edge"
     : uaLower.includes("samsungbrowser")
@@ -306,12 +319,11 @@ export function describeUserAgent(ua?: string | null): string {
               ? "Linux"
               : null;
 
-  if (browser && os) return `${browser} • ${os}`;
+  if (browser && os) return `${browser} (${os})`;
   return browser ?? os ?? "অজানা ডিভাইস";
 }
 
-// সফল লগইনের সিকিউরিটি অ্যালার্ট — sendEmailInBackground-এর কারণে এটি কল করা
-// কখনো অপেক্ষা করায় না, আর ডেলিভারি ব্যর্থ হলেও লগইন অপ্রভাবিত থাকে।
+// ১৬. নতুন লগইন শনাক্ত হলে সিকিউরিটি অ্যালার্ট মেইল পাঠানোর ফাংশন
 export function sendLoginAlertMail({
   to,
   name,
