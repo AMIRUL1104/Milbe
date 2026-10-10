@@ -1,10 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, BookOpen, Tag, ArrowUpRight } from "lucide-react";
+import { MapPin, BookOpen, ArrowUpRight } from "lucide-react";
 
 import { PostItem } from "@/interface/post/types";
 import { toBengaliNumber } from "@/lib/utils/toBengaliNumber";
-import { CONDITION_LABELS_BN } from "@/lib/constant/post";
 
 interface BookCardProps {
   book: PostItem;
@@ -16,17 +15,6 @@ export default function BookCard({ book }: BookCardProps) {
 
   // Post-level total price (no per-book price anymore; donate → null).
   const totalPrice = book.totalPrice ?? 0;
-
-  const publisherText = primaryBook?.publisherName || "প্রকাশনী উল্লেখ নেই";
-
-  // Condition mapper in Bangla (shared constant).
-  const formatCondition = (condition?: string) => {
-    if (!condition) return "নতুন";
-    return (
-      CONDITION_LABELS_BN[condition as keyof typeof CONDITION_LABELS_BN] ||
-      condition.replace("_", " ")
-    );
-  };
 
   return (
     <div className="group relative bg-surface border border-border/70 hover:border-primary/40 rounded-2xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col h-full transform hover:-translate-y-0.5">
@@ -68,15 +56,6 @@ export default function BookCard({ book }: BookCardProps) {
       <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between gap-2.5">
         <div className="flex flex-col gap-1.5 min-w-0">
 
-          {/* Publisher Name */}
-          <div
-            className="flex items-center gap-1 text-[11px] text-primary font-semibold tracking-tight min-w-0"
-            title={publisherText}
-          >
-            <BookOpen className="w-3 h-3 shrink-0 opacity-80" />
-            <span className="truncate block w-full">{publisherText}</span>
-          </div>
-
           {/* Book Title */}
           <h3
             className="font-bold text-text-primary text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-primary transition-colors min-w-0"
@@ -93,11 +72,6 @@ export default function BookCard({ book }: BookCardProps) {
             >
               <MapPin className="w-3 h-3 text-primary shrink-0" />
               <span className="truncate">{`${book.area}, ${book.district}`}</span>
-            </div>
-
-            <div className="inline-flex items-center gap-1 bg-surface-hover/80 border border-border/50 px-2 py-0.5 rounded-md">
-              <Tag className="w-3 h-3 text-accent shrink-0" />
-              <span>{formatCondition(book.overallCondition)}</span>
             </div>
           </div>
         </div>

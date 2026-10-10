@@ -18,7 +18,7 @@ export default async function BookMetaCard({ post }: BookMetaCardProps) {
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-col">
             <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
-              মোট বান্ডেল মূল্য
+              বইয়ের মোট মূল্য
             </span>
             <span className="text-2xl font-black text-slate-900">
               {post.type === "donate" ? (
@@ -30,9 +30,6 @@ export default async function BookMetaCard({ post }: BookMetaCardProps) {
           </div>
 
           <div className="flex flex-col items-end gap-1.5">
-            <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
-              স্ট্যাটাস
-            </span>
             <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-md uppercase tracking-wide">
               {post.status || "এভেইলএবল"}
             </span>
@@ -43,11 +40,17 @@ export default async function BookMetaCard({ post }: BookMetaCardProps) {
         </div>
 
         <div className="border-t border-b border-slate-100 py-3 text-xs text-slate-600 flex justify-between w-full">
+          {post.books.length > 0 &&
+            <span>
+              মোট বই: <span className="font-bold text-slate-900">{post.books.length}টি</span>
+            </span>
+          }
+
           <span>
-            মোট বই: <span className="font-bold text-slate-900">{post.books.length}টি</span>
+            <span className="font-bold text-slate-900 uppercase"></span>
           </span>
           <span>
-            টাইপ: <span className="font-bold text-slate-900 uppercase">{post.type}</span>
+            <span className="font-bold text-slate-900 uppercase">{post.type === "sell" ? "বিক্রি হবে" : "দান করা হবে"}</span>
           </span>
         </div>
       </div>

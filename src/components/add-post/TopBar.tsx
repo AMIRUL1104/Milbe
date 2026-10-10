@@ -70,13 +70,7 @@ function TopBarComponent({
     }
   };
 
-  const progressPercentage = useMemo(() => {
-    const totalSteps = STEP_SECTIONS.length;
-    return Math.min(
-      Math.max(((activeStepIndex + 1) / totalSteps) * 100, 0),
-      100
-    );
-  }, [activeStepIndex]);
+
 
   return (
     <div className="sticky top-0 z-40 bg-surface border-b border-border-light">
@@ -90,14 +84,14 @@ function TopBarComponent({
           <ArrowLeft size={18} strokeWidth={2} />
         </button>
 
-        <div className="flex-1 font-semibold text-[15.5px] text-text-primary">
+        <div className="flex-1 font-semibold text-xs text-text-primary">
           {isEditing ? "পোস্ট সম্পাদনা করুন" : "নতুন পোস্ট"}
 
         </div>
 
         {saveTimeText && (
           <div className="hidden sm:inline-flex font-en text-xs font-medium text-secondary-hover bg-secondary-light px-3 py-1.5 rounded-full whitespace-nowrap">
-            খসড়া সংরক্ষিত • {saveTimeText}
+            ড্রাফট সংরক্ষিত • {saveTimeText}
           </div>
         )}
 
@@ -113,14 +107,9 @@ function TopBarComponent({
 
       <TipsModal isOpen={isTipsOpen} onClose={() => setIsTipsOpen(false)} />
 
-      <div className="h-[3px] bg-border-light relative overflow-hidden">
-        <div
-          className="absolute inset-y-0 left-0 bg-primary transition-slow"
-          style={{ width: `${progressPercentage}%` }}
-        />
-      </div>
 
-      <div className="w-full max-w-[1100px] mx-auto flex gap-1 sm:gap-1.5 px-2 sm:px-4 py-1 sm:pb-2.5 overflow-x-auto sm:overflow-x-visible">
+
+      <div className="w-full max-w-[1100px] mx-auto flex items-center gap-1 px-1 sm:px-4 py-1 sm:pb-2.5 overflow-x-hidden">
         {STEP_SECTIONS.map((section, idx) => {
           const isActive = idx === activeStepIndex;
           const isDone = idx < activeStepIndex;
@@ -129,23 +118,15 @@ function TopBarComponent({
             <button
               key={section}
               type="button"
-              className={`flex-1 flex items-center justify-center sm:justify-start gap-1 px-1.5 sm:px-3 py-1.5 rounded-full border transition-base whitespace-nowrap sm:whitespace-nowrap cursor-pointer ${isActive
-                  ? "border-primary bg-primary-light text-primary font-medium"
-                  : isDone
-                    ? "border-border bg-surface text-secondary-hover"
-                    : "border-border bg-surface text-text-muted"
+              className={`flex-1 min-w-0 flex items-center justify-center sm:justify-start gap-1 px-1 sm:px-3 py-1.5 rounded-full border transition-base cursor-pointer ${isActive
+                ? "border-primary bg-primary-light text-primary font-medium"
+                : isDone
+                  ? "border-border bg-surface text-secondary-hover"
+                  : "border-border bg-surface text-text-muted"
                 }`}
               onClick={() => handleStepClick(idx)}
             >
-              <span
-                className={`w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] rounded-full font-en text-[10px] sm:text-[10.5px] font-semibold flex items-center justify-center shrink-0 transition-base ${isActive
-                    ? "bg-secondary text-white"
-                    : "bg-border-light text-text-muted"
-                  }`}
-              >
-                {idx + 1}
-              </span>
-              <span className="text-[11px] sm:text-xs truncate">
+              <span className="text-[10px] sm:text-xs truncate">
                 {STEP_LABELS[idx]}
               </span>
             </button>

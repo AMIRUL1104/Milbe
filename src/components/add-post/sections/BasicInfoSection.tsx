@@ -3,7 +3,11 @@
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { Tag } from "lucide-react";
-import { BOOK_CATEGORIES, BOOK_CONDITIONS, CONDITION_LABELS_BN } from "../../../lib/constant/post";
+import {
+  BOOK_CATEGORIES,
+  BOOK_CONDITIONS,
+  CONDITION_LABELS_BN,
+} from "../../../lib/constant/post";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 import TypeToggle from "../TypeToggle";
 import ConditionPills from "../ConditionPills";
@@ -17,7 +21,9 @@ interface ImageUploadProps {
   onUploadingChange: (isUploading: boolean) => void;
 }
 
-export default function BasicInfoSection({ onUploadingChange }: ImageUploadProps) {
+export default function BasicInfoSection({
+  onUploadingChange,
+}: ImageUploadProps) {
   const {
     register,
     formState: { errors },
@@ -48,19 +54,36 @@ export default function BasicInfoSection({ onUploadingChange }: ImageUploadProps
       : "border-border focus:border-border-focus focus-visible:outline-primary-focus";
 
   return (
-    <section id="step-basic" className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
+    <section
+      id="step-basic"
+      className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24"
+    >
       <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">1</div>
-        <h2 className="text-base font-semibold text-text-secondary">মূল তথ্য</h2>
+        <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">
+          1
+        </div>
+        <h2 className="text-base font-semibold text-text-secondary">
+          মূল তথ্য
+        </h2>
       </div>
 
+      {/* photo upload */}
+      <ImageUpload onUploadingChange={onUploadingChange} />
+
+      {/* type toggle */}
       <div className="mb-3.5">
-        <label className="block text-sm font-medium text-text-primary mb-1.5">পোস্টের ধরন</label>
+        <label className="block text-sm font-medium text-text-primary mb-1.5">
+          পোস্টের ধরন
+        </label>
         <TypeToggle />
       </div>
 
+      {/* post title */}
       <div className="mb-3.5">
-        <label htmlFor="title" className="block text-sm font-medium text-text-primary mb-1.5">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-text-primary mb-1.5"
+        >
           পোস্টের শিরোনাম <span className="text-danger font-semibold">*</span>
         </label>
         <input
@@ -70,18 +93,25 @@ export default function BasicInfoSection({ onUploadingChange }: ImageUploadProps
           placeholder="যেমন: এইচএসসি সায়েন্স গ্রুপের বই"
           {...register("title")}
           className={`${inputBase} pl-4 ${errors.title
-            ? "border-danger focus:border-danger focus-visible:outline-danger"
-            : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
+              ? "border-danger focus:border-danger focus-visible:outline-danger"
+              : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
             }`}
         />
-        <div className="text-right font-en text-[11px] text-text-muted mt-1">
-          <span id="titleCount">{titleCount}</span>/80
+
+        <div className="flex flex-row justify-between font-en text-[11px] text-text-muted mt-1">
+          {errors.title && <p className={errorText}>{errors.title.message}</p>}
+          <p>
+            <span id="titleCount">{titleCount}</span>/80
+          </p>
         </div>
-        {errors.title && <p className={errorText}>{errors.title.message}</p>}
       </div>
 
+      {/* post catewgory */}
       <div className="mb-3.5">
-        <label htmlFor="category" className="block text-sm font-medium text-text-primary mb-1.5">
+        <label
+          htmlFor="category"
+          className="block text-sm font-medium text-text-primary mb-1.5"
+        >
           ক্যাটাগরি <span className="text-danger font-semibold">*</span>
         </label>
         <div className="relative">
@@ -93,11 +123,13 @@ export default function BasicInfoSection({ onUploadingChange }: ImageUploadProps
             {...register("category")}
             defaultValue=""
             className={`${inputBase} appearance-none cursor-pointer ${errors.category
-              ? "border-danger focus:border-danger focus-visible:outline-danger"
-              : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
+                ? "border-danger focus:border-danger focus-visible:outline-danger"
+                : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
               }`}
           >
-            <option value="" disabled>ক্যাটাগরি বেছে নিন</option>
+            <option value="" disabled>
+              ক্যাটাগরি বেছে নিন
+            </option>
             {BOOK_CATEGORIES.map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -110,13 +142,14 @@ export default function BasicInfoSection({ onUploadingChange }: ImageUploadProps
         )}
       </div>
 
-      <ImageUpload onUploadingChange={onUploadingChange} />
-
       {/* Post-level total price — Sell only; donate stores null. */}
       {postType === "sell" ? (
         <div className="mt-3.5 mb-3.5">
-          <label htmlFor="totalPrice" className="block text-xs font-bold text-text-secondary uppercase tracking-wider">
-            মোট দাম (পুরো পোস্টের জন্য) <span className="text-danger font-semibold">*</span>
+          <label
+            htmlFor="totalPrice"
+            className="block text-xs font-bold text-text-secondary uppercase tracking-wider"
+          >
+            মোট দাম <span className="text-danger font-semibold">*</span>
           </label>
           <div className="relative mt-1.5">
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-en font-semibold text-text-secondary text-sm pointer-events-none">
@@ -131,16 +164,22 @@ export default function BasicInfoSection({ onUploadingChange }: ImageUploadProps
               className={`${inputBase} pl-8 ${borderClass(!!errors.totalPrice)}`}
             />
           </div>
-          <p className="text-xs text-text-muted mt-1">
-            এই দামটি পোস্টের সব বইয়ের জন্য প্রযোজ্য হবে।
-          </p>
           {errors.totalPrice && (
             <p className={errorText}>{errors.totalPrice.message}</p>
           )}
         </div>
       ) : (
         <div className="mt-3.5 mb-3.5 flex items-center gap-1.5 bg-success-light text-success-text rounded-btn px-3 py-2.5 text-sm font-semibold">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
           </svg>
           দান হিসেবে দেওয়া হবে — সম্পূর্ণ ফ্রি, কোনো মূল্য লাগবে না
@@ -150,7 +189,8 @@ export default function BasicInfoSection({ onUploadingChange }: ImageUploadProps
       {/* Post-level overall condition — default "ভালো" (good). */}
       <div className="mb-1">
         <label className="block text-sm font-medium text-text-primary mb-1.5">
-          সামগ্রিক বইয়ের অবস্থা <span className="text-danger font-semibold">*</span>
+          সামগ্রিক বইয়ের অবস্থা{" "}
+          <span className="text-danger font-semibold">*</span>
         </label>
         <ConditionPills
           value={watch("overallCondition") ?? "good"}

@@ -48,24 +48,7 @@ export default function ContactSection({
           {errors.phone && <p className={errorText}>{errors.phone.message}</p>}
         </div>
 
-        <div className="mb-3.5">
-          <label htmlFor="messenger" className="block text-sm font-medium text-text-primary mb-1.5">
-            মেসেঞ্জার <span className="font-medium text-text-muted text-xs">(ঐচ্ছিক)</span>
-          </label>
-          <div className="relative">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"><MessageCircle width="16" height="16" /></span>
-            <input
-              id="messenger"
-              type="text"
-              placeholder="ইউজারনেম বা লিংক"
-              {...register("messenger")}
-              className={`${inputBase} ${borderClass(!!errors.messenger)}`}
-            />
-          </div>
-          {errors.messenger && (
-            <p className={errorText}>{errors.messenger.message}</p>
-          )}
-        </div>
+
       </div>
 
       <div className="mb-3.5">
@@ -77,7 +60,6 @@ export default function ContactSection({
               checked={field.value}
               onChange={field.onChange}
               label="হোয়াটসঅ্যাপেও যোগাযোগ করুন"
-              helperText="একই ফোন নম্বরে হোয়াটসঅ্যাপ চালু আছে"
             />
           )}
         />
@@ -92,11 +74,9 @@ export default function ContactSection({
               className="mt-0.5 w-4 h-4 accent-primary cursor-pointer"
             />
             <span>
-              <span className="block text-sm font-medium text-text-primary">
-                ঠিকানা ও যোগাযোগ নম্বর প্রোফাইলে সংরক্ষণ করুন
-              </span>
               <span className="block text-xs text-text-muted mt-0.5">
-                পরবর্তীতে দ্রুত পোস্ট দিতে এই তথ্য প্রোফাইলে থেকে যাবে
+                ঠিকানা ও যোগাযোগ নম্বর প্রোফাইলে সংরক্ষণ করুন ।
+                পরবর্তীতে দ্রুত পোস্ট দিতে এই তথ্য প্রোফাইলে থেকে পাওয়া যাবে ।
               </span>
             </span>
           </label>

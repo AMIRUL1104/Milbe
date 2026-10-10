@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { PostItem } from "@/interface/post/types";
+import { CONDITION_LABELS_BN } from "@/lib/constant/post";
 
 interface BookHeroProps {
   post: PostItem;
@@ -9,6 +10,8 @@ interface BookHeroProps {
 
 export default function BookHero({ post }: BookHeroProps) {
   const imageUrl = post.image;
+  const conditionLabel = CONDITION_LABELS_BN[post.overallCondition] ?? "ভালো";
+
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs overflow-hidden">
@@ -52,12 +55,24 @@ export default function BookHero({ post }: BookHeroProps) {
 
           {/* Category & Title */}
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-semibold">
-              <span>ক্যাটাগরি:</span>
-              <span className="text-slate-900 font-bold uppercase">
-                {post.category || "সাধারণ"}
-              </span>
+
+            <div className="flex items-center justify-between">
+
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-semibold">
+                <span>ক্যাটাগরি:</span>
+                <span className="text-slate-900 font-bold uppercase">
+                  {post.category || "সাধারণ"}
+                </span>
+              </div>
+
+              <div className="ml-auto flex flex-wrap items-center gap-2">
+                <span className="inline-block px-2.5 py-1 text-xs font-bold rounded-md bg-slate-50 border border-slate-200 text-slate-700">
+                  অবস্থা: {conditionLabel}
+                </span>
+              </div>
+
             </div>
+
 
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 leading-snug">
               {post.title}
@@ -76,9 +91,21 @@ export default function BookHero({ post }: BookHeroProps) {
                 <span>৳{post.totalPrice ?? 0}</span>
               )}
             </div>
+
+
           </div>
 
-
+          {/* General Description Section */}
+          {post.description && (
+            <div className="hidden sm:block pt-2 border-t border-slate-100 space-y-2">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                অতিরিক্ত বিবরণ
+              </h3>
+              <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-4 rounded-xl border border-slate-100">
+                {post.description}
+              </p>
+            </div>
+          )}
 
         </div>
       </div>

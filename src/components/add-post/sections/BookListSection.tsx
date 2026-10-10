@@ -63,21 +63,19 @@ export default function BookListSection({
         <div className="w-6 h-6 rounded-full bg-primary text-white font-en font-semibold text-xs flex items-center justify-center">4</div>
         <h2 className="text-base font-semibold text-text-secondary">বইয়ের তালিকা</h2>
         <span className="ml-auto text-xs text-text-muted">
-          {fields.length === 0 ? "কোনো বই নেই" : `${fields.length} বই`}
+          {fields.length === 0 ? " " : `${fields.length} বই`}
         </span>
       </div>
 
       <p className="text-xs text-text-muted mb-3">
-        ঐচ্ছিক — বইয়ের তালিকা ছাড়াও পোস্ট করা যাবে। চাইলে নিচে বই যোগ করুন;
-        প্রতিটি বইয়ের নাম, লেখক ও প্রকাশনী সবই ঐচ্ছিক। দাম ও অবস্থা পুরো
-        পোস্টের জন্য ধাপ ১-এ দিলেই হবে।
+        ঐচ্ছিক — তবে বইগুলোর তথ্য আলাদাভাবে যোগ করলে — ক্রেতাদের সার্চ-এর ফলাফলে আপনার পোস্ট সহজে দেখাতে এটি সাহায্য করবে।
       </p>
 
-      {fields.length === 0 && (
+      {/* {fields.length === 0 && (
         <div className="border border-dashed border-border rounded-card px-4 py-6 text-center text-sm text-text-muted mb-3">
           এখনো কোনো বই যোগ করা হয়নি — নিচের বাটনে ক্লিক করে বই যোগ করুন।
         </div>
-      )}
+      )} */}
 
       <div className="flex flex-col gap-3.5">
         {fields.map((field, index) => (
@@ -91,7 +89,7 @@ export default function BookListSection({
 
       <button
         type="button"
-        className="w-full mt-3 flex items-center justify-center gap-1.5 border-2 border-dashed border-border bg-transparent rounded-card py-3 text-sm font-semibold text-primary cursor-pointer transition-base hover:bg-primary-light hover:border-primary"
+        className="w-full mt-3 flex items-center justify-center gap-1.5 border-2 border-dashed border-border bg-transparent rounded-card py-3 text-sm font-semibold text-primary cursor-pointer transition-base hover:bg-primary-light hover:border-primary max-sm:bg-primary-light max-sm:border-primary"
         id="addBookBtn"
         onClick={() => append({ ...emptyBook })}
       >

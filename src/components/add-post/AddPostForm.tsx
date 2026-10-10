@@ -323,15 +323,7 @@ export default function AddPostForm({
         noValidate
       >
         <div className="flex flex-col gap-4 min-w-0">
-          <div className="px-0.5 pb-2">
-            <h1 className="font-bn-serif text-2xl font-semibold text-text-primary mb-1">
-              বই বিক্রি করুন বা দান করুন
-            </h1>
-            <p className="text-sm text-text-secondary">
-              আপনার বইগুলো অন্য শিক্ষার্থীদের কাজে লাগুক — মাত্র কয়েকটি ধাপে
-              পোস্ট তৈরি করুন।
-            </p>
-          </div>
+
 
           <FormProvider {...methods}>
             <BasicInfoSection onUploadingChange={setIsUploadPending} />

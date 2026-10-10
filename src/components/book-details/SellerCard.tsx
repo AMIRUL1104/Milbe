@@ -18,7 +18,7 @@ export default function SellerCard({ post }: SellerCardProps) {
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4">
       <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider border-b border-slate-100 pb-2">
-        সেলার প্রোফাইল
+        বিক্রেতার তথ্য
       </h3>
 
       {/* Seller Header */}
@@ -28,7 +28,7 @@ export default function SellerCard({ post }: SellerCardProps) {
         </div>
         <div className="flex flex-col">
           <span className="font-bold text-slate-900 text-base">{sellerName}</span>
-          <span className="text-xs text-[#35858E] font-medium">ভেরিফায়েড সদস্য</span>
+          <span className="text-xs text-[#35858E] font-medium">ভেরিফায়িড সদস্য</span>
         </div>
       </div>
 
@@ -43,18 +43,7 @@ export default function SellerCard({ post }: SellerCardProps) {
         </div>
       </div>
 
-      {/* Note From Seller Section */}
-      {post.description && (
-        <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 space-y-1.5">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-            <FileText className="w-3.5 h-3.5 text-[#35858E]" />
-            <span>সেলারের নোট:</span>
-          </div>
-          <p className="text-xs text-slate-600 leading-relaxed">
-            {post.description}
-          </p>
-        </div>
-      )}
+
     </div>
   );
 }

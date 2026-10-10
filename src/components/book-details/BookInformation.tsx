@@ -10,7 +10,6 @@ interface BookInformationProps {
 
 export default function BookInformation({ post }: BookInformationProps) {
   const books = post.books ?? [];
-  const conditionLabel = CONDITION_LABELS_BN[post.overallCondition] ?? "ভালো";
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
@@ -18,27 +17,15 @@ export default function BookInformation({ post }: BookInformationProps) {
       <div className="flex flex-wrap items-center gap-2.5 border-b border-slate-100 pb-4">
         <BookOpen className="w-5 h-5 text-[#35858E]" />
         <h2 className="text-base sm:text-lg font-bold text-slate-900">
-          বইয়ের তালিকা ও বিবরণ ({books.length}টি)
+          বইয়ের তালিকা ও বিবরণ
         </h2>
-        <div className="ml-auto flex flex-wrap items-center gap-2">
-          <span className="inline-block px-2.5 py-1 text-xs font-bold rounded-md bg-slate-50 border border-slate-200 text-slate-700">
-            মোট মূল্য:{" "}
-            {post.type === "donate" ? (
-              <span className="text-[#35858E]">ফ্রি</span>
-            ) : (
-              `৳${post.totalPrice ?? 0}`
-            )}
-          </span>
-          <span className="inline-block px-2.5 py-1 text-xs font-bold rounded-md bg-slate-50 border border-slate-200 text-slate-700">
-            অবস্থা: {conditionLabel}
-          </span>
-        </div>
+
       </div>
 
       {books.length === 0 && (
         /* Empty list is valid — no empty table, just a hint. */
         <div className="border border-dashed border-slate-200 rounded-xl px-4 py-8 text-center text-sm text-slate-500">
-          এই পোস্টে কোনো বইয়ের তালিকা দেওয়া হয়নি — বিবরণ দেখে সম্পর্ক করুন।
+          এই পোস্টে কোনো বইয়ের তালিকা দেওয়া হয়নি — বিবরণ দেওয়া থাকলে পড়ুন।
         </div>
       )}
 
@@ -105,7 +92,7 @@ export default function BookInformation({ post }: BookInformationProps) {
 
       {/* General Description Section */}
       {post.description && (
-        <div className="pt-2 border-t border-slate-100 space-y-2">
+        <div className="sm:hidden pt-2 border-t border-slate-100 space-y-2">
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
             অতিরিক্ত বিবরণ
           </h3>
