@@ -33,6 +33,8 @@ export interface PostItem {
   description: string;
   status: PostStatus;
   acceptedRequestId: string | null;
+  acceptedEver: boolean;
+  requestCount: number;
   isDeleted: boolean;
   publishedAt: string;
   updatedAt: string;

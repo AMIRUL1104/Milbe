@@ -35,6 +35,7 @@ export default function ReceiveRequestActions({
       router.refresh();
     } catch (error) {
       toast.error(getFriendlyApiError(error));
+      router.refresh();
     } finally {
       setPendingAction(null);
     }

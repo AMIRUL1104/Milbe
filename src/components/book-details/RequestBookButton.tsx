@@ -10,6 +10,7 @@ type ButtonStatus =
   | "checking"
   | "can-request"
   | "already-requested"
+  | "unavailable"
   | "own-post"
   | "not-logged-in"
   | "error";
@@ -68,6 +69,10 @@ export default function RequestBookButton({
 
       if (result.data.reason === "already_requested") {
         setStatus("already-requested");
+        return;
+      }
+      if (result.data.reason === "unavailable") {
+        setStatus("unavailable");
         return;
       }
 
@@ -138,6 +143,18 @@ export default function RequestBookButton({
         className="w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-bold text-slate-500"
       >
         <span>রিকোয়েস্ট পাঠানো হয়েছে ✓</span>
+      </button>
+    );
+  }
+
+  if (status === "unavailable") {
+    return (
+      <button
+        type="button"
+        disabled
+        className="w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-bold text-slate-500"
+      >
+        বইটি আর উপলব্ধ নেই
       </button>
     );
   }
