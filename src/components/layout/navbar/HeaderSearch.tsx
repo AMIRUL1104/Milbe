@@ -14,19 +14,55 @@ interface HeaderSearchProps {
 export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const currentSearch = searchParams.get("search") || "";
 
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
-  const [selectedLocation, setSelectedLocation] = useState(searchParams.get("location") || "");
+  const [searchDraft, setSearchDraft] = useState({
+    urlSearch: currentSearch,
+    value: currentSearch,
+  });
+  if (searchDraft.urlSearch !== currentSearch) {
+    setSearchDraft({ urlSearch: currentSearch, value: currentSearch });
+  }
+  const searchQuery = searchDraft.value;
+  const selectedLocation = searchParams.get("location") || "";
   const [locationSearch, setLocationSearch] = useState("");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
-
   const searchInputRef = useRef<HTMLInputElement>(null);
   const locationDropdownRef = useRef<HTMLDivElement>(null);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const updateSearchParams = useCallback(
+    (updates: Record<string, string | undefined>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value) {
+          params.set(key, value);
+        } else {
+          params.delete(key);
+        }
+      });
+      params.set("page", "1");
+      router.push(`?${params.toString()}`, { scroll: false });
+    },
+    [router, searchParams]
+  );
 
   useEffect(() => {
-    setSelectedLocation(searchParams.get("location") || "");
-  }, [searchParams]);
+    if (searchQuery.trim() === currentSearch.trim()) return;
+
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      updateSearchParams({ search: searchQuery.trim() || undefined });
+    }, 500);
+
+    return () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    };
+  }, [currentSearch, searchQuery, updateSearchParams]);
+
+  useEffect(() => () => {
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+  }, []);
 
   useEffect(() => {
     if (mode === "search" && searchInputRef.current) {
@@ -59,35 +95,14 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
     };
   }, [isLocationOpen]);
 
-  const updateSearchParams = useCallback(
-    (updates: Record<string, string | undefined>) => {
-      const params = new URLSearchParams(searchParams.toString());
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value) {
-          params.set(key, value);
-        } else {
-          params.delete(key);
-        }
-      });
-      params.set("page", "1");
-      router.push(`?${params.toString()}`, { scroll: false });
-    },
-    [router, searchParams]
-  );
-
   const handleSearchChange = (value: string) => {
-    setSearchQuery(value);
-    if (debounceTimer) clearTimeout(debounceTimer);
-    const timer = setTimeout(() => {
-      updateSearchParams({ search: value || undefined });
-    }, 500);
-    setDebounceTimer(timer);
+    setSearchDraft({ urlSearch: currentSearch, value });
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (debounceTimer) clearTimeout(debounceTimer);
-    updateSearchParams({ search: searchQuery || undefined });
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    updateSearchParams({ search: searchQuery.trim() || undefined });
   };
 
   const handleLocationSelect = (district: string) => {
@@ -103,7 +118,8 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   };
 
   const handleClearSearch = () => {
-    setSearchQuery("");
+    setSearchDraft({ urlSearch: currentSearch, value: "" });
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
     updateSearchParams({ search: undefined });
     if (searchInputRef.current) {
       searchInputRef.current.focus();

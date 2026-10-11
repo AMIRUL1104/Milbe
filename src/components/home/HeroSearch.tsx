@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import {
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+    useTransition,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, Loader2 } from "lucide-react";
 
@@ -10,42 +16,55 @@ export default function HeroSearchBar() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const inputRef = useRef<HTMLInputElement>(null);
+    const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isPending, startTransition] = useTransition();
 
     // The URL is the source of truth: ?search=... fills the input on load
     const currentSearch = searchParams.get(SEARCH_PARAM) ?? "";
-    const [query, setQuery] = useState(currentSearch);
+    const [searchDraft, setSearchDraft] = useState({
+        urlSearch: currentSearch,
+        value: currentSearch,
+    });
+    if (searchDraft.urlSearch !== currentSearch) {
+        setSearchDraft({ urlSearch: currentSearch, value: currentSearch });
+    }
+    const query = searchDraft.value;
 
-    // Keep the input in sync when the URL changes (back/forward, clear, other links)
-    useEffect(() => {
-        setQuery(currentSearch);
-    }, [currentSearch]);
-
-    const applySearch = (value: string) => {
+    const applySearch = useCallback((value: string) => {
         const text = value.trim();
 
-        // Keep other params (category, filters...) but reset pagination
         const params = new URLSearchParams(searchParams.toString());
         if (text) {
             params.set(SEARCH_PARAM, text);
         } else {
             params.delete(SEARCH_PARAM);
         }
-        params.delete("page");
+        params.set("page", "1");
 
         const qs = params.toString();
         startTransition(() => {
-            router.push(qs ? `/?${qs}` : "/");
+            router.push(qs ? `/?${qs}` : "/", { scroll: false });
         });
-    };
+    }, [router, searchParams]);
+
+    useEffect(() => {
+        if (query.trim() === currentSearch.trim()) return;
+
+        debounceTimer.current = setTimeout(() => applySearch(query), 500);
+        return () => {
+            if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        };
+    }, [applySearch, currentSearch, query]);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (debounceTimer.current) clearTimeout(debounceTimer.current);
         applySearch(query);
     };
 
     const handleClear = () => {
-        setQuery("");
+        setSearchDraft({ urlSearch: currentSearch, value: "" });
+        if (debounceTimer.current) clearTimeout(debounceTimer.current);
         inputRef.current?.focus();
         if (currentSearch) applySearch("");
     };
@@ -63,7 +82,12 @@ export default function HeroSearchBar() {
                     type="text"
                     name={SEARCH_PARAM}
                     value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    onChange={(e) =>
+                        setSearchDraft({
+                            urlSearch: currentSearch,
+                            value: e.target.value,
+                        })
+                    }
                     inputMode="search"
                     enterKeyHint="search"
                     autoComplete="off"
