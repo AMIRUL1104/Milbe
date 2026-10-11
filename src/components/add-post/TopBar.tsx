@@ -1,10 +1,11 @@
 "use client";
 
-import { memo, useMemo, useState, useEffect } from "react";
+import { memo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Lightbulb } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import { STEP_SECTIONS, STEP_LABELS } from "@/lib/constant/post";
 import TipsModal from "./TipsModal";
+import BackButton from "../ui/BackButton";
 
 interface TopBarProps {
   activeStepIndex: number;
@@ -75,14 +76,7 @@ function TopBarComponent({
   return (
     <div className="sticky top-0 z-40 bg-surface border-b border-border-light">
       <div className="max-w-[1100px] mx-auto flex items-center gap-3 px-4 py-3">
-        <button
-          type="button"
-          className="w-9 h-9 flex items-center justify-center rounded-btn border border-border bg-surface text-text-secondary hover:bg-surface-hover hover:border-primary transition-base cursor-pointer"
-          onClick={() => router.back()}
-          aria-label="ফিরে যান"
-        >
-          <ArrowLeft size={18} strokeWidth={2} />
-        </button>
+        <BackButton />
 
         <div className="flex-1 font-semibold text-xs text-text-primary">
           {isEditing ? "পোস্ট সম্পাদনা করুন" : "নতুন পোস্ট"}

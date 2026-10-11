@@ -8,6 +8,7 @@ import BookMetaCard from "@/components/book-details/BookMetaCard";
 import BookHero from "@/components/book-details/BookHero";
 import type { PostItem } from "@/interface/post/types";
 import { getPostById, getPostBySlug } from "@/services/features/posts";
+import BackButton from "@/components/ui/BackButton";
 
 interface BookDetailsPageProps {
   params: Promise<{
@@ -97,13 +98,14 @@ export default async function BookDetailsPage({ params }: BookDetailsPageProps) 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Back Button Section */}
         <div>
-          <Link
+          {/* <Link
             href="/"
             className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#35858E] bg-white hover:bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 transition-all duration-200 shadow-xs group"
           >
             <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1" />
             <span>হোমে ফিরে যান</span>
-          </Link>
+          </Link> */}
+          <BackButton />
         </div>
 
         {/* Main Content Layout Grid */}
