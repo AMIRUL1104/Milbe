@@ -47,6 +47,17 @@ export async function getPostById(id: string): Promise<PostResponse> {
   return serverFetch<PostItem>(`/api/posts/${id}`);
 }
 
+/**
+ * Owner-only single post (edit mode) — unlike `getPostById` (public,
+ * contact-redacted), this authenticated endpoint returns the post WITH
+ * `phone`/`messenger` so the edit form can prefill them.
+ */
+export async function getMyPostById(id: string): Promise<PostResponse> {
+  return protectedFetch<PostItem>(
+    `/api/posts/my/${encodeURIComponent(id)}`,
+  );
+}
+
 export async function getPostBySlug(slug: string): Promise<PostResponse> {
   return serverFetch<PostItem>(`/api/posts/slug/${encodeURIComponent(slug)}`);
 }

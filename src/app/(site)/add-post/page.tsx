@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getUserSession } from "@/services/core/session";
 import { redirect } from "next/navigation";
 import AddPostForm from "@/components/add-post/AddPostForm";
-import { getPostById } from "@/services/features/posts";
+import { getMyPostById } from "@/services/features/posts";
 import type { PostItem } from "@/interface/post/types";
 
 export const metadata: Metadata = {
@@ -43,7 +43,10 @@ export default async function AddPostPage({ searchParams }: AddPostPageProps) {
     let post: PostItem | null = null;
 
     try {
-      const response = await getPostById(editId);
+      // Owner-only fetch (authenticated) — the public GET /api/posts/:id
+      // redacts `phone`/`messenger`, which would leave the contact input
+      // empty in edit mode.
+      const response = await getMyPostById(editId);
       if (response?.success && response.data) {
         post = response.data;
       }

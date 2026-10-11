@@ -1,126 +1,182 @@
-import React from "react";
+function Skeleton({ className = "" }: { className?: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`animate-pulse rounded bg-slate-200 ${className}`}
+    />
+  );
+}
+
+function SectionHeading({ titleWidth }: { titleWidth: string }) {
+  return (
+    <div className="flex items-center gap-2.5 mb-4">
+      <Skeleton className="w-6 h-6 rounded-full shrink-0" />
+      <Skeleton className={`h-4 ${titleWidth}`} />
+    </div>
+  );
+}
+
+function Field({ labelWidth = "w-20" }: { labelWidth?: string }) {
+  return (
+    <div>
+      <Skeleton className={`h-3.5 ${labelWidth} mb-2`} />
+      <Skeleton className="h-10.5 w-full rounded-xl" />
+    </div>
+  );
+}
 
 export default function AddBookLoading() {
   return (
-    <div className="min-h-screen bg-taupe-50">
-      {/* TopBar Skeleton */}
+    <div
+      className="min-h-screen bg-background"
+      role="status"
+      aria-label="পোস্ট ফর্ম লোড হচ্ছে"
+      aria-busy="true"
+    >
       <div className="sticky top-0 z-40 bg-surface border-b border-border-light">
-        <div className="max-w-[1100px] mx-auto flex items-center gap-3 px-4 py-3">
-          <div className="w-9 h-9 rounded-btn bg-slate-200 animate-pulse shrink-0" />
-          <div className="flex-1 space-y-1">
-            <div className="h-5 w-28 bg-slate-200 rounded animate-pulse" />
-            <div className="h-3 w-40 bg-slate-100 rounded animate-pulse" />
-          </div>
-          <div className="hidden sm:block h-7 w-32 bg-slate-200 rounded-full animate-pulse" />
+        <div className="max-w-275 mx-auto flex items-center gap-3 px-4 py-3">
+          <Skeleton className="w-9 h-9 rounded-btn shrink-0" />
+          <Skeleton className="h-4 w-24 flex-1" />
+          <Skeleton className="h-8 w-36 sm:w-44 rounded-full shrink-0" />
         </div>
-        {/* Progress Bar Skeleton */}
-        <div className="h-[3px] bg-slate-200" />
-        {/* Step Indicator Skeleton */}
-        <div className="max-w-[1100px] mx-auto flex gap-2 px-4 py-2.5 overflow-x-auto">
-          {[1, 2, 3, 4].map((i) => (
+        <div className="w-full max-w-275 mx-auto flex items-center gap-1 px-1 sm:px-4 py-1 sm:pb-2.5">
+          {[1, 2, 3, 4].map((step) => (
             <div
-              key={i}
-              className="h-8 w-24 bg-slate-200 rounded-full animate-pulse shrink-0"
-            />
+              key={step}
+              className="flex-1 min-w-0 flex justify-center sm:justify-start px-1 sm:px-3 py-1.5"
+            >
+              <Skeleton className="h-3.5 w-12 sm:w-20" />
+            </div>
           ))}
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <main className="max-w-[1100px] mx-auto p-4 sm:p-6 space-y-6">
-        {/* Card 1: Basic Information */}
-        <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-100 shadow-sm space-y-6">
-          <div className="h-5 w-36 bg-slate-200 rounded-md animate-pulse" />
+      <main className="max-w-275 mx-auto grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 px-4 py-5 lg:px-6 lg:py-8 lg:gap-7">
+        <div className="flex flex-col gap-4 min-w-0">
+          <section className="bg-surface border border-border-light rounded-card p-5">
+            <SectionHeading titleWidth="w-20" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Book Title */}
-            <div className="space-y-2 animate-pulse">
-              <div className="h-4 w-20 bg-slate-100 rounded" />
-              <div className="h-10 w-full bg-slate-100 rounded-xl" />
+            <div className="mb-3.5">
+              <Skeleton className="h-3.5 w-24 mb-1.5" />
+              <Skeleton className="h-3 w-52 mb-2" />
+              <Skeleton className="h-42.5 w-full rounded-card" />
             </div>
 
-            {/* Author */}
-            <div className="space-y-2 animate-pulse">
-              <div className="h-4 w-24 bg-slate-100 rounded" />
-              <div className="h-10 w-full bg-slate-100 rounded-xl" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Category */}
-            <div className="space-y-2 animate-pulse">
-              <div className="h-4 w-28 bg-slate-100 rounded" />
-              <div className="h-10 w-full bg-slate-100 rounded-xl" />
+            <div className="mb-3.5">
+              <Skeleton className="h-3.5 w-24 mb-1.5" />
+              <div className="grid grid-cols-2 gap-2 p-1.25 rounded-xl border border-border-light bg-background">
+                <Skeleton className="h-10 rounded-lg" />
+                <Skeleton className="h-10 rounded-lg" />
+              </div>
             </div>
 
-            {/* Book Type */}
-            <div className="space-y-2 animate-pulse">
-              <div className="h-4 w-20 bg-slate-100 rounded" />
-              <div className="h-10 w-full bg-slate-100 rounded-xl" />
+            <div className="mb-3.5">
+              <Skeleton className="h-3.5 w-32 mb-1.5" />
+              <Skeleton className="h-10.5 w-full rounded-xl" />
+              <Skeleton className="h-3 w-10 ml-auto mt-1" />
             </div>
 
-            {/* Condition */}
-            <div className="space-y-2 animate-pulse">
-              <div className="h-4 w-24 bg-slate-100 rounded" />
-              <div className="h-10 w-full bg-slate-100 rounded-xl" />
+            <div className="mb-3.5">
+              <Skeleton className="h-3.5 w-20 mb-1.5" />
+              <Skeleton className="h-10.5 w-full rounded-xl" />
             </div>
+
+            <div className="mt-3.5 mb-3.5">
+              <Skeleton className="h-3 w-24 mb-1.5" />
+              <Skeleton className="h-10.5 w-full rounded-xl" />
+            </div>
+
+            <div>
+              <Skeleton className="h-3.5 w-40 mb-2" />
+              <div className="flex flex-wrap gap-2">
+                {[0, 1, 2].map((item) => (
+                  <Skeleton key={item} className="h-9 w-20 rounded-full" />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="bg-surface border border-border-light rounded-card p-5">
+            <SectionHeading titleWidth="w-36" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div className="mb-3.5">
+                <Field labelWidth="w-12" />
+              </div>
+              <div className="mb-3.5">
+                <Field labelWidth="w-14" />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div className="mb-3.5">
+                <Field labelWidth="w-24" />
+              </div>
+            </div>
+            <div className="mt-3.5 mb-3.5 flex items-center gap-2">
+              <Skeleton className="h-5 w-9 rounded-full" />
+              <Skeleton className="h-3.5 w-44" />
+            </div>
+            <div className="flex items-start gap-2.5">
+              <Skeleton className="mt-0.5 h-4 w-4 shrink-0 rounded-sm" />
+              <div className="flex-1 space-y-1.5">
+                <Skeleton className="h-3 w-full max-w-90" />
+                <Skeleton className="h-3 w-3/4 max-w-70" />
+              </div>
+            </div>
+          </section>
+
+          <section className="bg-surface border border-border-light rounded-card p-5">
+            <SectionHeading titleWidth="w-16" />
+            <Skeleton className="h-3 w-28 mb-1.5" />
+            <Skeleton className="h-28 w-full rounded-xl" />
+            <Skeleton className="h-3 w-12 ml-auto mt-1" />
+          </section>
+
+          <section className="bg-surface border border-border-light rounded-card p-5">
+            <div className="flex items-center gap-2.5 mb-3">
+              <Skeleton className="w-6 h-6 rounded-full shrink-0" />
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-3 w-10 ml-auto" />
+            </div>
+            <Skeleton className="h-3 w-full max-w-110 mb-3" />
+            <Skeleton className="h-11 w-full rounded-card" />
+          </section>
+
+          <div className="lg:hidden">
+            <Skeleton className="h-11 w-full sm:w-52 rounded-btn" />
           </div>
         </div>
 
-        {/* Card 2: Cover Image Upload */}
-        <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-          <div className="h-5 w-40 bg-slate-200 rounded-md animate-pulse" />
-          <div className="w-full h-36 sm:h-40 border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center space-y-2 animate-pulse bg-slate-50/50">
-            <div className="w-10 h-10 rounded-full bg-slate-200" />
-            <div className="h-4 w-36 bg-slate-200 rounded" />
-            <div className="h-3 w-24 bg-slate-100 rounded" />
-          </div>
-        </div>
-
-        {/* Card 3: Location & Contact */}
-        <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-100 shadow-sm space-y-6">
-          <div className="h-5 w-44 bg-slate-200 rounded-md animate-pulse" />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2 animate-pulse">
-              <div className="h-4 w-16 bg-slate-100 rounded" />
-              <div className="h-10 w-full bg-slate-100 rounded-xl" />
-            </div>
-            <div className="space-y-2 animate-pulse">
-              <div className="h-4 w-14 bg-slate-100 rounded" />
-              <div className="h-10 w-full bg-slate-100 rounded-xl" />
+        <aside className="hidden lg:flex flex-col gap-3.5 sticky top-24 self-start">
+          <div className="bg-surface border border-border-light rounded-card overflow-hidden">
+            <Skeleton className="h-37.5 w-full rounded-none" />
+            <div className="p-4">
+              <Skeleton className="h-5 w-16 rounded-full mb-2.5" />
+              <Skeleton className="h-4 w-3/4 mb-2" />
+              <Skeleton className="h-3 w-1/2 mb-3.5" />
+              <div className="flex gap-4 border-t border-border-light pt-3">
+                {[0, 1, 2].map((item) => (
+                  <div key={item} className="space-y-1.5">
+                    <Skeleton className="h-3 w-12" />
+                    <Skeleton className="h-4 w-10" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50/60 p-3 sm:p-4 rounded-xl border border-slate-100">
-            <div className="space-y-2 animate-pulse">
-              <div className="h-4 w-24 bg-slate-100 rounded" />
-              <div className="h-10 w-full bg-white rounded-xl border border-slate-100" />
-            </div>
-            <div className="space-y-2 animate-pulse">
-              <div className="h-4 w-36 bg-slate-100 rounded" />
-              <div className="h-10 w-full bg-white rounded-xl border border-slate-100" />
+          <div className="bg-accent-light border border-border-light rounded-card p-4 space-y-3">
+            <Skeleton className="h-4 w-32" />
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-11/12" />
+              <Skeleton className="h-3 w-4/5" />
             </div>
           </div>
-        </div>
 
-        {/* Card 4: Detailed Description */}
-        <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-          <div className="h-5 w-32 bg-slate-200 rounded-md animate-pulse" />
-          <div className="space-y-2 animate-pulse">
-            <div className="h-4 w-28 bg-slate-100 rounded" />
-            <div className="h-28 w-full bg-slate-100 rounded-xl" />
-          </div>
-        </div>
-
-        {/* Action Button Skeleton */}
-        <div className="w-full pt-2">
-          <div
-            className="w-full h-12 rounded-xl animate-pulse"
-            style={{ backgroundColor: "#35858E", opacity: 0.25 }}
-          />
-        </div>
+          <Skeleton className="h-11 w-full rounded-btn" />
+        </aside>
       </main>
+      <span className="sr-only">লোড হচ্ছে...</span>
     </div>
   );
 }
