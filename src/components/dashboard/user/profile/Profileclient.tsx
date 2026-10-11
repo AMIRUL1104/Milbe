@@ -64,16 +64,18 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
     }
 
     async function onSubmit(values: ProfileFormValues) {
-        // --- Connect updateProfile() API here later ---
-        // const payload: UpdateProfilePayload = { ...values, avatarUrl: uploadedUrl };
-        // await updateProfile(payload);
-
-        // Simulate network delay
-        await new Promise((res) => setTimeout(res, 800));
-
+        // Build the payload so empty/whitespace-only optional fields are
+        // OMITTED (not sent as "") — sending "" would clear an existing
+        // profile value. `undefined` in the Better Auth `updateUser` body
+        // leaves that field untouched.
         const payload: UpdateProfilePayload = {
-            ...values,
-            avatarUrl: previewUrl ?? user.avatarUrl,
+            fullName: values.fullName,
+            ...(values.phoneNumber ? { phoneNumber: values.phoneNumber } : {}),
+            ...(values.district ? { district: values.district } : {}),
+            ...(values.area ? { area: values.area } : {}),
+            ...(previewUrl || user.avatarUrl
+                ? { avatarUrl: previewUrl ?? user.avatarUrl }
+                : {}),
         };
 
         try {
@@ -87,6 +89,14 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
                 area: res.area,
                 avatarUrl: res.avatarUrl ?? prev.avatarUrl,
             }));
+            // Re-sync the form with the server state so a cleared field
+            // shows the still-stored value instead of the cleared input.
+            form.reset({
+                fullName: res.fullName,
+                phoneNumber: res.phoneNumber,
+                district: res.district,
+                area: res.area,
+            });
             setIsEditing(false);
             setPreviewUrl(null);
             setPendingImageFile(null);

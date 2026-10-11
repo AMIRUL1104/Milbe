@@ -37,6 +37,17 @@ const EMPTY_PROFILE: AddPostProfile = {
   area: "",
 };
 
+// The save-to-profile checkbox should only appear when the profile is
+// incomplete — i.e. at least one of district / area / phone is missing.
+// Empty string, whitespace-only, null and undefined all count as "missing".
+const hasValue = (value: string | null | undefined): boolean =>
+  typeof value === "string" && value.trim() !== "";
+
+const hasCompleteContactProfile = (profile: AddPostProfile): boolean =>
+  hasValue(profile.district) &&
+  hasValue(profile.area) &&
+  hasValue(profile.phoneNumber);
+
 function buildDefaultValues(profile: AddPostProfile): AddPostFormInput {
   return {
     title: "",
@@ -133,6 +144,10 @@ export default function AddPostForm({
   const [isUploadPending, setIsUploadPending] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [draftTimestamp, setDraftTimestamp] = useState<string | null>(null);
+
+  // Save-to-profile is offered only when the profile is missing at least one
+  // of district / area / phone (and never in edit mode).
+  const showSaveToProfile = !isEditMode && !hasCompleteContactProfile(initialProfile);
 
   // Profile-prefilled defaults; memoized so the reference stays stable across
   // renders (RHF only reads defaultValues on mount/reset anyway).
@@ -255,14 +270,17 @@ export default function AddPostForm({
       setDraftTimestamp(null);
       reset(buildDefaultValues(initialProfile));
 
-      // Save-to-profile is create-mode only (checkbox is hidden in edit).
-      if (values.saveToProfile) {
+      // Save-to-profile is create-mode only, and the checkbox only renders
+      // when the profile is incomplete. The current form values are sent;
+      // empty optional fields are omitted so they never overwrite an
+      // existing profile value with "".
+      if (!isEditMode && values.saveToProfile) {
         try {
           await updateUserProfile({
             fullName: initialProfile.fullName,
-            phoneNumber: values.phone,
-            district: values.district,
-            area: values.area,
+            ...(values.phone.trim() ? { phoneNumber: values.phone.trim() } : {}),
+            ...(values.district.trim() ? { district: values.district.trim() } : {}),
+            ...(values.area.trim() ? { area: values.area.trim() } : {}),
           });
         } catch {
           // Silent by design: the post stays; no toast, no rollback.
@@ -329,7 +347,7 @@ export default function AddPostForm({
             <BasicInfoSection onUploadingChange={setIsUploadPending} />
             {/* Step 2: location + contact in ONE section (ContactSection
                 renders inside LocationSection so progress stays at 4 steps). */}
-            <LocationSection showSaveToProfile={!isEditMode} />
+            <LocationSection showSaveToProfile={showSaveToProfile} />
             <DescriptionSection />
             <BookListSection isEditing={isEditMode} />
             <SubmitButton
