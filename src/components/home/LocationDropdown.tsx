@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MapPin, Search, X, Check } from "lucide-react";
 import { DISTRICTS } from "@/lib/constant/location";
+import { updateHomeSearchParams } from "./homeSearchParams";
 
 interface LocationDropdownProps {
     currentLocation?: string;
@@ -18,7 +19,6 @@ export default function LocationDropdown({
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    // URL Query Param থেকে বর্তমান জেলা পড়া
     const activeLocation = searchParams.get("location") || currentLocation || "";
 
     const [isOpen, setIsOpen] = useState(false);
@@ -34,19 +34,11 @@ export default function LocationDropdown({
 
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // URL ফিল্টার আপডেট করার ফাংশন
     const updateLocationParam = useCallback(
         (locationValue?: string) => {
-            const params = new URLSearchParams(searchParams.toString());
-            if (locationValue) {
-                params.set("location", locationValue);
-            } else {
-                params.delete("location");
-            }
-            params.set("page", "1");
-            router.push(`?${params.toString()}`, { scroll: false });
+            updateHomeSearchParams(router, { location: locationValue });
         },
-        [router, searchParams]
+        [router]
     );
 
     // আউটসাইড ক্লিকে ড্রপডাউন বন্ধ করার লজিক

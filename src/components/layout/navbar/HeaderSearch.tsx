@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, MapPin, X } from "lucide-react";
 import { DISTRICTS } from "@/lib/constant/location";
+import { updateHomeSearchParams } from "@/components/home/homeSearchParams";
 
 type SearchMode = "default" | "search" | "desktop";
 
@@ -30,29 +31,30 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const locationDropdownRef = useRef<HTMLDivElement>(null);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const appliedSearch = useRef<string | null>(null);
 
   const updateSearchParams = useCallback(
-    (updates: Record<string, string | undefined>) => {
-      const params = new URLSearchParams(searchParams.toString());
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value) {
-          params.set(key, value);
-        } else {
-          params.delete(key);
-        }
-      });
-      params.set("page", "1");
-      router.push(`?${params.toString()}`, { scroll: false });
-    },
-    [router, searchParams]
+    (updates: Record<string, string | undefined>) =>
+      updateHomeSearchParams(router, updates),
+    [router],
   );
 
   useEffect(() => {
-    if (searchQuery.trim() === currentSearch.trim()) return;
+    const normalizedQuery = searchQuery.trim();
+    if (appliedSearch.current === currentSearch.trim()) {
+      appliedSearch.current = null;
+    }
+    if (
+      normalizedQuery === currentSearch.trim() ||
+      normalizedQuery === appliedSearch.current
+    ) {
+      return;
+    }
 
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
-      updateSearchParams({ search: searchQuery.trim() || undefined });
+      appliedSearch.current = normalizedQuery;
+      updateSearchParams({ search: normalizedQuery || undefined });
     }, 500);
 
     return () => {
@@ -102,12 +104,14 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    appliedSearch.current = searchQuery.trim();
     updateSearchParams({ search: searchQuery.trim() || undefined });
   };
 
   const handleLocationSelect = (district: string) => {
     setIsLocationOpen(false);
     setLocationSearch("");
+    // শুধুমাত্র লোকেশন আপডেট করবে, সার্চ কুয়েরি অপরিবর্তিত রাখবে
     updateSearchParams({ location: district });
   };
 
@@ -120,6 +124,7 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
   const handleClearSearch = () => {
     setSearchDraft({ urlSearch: currentSearch, value: "" });
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    appliedSearch.current = "";
     updateSearchParams({ search: undefined });
     if (searchInputRef.current) {
       searchInputRef.current.focus();
@@ -138,7 +143,7 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
           setIsLocationOpen((prev) => !prev);
           if (isLocationOpen) setLocationSearch("");
         }}
-        className="flex items-center justify-between gap-1.5 px-2.5 py-1.5 bg-surface border border-border rounded-btn text-text-primary hover:border-primary transition-base focus-visible:outline-2 focus-visible:outline-primary-focus min-w-[100px] sm:min-w-[120px]"
+        className="flex items-center justify-between gap-1.5 px-2.5 py-1.5 bg-surface border border-border rounded-btn text-text-primary hover:border-primary transition-base focus-visible:outline-2 focus-visible:outline-primary-focus min-w-25 sm:min-w-30"
       >
         <div className="flex items-center gap-1.5 truncate">
           <MapPin className="w-3.5 h-3.5 text-text-muted shrink-0" />
@@ -188,8 +193,8 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
                   type="button"
                   onClick={() => handleLocationSelect(district)}
                   className={`w-full px-3 py-2 text-left text-xs sm:text-sm transition-colors ${selectedLocation === district
-                      ? "bg-primary-light text-primary font-medium"
-                      : "text-text-primary hover:bg-surface-hover"
+                    ? "bg-primary-light text-primary font-medium"
+                    : "text-text-primary hover:bg-surface-hover"
                     }`}
                 >
                   {district}
@@ -206,7 +211,6 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
     </div>
   );
 
-  // Mobile Minimal Location View
   if (mode === "default") {
     return (
       <div className="flex items-center justify-end">
@@ -215,7 +219,6 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
     );
   }
 
-  // Integrated Desktop & Mobile Full Search View
   return (
     <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full">
       <div className="relative flex-1">

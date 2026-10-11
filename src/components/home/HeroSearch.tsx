@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, Loader2 } from "lucide-react";
+import { updateHomeSearchParams } from "./homeSearchParams";
 
 const SEARCH_PARAM = "search";
 
@@ -17,9 +18,9 @@ export default function HeroSearchBar() {
     const searchParams = useSearchParams();
     const inputRef = useRef<HTMLInputElement>(null);
     const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const appliedSearch = useRef<string | null>(null);
     const [isPending, startTransition] = useTransition();
 
-    // The URL is the source of truth: ?search=... fills the input on load
     const currentSearch = searchParams.get(SEARCH_PARAM) ?? "";
     const [searchDraft, setSearchDraft] = useState({
         urlSearch: currentSearch,
@@ -31,26 +32,29 @@ export default function HeroSearchBar() {
     const query = searchDraft.value;
 
     const applySearch = useCallback((value: string) => {
-        const text = value.trim();
-
-        const params = new URLSearchParams(searchParams.toString());
-        if (text) {
-            params.set(SEARCH_PARAM, text);
-        } else {
-            params.delete(SEARCH_PARAM);
-        }
-        params.set("page", "1");
-
-        const qs = params.toString();
         startTransition(() => {
-            router.push(qs ? `/?${qs}` : "/", { scroll: false });
+            updateHomeSearchParams(router, {
+                [SEARCH_PARAM]: value.trim() || undefined,
+            });
         });
-    }, [router, searchParams]);
+    }, [router, startTransition]);
 
     useEffect(() => {
-        if (query.trim() === currentSearch.trim()) return;
+        const normalizedQuery = query.trim();
+        if (appliedSearch.current === currentSearch.trim()) {
+            appliedSearch.current = null;
+        }
+        if (
+            normalizedQuery === currentSearch.trim() ||
+            normalizedQuery === appliedSearch.current
+        ) {
+            return;
+        }
 
-        debounceTimer.current = setTimeout(() => applySearch(query), 500);
+        debounceTimer.current = setTimeout(() => {
+            appliedSearch.current = normalizedQuery;
+            applySearch(query);
+        }, 500);
         return () => {
             if (debounceTimer.current) clearTimeout(debounceTimer.current);
         };
@@ -59,6 +63,7 @@ export default function HeroSearchBar() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        appliedSearch.current = query.trim();
         applySearch(query);
     };
 
@@ -66,7 +71,8 @@ export default function HeroSearchBar() {
         setSearchDraft({ urlSearch: currentSearch, value: "" });
         if (debounceTimer.current) clearTimeout(debounceTimer.current);
         inputRef.current?.focus();
-        if (currentSearch) applySearch("");
+        appliedSearch.current = "";
+        applySearch("");
     };
 
     return (

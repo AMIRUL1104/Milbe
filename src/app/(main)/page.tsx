@@ -29,9 +29,11 @@ export default async function HomePage({
   const { search, location, category, type, condition, page } = await searchParams;
   const currentPage = Number(page) || 1;
 
-  // ১. লোকেশন ছাড়া কনটেন্ট ভিত্তিক অন্যান্য সক্রিয় ফিল্টার আছে কিনা চেক করা
+  const isSearchActive = Boolean(search?.trim());
+
+  // Location scopes Nearby Books by default and constrains results when content filters are active.
   const hasActiveContentFilters = Boolean(
-    search?.trim() ||
+    isSearchActive ||
     category?.trim() ||
     condition?.trim() ||
     type === "sell" ||
@@ -40,11 +42,11 @@ export default async function HomePage({
 
   // --- Nearby Books: user-centric logic ---
   const session = await getUserSession();
-  let profileDistrict: string | undefined;
-  if (session && !location) {
-    profileDistrict = session.district?.trim() || undefined;
-  }
-  const selectedDistrict = location || profileDistrict;
+  const requestedDistrict = location?.trim();
+  const profileDistrict = requestedDistrict
+    ? undefined
+    : session?.district?.trim() || undefined;
+  const selectedDistrict = requestedDistrict || profileDistrict;
 
   let nearbyState: NearbyBooksState = "needs-login";
   let nearbyBooks: PostItem[] = [];
@@ -52,7 +54,7 @@ export default async function HomePage({
   let nearbyTotalPages = 1;
   let nearbyTotal = 0;
 
-  // Global books remain unscoped by location and power both default and unified views.
+  // Location-only pages keep All Books global; active filtered results may be district-scoped.
   let books: PostItem[] = [];
   let totalPages = 1;
   let allBooksTotal = 0;
@@ -75,9 +77,9 @@ export default async function HomePage({
     getPosts({
       search,
       category,
-      district: selectedDistrict,
       type: (type || "") as "sell" | "donate" | "",
       condition,
+      district: hasActiveContentFilters ? requestedDistrict : undefined,
       sort: "newest",
       page: currentPage,
       limit: 20,
@@ -119,10 +121,10 @@ export default async function HomePage({
         />
 
         {/* ২. হিরো সেকশন (শুধুমাত্র কনটেন্ট ফিল্টার না থাকলে দেখাবে) */}
-        {!hasActiveContentFilters && <Hero />}
+        {!isSearchActive && !hasActiveContentFilters && <Hero />}
 
         {/* ৩. নিয়ারবাই বুকস সেকশন (শুধুমাত্র কনটেন্ট ফিল্টার না থাকলে দেখাবে) */}
-        {!hasActiveContentFilters && (
+        {!isSearchActive && !hasActiveContentFilters && (
           <NearbyBooks
             key={nearbyDistrict || nearbyState}
             state={nearbyState}
