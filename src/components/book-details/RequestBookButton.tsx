@@ -19,6 +19,7 @@ interface RequestBookButtonProps {
   postId: string;
   postSlug: string;
   requesterId?: string;
+  requesterName?: string;
   postTitle: string;
   sellerName: string;
   requesterPhone?: string;
@@ -30,6 +31,7 @@ export default function RequestBookButton({
   postId,
   postSlug,
   requesterId,
+  requesterName,
   postTitle,
   sellerName,
   requesterPhone,
@@ -188,6 +190,7 @@ export default function RequestBookButton({
         onClose={() => setIsModalOpen(false)}
         postId={postId}
         requesterId={requesterId}
+        defaultRequesterName={requesterName}
         postTitle={postTitle}
         sellerName={sellerName}
         defaultRequesterPhone={requesterPhone}

@@ -15,7 +15,7 @@ export interface UserProfile {
 }
 
 export interface UpdateProfilePayload {
-  fullName: string;
+  fullName?: string;
   // Optional: an empty/undefined value means "leave this field as-is".
   phoneNumber?: string;
   district?: string;

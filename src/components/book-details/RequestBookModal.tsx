@@ -138,6 +138,7 @@ export default function RequestBookModal({
             <RequestBookForm
               postId={postId}
               requesterId={requesterId}
+              defaultRequesterName={defaultRequesterName}
               defaultRequesterPhone={defaultRequesterPhone}
               defaultRequesterDistrict={defaultRequesterDistrict}
               defaultRequesterArea={defaultRequesterArea}

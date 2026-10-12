@@ -18,6 +18,7 @@ import { addNewPost, updatePost } from "@/services/features/posts";
 import { updateUserProfile } from "@/services/features/userProfile";
 import { getFriendlyApiError } from "@/lib/apiErrorMap";
 import { AddPostFormValues, addPostSchema } from "@/lib/validations/add-post-schema";
+import { hasCompleteContactProfile } from "@/lib/utils/contact-profile";
 import { STEP_SECTIONS } from "@/lib/constant/post";
 import SubmitButton from "./sections/SubmitButton";
 
@@ -36,17 +37,6 @@ const EMPTY_PROFILE: AddPostProfile = {
   district: "",
   area: "",
 };
-
-// The save-to-profile checkbox should only appear when the profile is
-// incomplete — i.e. at least one of district / area / phone is missing.
-// Empty string, whitespace-only, null and undefined all count as "missing".
-const hasValue = (value: string | null | undefined): boolean =>
-  typeof value === "string" && value.trim() !== "";
-
-const hasCompleteContactProfile = (profile: AddPostProfile): boolean =>
-  hasValue(profile.district) &&
-  hasValue(profile.area) &&
-  hasValue(profile.phoneNumber);
 
 function buildDefaultValues(profile: AddPostProfile): AddPostFormInput {
   return {

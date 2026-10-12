@@ -15,7 +15,7 @@ export async function updateUserProfile(
   data: UpdateProfilePayload,
 ): Promise<UserProfile> {
   const res = await authClient.updateUser({
-    name: data.fullName,
+    ...(data.fullName !== undefined ? { name: data.fullName } : {}),
     image: data.avatarUrl ?? undefined,
     phoneNumber: data.phoneNumber,
     district: data.district,

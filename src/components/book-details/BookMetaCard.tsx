@@ -73,6 +73,7 @@ export default async function BookMetaCard({ post }: BookMetaCardProps) {
             postId={post._id}
             postSlug={post.slug || post._id}
             requesterId={session?.id}
+            requesterName={session?.name ?? undefined}
             postTitle={post.title}
             sellerName={post.sellerName}
             requesterPhone={session?.phoneNumber ?? undefined}

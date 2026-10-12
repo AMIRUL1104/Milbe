@@ -11,12 +11,15 @@ import {
 } from "@/lib/validations/request-book-schema";
 import { CreateBookRequestPayload } from "@/interface/bookRequest/createBookRequest";
 import { createBookRequest } from "@/services/features/bookRequests";
+import { updateUserProfile } from "@/services/features/userProfile";
 import { getFriendlyApiError } from "@/lib/apiErrorMap";
 import { DISTRICTS } from "@/lib/constant/location";
+import { hasCompleteContactProfile } from "@/lib/utils/contact-profile";
 
 interface RequestBookFormProps {
   postId: string;
   requesterId?: string;
+  defaultRequesterName?: string;
   defaultRequesterPhone?: string;
   defaultRequesterDistrict?: string;
   defaultRequesterArea?: string;
@@ -27,6 +30,7 @@ interface RequestBookFormProps {
 export default function RequestBookForm({
   postId,
   requesterId,
+  defaultRequesterName,
   defaultRequesterPhone,
   defaultRequesterDistrict,
   defaultRequesterArea,
@@ -46,7 +50,13 @@ export default function RequestBookForm({
       district: defaultRequesterDistrict ?? "",
       area: defaultRequesterArea ?? "",
       message: "",
+      saveToProfile: false,
     },
+  });
+  const showSaveToProfile = !hasCompleteContactProfile({
+    district: defaultRequesterDistrict,
+    area: defaultRequesterArea,
+    phoneNumber: defaultRequesterPhone,
   });
 
   const onSubmit = async (values: RequestBookFormValues) => {
@@ -77,6 +87,24 @@ export default function RequestBookForm({
 
       toast.success("রিকোয়েস্ট পাঠানো হয়েছে। সেলার শীঘ্রই আপনার অনুরোধ দেখবেন।");
       onSuccess();
+
+      if (values.saveToProfile) {
+        try {
+          await updateUserProfile({
+            ...(defaultRequesterName !== undefined
+              ? { fullName: defaultRequesterName }
+              : {}),
+            phoneNumber: values.phoneNumber.trim(),
+            district: values.district.trim(),
+            area: values.area.trim(),
+          });
+        } catch (error) {
+          console.error(
+            "Book request succeeded, but saving requester profile failed.",
+            error,
+          );
+        }
+      }
     } catch (error) {
       toast.error(getFriendlyApiError(error));
     } finally {
@@ -165,6 +193,20 @@ export default function RequestBookForm({
             )}
           </div>
         </div>
+
+        {showSaveToProfile && (
+          <label className="flex items-start gap-2.5 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              {...register("saveToProfile")}
+              className="mt-0.5 h-4 w-4 accent-[#35858E] cursor-pointer"
+            />
+            <span className="text-xs text-slate-500">
+              এই তথ্যগুলো প্রোফাইলে সংরক্ষণ করুন, যাতে পরবর্তীতে সহজে রিকোয়েস্ট
+              পাঠাতে পারেন।
+            </span>
+          </label>
+        )}
 
         {/* Optional Message Field */}
         <div>
