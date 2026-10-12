@@ -40,7 +40,7 @@ The frontend calls the backend REST API using server-side `fetch` (`cache: "no-s
 ### Book Listings
 
 - Create listings that bundle **multiple books** in a single post (a "bundle").
-- Single cover image per post, uploaded via **ImgBB** (`next/image` optimized from `i.ibb.co`).
+- Single cover image per post, uploaded through the authenticated backend to **Cloudinary** (`next/image` optimized from `res.cloudinary.com`). Existing ImgBB-hosted images remain viewable.
 - Rich post data: category, listing type (sell / donate), condition (new / excellent / good / fair), price, location (district + area), description, and seller contact (phone / WhatsApp / messenger).
 - Delete your own listings.
 
@@ -88,7 +88,7 @@ The frontend calls the backend REST API using server-side `fetch` (`cache: "no-s
 
 1. **Browse** — Land on the home page, search or filter by category / location / type, and page through results.
 2. **Request** — Open a listing, then send a book request (sign-in required). Contact details are visible only to the seller.
-3. **List** — Sign in, click **Sell / Donate**, fill the multi-book form, upload an image (ImgBB), and publish.
+3. **List** — Sign in, click **Sell / Donate**, fill the multi-book form, upload an image (Cloudinary), and publish.
 4. **Transact** — Sellers accept requests from the dashboard; accepted requests mark the post as sold and close out pending requests.
 5. **Manage** — Use the dashboard to track your posts and requests, or edit your profile.
 
@@ -108,7 +108,7 @@ The frontend calls the backend REST API using server-side `fetch` (`cache: "no-s
 | Session            | Server-side `getUserSession()`; client `useSession()` hook                                                         |
 | Notifications      | React Toastify                                                                                                     |
 | Icons              | Lucide React                                                                                                       |
-| Image Hosting      | ImgBB (`next/image` optimized)                                                                                     |
+| Image Hosting      | Cloudinary via authenticated Express endpoints (`next/image` optimized)                                            |
 | Linting            | ESLint (`eslint-config-next`, core-web-vitals)                                                                     |
 | Package Manager    | npm                                                                                                                |
 
@@ -195,7 +195,7 @@ npm start       # production server
 
 ## Environment Variables
 
-Create a `.env.local` (never commit it — `.env*` is gitignored). The values below are **placeholders only**; generate a real `BETTER_AUTH_SECRET`, a MongoDB Atlas connection string, and an ImgBB API key.
+Create a `.env.local` (never commit it — `.env*` is gitignored). The values below are **placeholders only**; generate a real `BETTER_AUTH_SECRET` and MongoDB Atlas connection string. Cloudinary credentials belong only in the backend environment; never add them to frontend `NEXT_PUBLIC_*` variables.
 
 | Variable                    | Purpose                                               | Local example                         |
 | --------------------------- | ----------------------------------------------------- | ------------------------------------- |
@@ -203,7 +203,8 @@ Create a `.env.local` (never commit it — `.env*` is gitignored). The values be
 | `NEXT_PUBLIC_API_URL`       | Backend Express REST API base URL                     | `http://localhost:4000`               |
 | `BETTER_AUTH_SECRET`        | Secret used to sign Better Auth sessions/tokens       | `a-random-32+-char-string`            |
 | `MONGODB_URI`               | MongoDB connection string for the Better Auth adapter | `mongodb+srv://USER:PASS@cluster0...` |
-| `NEXT_PUBLIC_IMGBB_API_KEY` | ImgBB API key for image uploads                       | your-imgbb-key                        |
+
+Image uploads are sent as authenticated multipart requests through Next.js Server Actions to the Express backend. Configure `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET` in the backend environment (see `bookbridge-server/README.md`). The browser must never receive the Cloudinary API secret.
 
 In production, `NEXT_PUBLIC_API_URL` points to the hosted Express backend (deployed on Render).
 
@@ -216,8 +217,9 @@ The frontend is a typed client of the `Milbe-Server` Express API. All requests g
 | Category      | Endpoints (from `src/services/features`)                                                                                                                                                                                                                                         |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Posts         | `GET /api/posts`, `GET /api/posts/:id`, `GET /api/posts/my`, `GET /api/posts/featured`, `GET /api/posts/admin`, `POST /api/posts`, `DELETE /api/posts/:id`                                                                                                                       |
+| Images        | `POST /api/images` (authenticated multipart upload), `DELETE /api/images/:assetId` (owner-only unattached upload)                                                                                                                                                                |
 | Book Requests | `POST /api/book-requests`, `GET /api/book-requests/check`, `GET /api/book-requests/sent`, `GET /api/book-requests/received`, `GET /api/admin/book-requests`, `PATCH /api/book-requests/:id/accept`, `PATCH /api/book-requests/:id/reject`, `PATCH /api/book-requests/:id/cancel` |
-| Users         | `GET /api/users` (profile), `POST /api/users` (create profile), `PATCH /api/users` (update profile), `GET /api/users/admin` (admin list)                                                                                                                                         |
+| Users         | `GET /api/users` (profile), `POST /api/users` (create profile), `PATCH /api/users/me/profile` (update profile), `GET /api/users/admin` (admin list)                                                                                                                                 |
 | Dashboards    | `GET /api/dashboard/user`, `GET /api/dashboard/admin`                                                                                                                                                                                                                            |
 | Auth          | Better Auth route handler at `/api/auth/[...all]` (email/password sign-in/up, session)                                                                                                                                                                                           |
 

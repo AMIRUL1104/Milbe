@@ -118,12 +118,12 @@ export default function PrivacyPolicyPage() {
                         </SectionCard>
 
                         {/* 4. Media & Image Hosting */}
-                        <SectionCard id="image-hosting" icon={<ImageIcon />} label="৪. মিডিয়া ও ছবি হোস্টিং (ImgBB)">
+                        <SectionCard id="image-hosting" icon={<ImageIcon />} label="৪. মিডিয়া ও ছবি হোস্টিং (Cloudinary)">
                             <p>
-                                মিলবে প্ল্যাটফর্মে আপলোড করা সকল বইয়ের ছবি ও প্রোফাইল ইমেজ নিরাপদ থার্ড-পার্টি সার্ভিস <strong>ImgBB</strong>-এর সার্ভারে হোস্ট করা হয়।
+                                মিলবে প্ল্যাটফর্মে আপলোড করা বইয়ের ছবি ও প্রোফাইল ইমেজ থার্ড-পার্টি সার্ভিস <strong>Cloudinary</strong>-তে হোস্ট করা হয়। আপলোড ও মুছে ফেলার অনুরোধ আমাদের authenticated server-এর মাধ্যমে পরিচালিত হয়।
                             </p>
                             <p>
-                                আমাদের নিজস্ব মূল ডেটাবেসে ভারী ছবি সংরক্ষণ করা হয় না। তাই আপনার দেওয়া ছবিগুলো ImgBB-এর প্রাইভেসি স্ট্যান্ডার্ড মেনে নিরাপদ থাকে। আপনি যেকোনো সময় আপনার পোস্ট মুছে ফেললে তা প্ল্যাটফর্মের লাইভ ভিউ থেকে সরিয়ে দেওয়া হয়।
+                                আমাদের MongoDB-তে ছবির ফাইল নয়, তার URL এবং মালিকানা/ব্যবহারের asset reference রাখা হয়। কোনো ছবি ব্যবহারাধীন থাকলে সেটি সরাসরি মুছে ফেলা যায় না; পোস্ট বা প্রোফাইল থেকে সরানোর পর Cloudinary deletion ব্যর্থ হলে server retry করে। পুরোনো ImgBB-তে হোস্ট করা ছবি legacy content হিসেবে দেখানো হতে পারে; সেগুলো Cloudinary-তে স্থানান্তরিত বা সেখান থেকে মুছে ফেলা হয় না।
                             </p>
                         </SectionCard>
 

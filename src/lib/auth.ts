@@ -137,6 +137,12 @@ export const auth = betterAuth({
         input: false,
       },
 
+      imageAssetId: {
+        type: "string",
+        required: false,
+        input: false,
+      },
+
       // ── Milbe profile fields ────────────────────────────────────────────────
       // Formerly stored in the separate `userProfile` collection; consolidated
       // onto the Better Auth `user` document.

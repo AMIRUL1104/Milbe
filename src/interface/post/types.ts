@@ -22,7 +22,8 @@ export interface PostItem {
   searchSlug?: string;
   category: string;
   type: PostType;
-  image: string;
+  image: string | null;
+  imageAssetId?: string | null;
   totalPrice: number | null;
   overallCondition: BookCondition;
   district: string;
@@ -41,12 +42,11 @@ export interface PostItem {
   books: PostBookEntry[];
 }
 
-export type NewPostPayload = Pick<
+type PostPayloadFields = Pick<
   PostItem,
   | "title"
   | "category"
   | "type"
-  | "image"
   | "totalPrice"
   | "overallCondition"
   | "district"
@@ -58,8 +58,16 @@ export type NewPostPayload = Pick<
   | "books"
 >;
 
-/** Payload accepted by PATCH /api/posts/:id — same editable fields as create. */
-export type UpdatePostPayload = NewPostPayload;
+export interface NewPostPayload extends PostPayloadFields {
+  image: string;
+  imageAssetId: string;
+}
+
+export interface UpdatePostPayload
+  extends Omit<NewPostPayload, "image" | "imageAssetId"> {
+  image: string | null;
+  imageAssetId: string | null;
+}
 
 export interface AddNewPostResult {
   success: boolean;

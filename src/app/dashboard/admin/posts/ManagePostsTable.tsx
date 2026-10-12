@@ -239,7 +239,12 @@ export default function ManagePostsTable({
       if (res.ok) {
         setPosts((prev) => prev.filter((p) => p._id !== targetPost._id));
         router.refresh();
-        showToast("Post deleted successfully.", "success");
+        showToast(
+          res.cleanupPending
+            ? "Post deleted; Cloudinary image cleanup is pending."
+            : "Post deleted successfully.",
+          "success",
+        );
         setTargetPost(null);
       } else {
         // Keep the modal open so the typed reason is not lost.

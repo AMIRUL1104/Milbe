@@ -14,6 +14,7 @@ import { ProfileForm } from "./Profileform";
 import { ProfileActions } from "./Profileactions";
 import { ProfileInfo } from "./Profileinfo";
 import { updateUserProfile } from "@/services/features/userProfile";
+import { deletePendingImageAction } from "@/services/features/images/actions";
 import { signOut } from "@/lib/auth-client";
 import { Button } from "@/components/ui/Button";
 
@@ -25,8 +26,10 @@ interface ProfileClientProps {
 export function ProfileClient({ initialUser }: ProfileClientProps) {
     const [user, setUser] = useState<UserProfile>(initialUser);
     const [isEditing, setIsEditing] = useState(false);
-    const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [pendingAvatarAssetId, setPendingAvatarAssetId] = useState<string | null>(null);
+    const [isAvatarRemoved, setIsAvatarRemoved] = useState(false);
+    const [isAvatarUploading, setIsAvatarUploading] = useState(false);
     const router = useRouter();
 
     const form = useForm<ProfileFormValues>({
@@ -47,20 +50,61 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
             area: user.area,
         });
         setPreviewUrl(null);
-        setPendingImageFile(null);
+        setPendingAvatarAssetId(null);
+        setIsAvatarRemoved(false);
         setIsEditing(true);
     }
 
-    function cancelEdit() {
+    async function cancelEdit() {
+        if (pendingAvatarAssetId) {
+            try {
+                await deletePendingImageAction(pendingAvatarAssetId);
+            } catch (error) {
+                toast.error(
+                    error instanceof Error
+                        ? `ছবিটি মুছে ফেলা যায়নি; cleanup retry হবে। ${error.message}`
+                        : "ছবিটি মুছে ফেলা যায়নি; cleanup retry হবে।",
+                );
+            }
+        }
         setIsEditing(false);
         setPreviewUrl(null);
-        setPendingImageFile(null);
+        setPendingAvatarAssetId(null);
+        setIsAvatarRemoved(false);
         form.reset();
     }
 
-    function handleImageChange(file: File, url: string) {
-        setPendingImageFile(file);
+    async function handleImageChange(url: string, assetId: string) {
+        if (pendingAvatarAssetId && pendingAvatarAssetId !== assetId) {
+            try {
+                await deletePendingImageAction(pendingAvatarAssetId);
+            } catch (error) {
+                try {
+                    await deletePendingImageAction(assetId);
+                } catch (cleanupError) {
+                    console.error(
+                        "New profile image cleanup failed after replacing a pending image:",
+                        cleanupError,
+                    );
+                }
+                throw error;
+            }
+        }
         setPreviewUrl(url);
+        setPendingAvatarAssetId(assetId);
+        setIsAvatarRemoved(false);
+    }
+
+    async function handleAvatarRemove() {
+        if (pendingAvatarAssetId) {
+            await deletePendingImageAction(pendingAvatarAssetId);
+            setPendingAvatarAssetId(null);
+            setPreviewUrl(null);
+            setIsAvatarRemoved(false);
+            return;
+        }
+        setPreviewUrl(null);
+        setIsAvatarRemoved(Boolean(user.avatarUrl));
     }
 
     async function onSubmit(values: ProfileFormValues) {
@@ -73,33 +117,45 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
             ...(values.phoneNumber ? { phoneNumber: values.phoneNumber } : {}),
             ...(values.district ? { district: values.district } : {}),
             ...(values.area ? { area: values.area } : {}),
-            ...(previewUrl || user.avatarUrl
-                ? { avatarUrl: previewUrl ?? user.avatarUrl }
-                : {}),
+            ...(pendingAvatarAssetId && previewUrl
+                ? {
+                    avatarUrl: previewUrl,
+                    avatarAssetId: pendingAvatarAssetId,
+                }
+                : isAvatarRemoved
+                    ? { avatarUrl: null, avatarAssetId: null }
+                    : {}),
         };
 
         try {
             const res = await updateUserProfile(payload);
-            toast.success("Profile updated successfully!");
+            toast.success(
+                res.cleanupPending
+                    ? "প্রোফাইল আপডেট হয়েছে; পুরোনো ছবির cleanup retry হবে।"
+                    : "Profile updated successfully!",
+            );
             setUser((prev) => ({
                 ...prev,
-                fullName: res.fullName,
-                phoneNumber: res.phoneNumber,
-                district: res.district,
-                area: res.area,
-                avatarUrl: res.avatarUrl ?? prev.avatarUrl,
+                fullName: res.profile.fullName,
+                phoneNumber: res.profile.phoneNumber,
+                district: res.profile.district,
+                area: res.profile.area,
+                avatarUrl: res.profile.avatarUrl,
+                avatarAssetId: res.profile.avatarAssetId,
             }));
             // Re-sync the form with the server state so a cleared field
             // shows the still-stored value instead of the cleared input.
             form.reset({
-                fullName: res.fullName,
-                phoneNumber: res.phoneNumber,
-                district: res.district,
-                area: res.area,
+                fullName: res.profile.fullName,
+                phoneNumber: res.profile.phoneNumber,
+                district: res.profile.district,
+                area: res.profile.area,
             });
             setIsEditing(false);
             setPreviewUrl(null);
-            setPendingImageFile(null);
+            setPendingAvatarAssetId(null);
+            setIsAvatarRemoved(false);
+            router.refresh();
         } catch {
             toast.error("Failed to update profile. Please try again.");
         }
@@ -111,6 +167,10 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
             fullName={user.fullName}
             isEditing={isEditing}
             previewUrl={previewUrl}
+            isRemoved={isAvatarRemoved}
+            isUploading={isAvatarUploading}
+            onUploadingChange={setIsAvatarUploading}
+            onRemove={handleAvatarRemove}
             onImageChange={handleImageChange}
         />
     );

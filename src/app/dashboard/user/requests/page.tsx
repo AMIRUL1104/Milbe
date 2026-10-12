@@ -84,7 +84,7 @@ function buildPostSummaries(
   return posts.map((post) => ({
     id: post._id,
     title: post.title,
-    bookCoverUrl: post.image,
+    bookCoverUrl: post.image ?? "",
     pendingCount: pendingCounts.get(post._id) ?? 0,
   }));
 }

@@ -13,11 +13,19 @@ import BookListSection from "./sections/BookListSection";
 import LocationSection from "./sections/LocationSection";
 import DescriptionSection from "./sections/DescriptionSection";
 
-import { NewPostPayload, PostItem } from "@/interface/post/types";
+import {
+  NewPostPayload,
+  PostItem,
+  UpdatePostPayload,
+} from "@/interface/post/types";
 import { addNewPost, updatePost } from "@/services/features/posts";
 import { updateUserProfile } from "@/services/features/userProfile";
 import { getFriendlyApiError } from "@/lib/apiErrorMap";
-import { AddPostFormValues, addPostSchema } from "@/lib/validations/add-post-schema";
+import {
+  AddPostFormValues,
+  addPostSchema,
+  editPostSchema,
+} from "@/lib/validations/add-post-schema";
 import { hasCompleteContactProfile } from "@/lib/utils/contact-profile";
 import { STEP_SECTIONS } from "@/lib/constant/post";
 import SubmitButton from "./sections/SubmitButton";
@@ -44,6 +52,7 @@ function buildDefaultValues(profile: AddPostProfile): AddPostFormInput {
     category: "",
     type: "sell",
     image: "",
+    imageAssetId: null,
     totalPrice: null,
     overallCondition: "good",
     district: profile.district,
@@ -57,12 +66,13 @@ function buildDefaultValues(profile: AddPostProfile): AddPostFormInput {
   };
 }
 
-function buildPayload(values: AddPostFormValues): NewPostPayload {
+function buildPayload(values: AddPostFormValues): UpdatePostPayload {
   return {
     title: values.title,
     category: values.category,
     type: values.type,
-    image: values.image,
+    image: values.image || null,
+    imageAssetId: values.imageAssetId || null,
     totalPrice: values.type === "donate" ? null : values.totalPrice,
     overallCondition: values.overallCondition,
     district: values.district,
@@ -103,7 +113,8 @@ function postToForm(post: PostItem): AddPostFormValues {
     title: post.title,
     category: post.category ?? "",
     type: post.type,
-    image: post.image,
+    image: post.image ?? "",
+    imageAssetId: post.imageAssetId ?? null,
     totalPrice: post.totalPrice,
     overallCondition: post.overallCondition,
     district: post.district,
@@ -132,6 +143,9 @@ export default function AddPostForm({
 }: AddPostFormProps) {
   const isEditMode = mode === "edit";
   const [isUploadPending, setIsUploadPending] = useState(false);
+  const [savedImageAssetId, setSavedImageAssetId] = useState<string | null>(
+    isEditMode ? initialPost?.imageAssetId ?? null : null,
+  );
   const [activeStep, setActiveStep] = useState(0);
   const [draftTimestamp, setDraftTimestamp] = useState<string | null>(null);
 
@@ -147,7 +161,7 @@ export default function AddPostForm({
   );
 
   const methods = useForm<AddPostFormInput, unknown, AddPostFormValues>({
-    resolver: zodResolver(addPostSchema),
+    resolver: zodResolver(isEditMode ? editPostSchema : addPostSchema),
     defaultValues,
     mode: "onBlur",
   });
@@ -229,7 +243,12 @@ export default function AddPostForm({
         const response = await updatePost(postId, payload);
 
         if (response?.success) {
-          toast.success("পোস্ট সফলভাবে আপডেট হয়েছে!");
+          setSavedImageAssetId(response.data?.imageAssetId ?? null);
+          toast.success(
+            response.meta?.cleanupPending
+              ? "পোস্ট আপডেট হয়েছে; পুরোনো ছবির storage cleanup retry হবে।"
+              : "পোস্ট সফলভাবে আপডেট হয়েছে!",
+          );
 
           if (typeof window !== "undefined") {
             localStorage.removeItem("addPostDraft");
@@ -243,7 +262,17 @@ export default function AddPostForm({
         return;
       }
 
-      const response = await addNewPost(payload);
+      const image = payload.image;
+      const imageAssetId = payload.imageAssetId;
+      if (!image || !imageAssetId) {
+        toast.error("পোস্টের একটি ছবি দিন।");
+        return;
+      }
+      const response = await addNewPost({
+        ...payload,
+        image,
+        imageAssetId,
+      } satisfies NewPostPayload);
 
       if (!response?.success) {
         toast.error(response?.message ?? "পোস্ট প্রকাশ করা যায়নি।");
@@ -334,7 +363,10 @@ export default function AddPostForm({
 
 
           <FormProvider {...methods}>
-            <BasicInfoSection onUploadingChange={setIsUploadPending} />
+            <BasicInfoSection
+              onUploadingChange={setIsUploadPending}
+              initialImageAssetId={isEditMode ? savedImageAssetId : null}
+            />
             {/* Step 2: location + contact in ONE section (ContactSection
                 renders inside LocationSection so progress stays at 4 steps). */}
             <LocationSection showSaveToProfile={showSaveToProfile} />

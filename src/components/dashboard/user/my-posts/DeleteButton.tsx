@@ -32,7 +32,11 @@ export default function DeleteButton({
       const response = await deletePost(postId);
 
       if (response?.success) {
-        toast.success("পোস্টটি সফলভাবে ডিলিট করে ফেলা হয়েছে।");
+        toast.success(
+          response.meta?.cleanupPending
+            ? "পোস্টটি ডিলিট হয়েছে; ছবির storage cleanup retry হবে।"
+            : "পোস্টটি সফলভাবে ডিলিট করে ফেলা হয়েছে।",
+        );
         setIsOpen(false);
         onDeleted(postId);
       } else {

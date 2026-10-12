@@ -12,14 +12,14 @@ export const bookEntrySchema = z.object({
   availableStatus: z.enum(["available", "unavailable"]).default("available"),
 });
 
-export const addPostSchema = z
-  .object({
+const postFormSchema = z.object({
     title: z.string().min(1, "পোস্টের শিরোনাম দিন"),
     category: z.string().min(1, "ক্যাটাগরি বেছে নিন"),
     type: z.enum(["sell", "donate"], {
       message: "পোস্টের ধরন বেছে নিন",
     }),
     image: z.string().min(1, "পোস্টের একটি ছবি দিন"),
+    imageAssetId: z.string().nullable().optional(),
     // Post-level total price. NaN (cleared number input) → null.
     totalPrice: z
       .union([z.number(), z.nan(), z.null()])
@@ -44,25 +44,43 @@ export const addPostSchema = z
     saveToProfile: z.boolean().default(false),
     // Book list is fully optional — an empty list is valid.
     books: z.array(bookEntrySchema).default([]),
-  })
-  .superRefine((data, ctx) => {
-    if (data.type === "sell") {
-      if (data.totalPrice === null || data.totalPrice < 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "বিক্রয় পোস্টে মোট দাম দিন (০ বা তার বেশি)",
-          path: ["totalPrice"],
-        });
-      }
-    } else if (data.totalPrice !== null) {
-      // Donate posts always store totalPrice: null (backend enforces too).
+  });
+
+const validatePostValues = (
+  data: z.infer<typeof postFormSchema>,
+  ctx: z.RefinementCtx,
+) => {
+  if (data.type === "sell") {
+    if (data.totalPrice === null || data.totalPrice < 0) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "দান পোস্টে মূল্য লাগবে না",
+        message: "বিক্রয় পোস্টে মোট দাম দিন (০ বা তার বেশি)",
         path: ["totalPrice"],
       });
     }
-  });
+  } else if (data.totalPrice !== null) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "দান পোস্টে মূল্য লাগবে না",
+      path: ["totalPrice"],
+    });
+  }
+};
+
+export const addPostSchema = postFormSchema.superRefine((data, ctx) => {
+  validatePostValues(data, ctx);
+  if (!data.imageAssetId) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "ছবি আপলোড সম্পন্ন করুন",
+      path: ["imageAssetId"],
+    });
+  }
+});
+
+export const editPostSchema = postFormSchema
+  .extend({ image: z.string() })
+  .superRefine(validatePostValues);
 
 export type AddPostFormValues = z.infer<typeof addPostSchema>;
 export type BookEntryFormValues = z.infer<typeof bookEntrySchema>;

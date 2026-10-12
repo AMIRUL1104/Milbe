@@ -7,7 +7,11 @@ import { db } from "@/lib/auth";
 import { getUserSession } from "@/services/core/session";
 import { sendPostDeletedMail } from "@/lib/email";
 
-export type AdminPostActionResult = { ok: boolean; error?: string };
+export type AdminPostActionResult = {
+  ok: boolean;
+  error?: string;
+  cleanupPending?: boolean;
+};
 
 const MAX_REASON_LENGTH = 500;
 
@@ -57,7 +61,7 @@ export async function deletePostAsAdmin(
       return { ok: false, error: "Post not found." };
     }
 
-    await serverMutation<Record<string, never>, null>(
+    const deletion = await serverMutation<Record<string, never>, null>(
       `/api/posts/${postId}`,
       {},
       "DELETE",
@@ -87,7 +91,10 @@ export async function deletePostAsAdmin(
     }
 
     revalidatePath("/dashboard/admin/posts");
-    return { ok: true };
+    return {
+      ok: true,
+      cleanupPending: Boolean(deletion?.meta?.cleanupPending),
+    };
   } catch (error) {
     const message = error instanceof Error ? error.message.toLowerCase() : "";
     return {

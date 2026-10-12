@@ -1,5 +1,9 @@
 import { serverMutation } from "@/services/core/server";
-import type { NewPostPayload, PostItem } from "@/interface/post/types";
+import type {
+  NewPostPayload,
+  PostItem,
+  UpdatePostPayload,
+} from "@/interface/post/types";
 import { ApiResponse } from "@/interface/apiResponse";
 
 export async function addNewPost(data: NewPostPayload): Promise<ApiResponse<{ insertedId: string; createdAt: string }>> {
@@ -8,9 +12,9 @@ export async function addNewPost(data: NewPostPayload): Promise<ApiResponse<{ in
 
 export async function updatePost(
   postId: string,
-  data: NewPostPayload,
+  data: UpdatePostPayload,
 ): Promise<ApiResponse<PostItem>> {
-  return (await serverMutation<NewPostPayload, PostItem>(
+  return (await serverMutation<UpdatePostPayload, PostItem>(
     `/api/posts/${postId}`,
     data,
     "PATCH",

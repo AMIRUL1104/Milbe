@@ -1,20 +1,27 @@
 "use client";
 
-import { useRef, useState, memo } from "react";
+import { useRef, useState, memo, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
-import { ImgBBUploadError, uploadImageToImgBB } from "../../../lib/utils/imgbb";
 import Image from "next/image";
+import {
+  deletePendingImageAction,
+  uploadImageAction,
+} from "@/services/features/images/actions";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_SIZE_MB = 5;
+const MAX_SIZE_MB = 4;
 
 interface ImageUploadProps {
   onUploadingChange: (isUploading: boolean) => void;
+  initialImageAssetId: string | null;
 }
 
-function ImageUpload({ onUploadingChange }: ImageUploadProps) {
+function ImageUpload({
+  onUploadingChange,
+  initialImageAssetId,
+}: ImageUploadProps) {
   const {
     setValue,
     watch,
@@ -28,11 +35,20 @@ function ImageUpload({ onUploadingChange }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const uploadedUrl = watch("image");
+  const uploadedAssetId = watch("imageAssetId");
+
+  useEffect(
+    () => () => {
+      if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+    },
+    [previewUrl],
+  );
 
   async function handleFileChange(file: File | undefined) {
-    if (!file) return;
+    if (!file || isUploading || isDeleting) return;
 
     if (!ACCEPTED_TYPES.includes(file.type)) {
       toast.error("Only JPG, PNG, or WEBP images are allowed.");
@@ -45,6 +61,8 @@ function ImageUpload({ onUploadingChange }: ImageUploadProps) {
     }
 
     const localPreview = URL.createObjectURL(file);
+    const previousUrl = uploadedUrl || "";
+    const previousAssetId = uploadedAssetId ?? null;
     setPreviewUrl(localPreview);
     setIsUploading(true);
     setUploadProgress(30); // আপলোড শুরু হওয়া বোঝাতে 30% সিমুলেট করা হলো
@@ -54,32 +72,76 @@ function ImageUpload({ onUploadingChange }: ImageUploadProps) {
     try {
       setUploadProgress(65); // API-তে রিকোয়েস্ট পৌঁছানো বোঝাতে 65%
 
-      // uploadImageToImgBB যদি 2nd argument হিসেবে onProgress callback গ্রহণ করে, তবে:
-      // const result = await uploadImageToImgBB(file, (progress) => setUploadProgress(progress));
-      const result = await uploadImageToImgBB(file);
+      const formData = new FormData();
+      formData.append("image", file, file.name);
+      const result = await uploadImageAction(formData, "post");
+      if (
+        previousAssetId &&
+        previousAssetId !== initialImageAssetId &&
+        previousAssetId !== result.assetId
+      ) {
+        try {
+          await deletePendingImageAction(previousAssetId);
+        } catch (error) {
+          try {
+            await deletePendingImageAction(result.assetId);
+          } catch (cleanupError) {
+            console.error(
+              "New image cleanup failed after replacing a pending image:",
+              cleanupError,
+            );
+          }
+          throw error;
+        }
+      }
 
-      setValue("image", result.url, { shouldValidate: true });
+      setValue("image", result.secureUrl, { shouldValidate: true });
+      setValue("imageAssetId", result.assetId, { shouldValidate: true });
+      setPreviewUrl(result.secureUrl);
       setUploadProgress(100); // সফল আপলোডে 100%
     } catch (error) {
       const message =
-        error instanceof ImgBBUploadError
+        error instanceof Error
           ? error.message
           : "Image upload failed. Please try again.";
       toast.error(message);
       setError("image", { type: "manual", message });
-      setPreviewUrl(null);
-      setValue("image", "", { shouldValidate: true });
+      setPreviewUrl(previousUrl || null);
       setUploadProgress(0);
     } finally {
+      URL.revokeObjectURL(localPreview);
       setIsUploading(false);
       onUploadingChange(false);
+      if (inputRef.current) inputRef.current.value = "";
     }
   }
 
-  function handleRemove() {
+  async function handleRemove() {
+    if (isUploading || isDeleting) return;
+    const assetId = uploadedAssetId ?? null;
+    if (assetId && assetId !== initialImageAssetId) {
+      setIsDeleting(true);
+      onUploadingChange(true);
+      try {
+        await deletePendingImageAction(assetId);
+      } catch (error) {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "ছবিটি মুছে ফেলা যায়নি। আবার চেষ্টা করুন।",
+        );
+        return;
+      } finally {
+        setIsDeleting(false);
+        onUploadingChange(false);
+      }
+    }
+
     setPreviewUrl(null);
     setUploadProgress(0);
     setValue("image", "", { shouldValidate: true });
+    setValue("imageAssetId", null, { shouldValidate: true });
+    clearErrors("image");
     if (inputRef.current) {
       inputRef.current.value = "";
     }
@@ -109,6 +171,7 @@ function ImageUpload({ onUploadingChange }: ImageUploadProps) {
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
+              disabled={isUploading || isDeleting}
               aria-label="পরিবর্তন করুন"
               className="w-8 h-8 rounded-full bg-black/55 text-white flex items-center justify-center backdrop-blur-sm hover:bg-black/75 transition-base cursor-pointer"
             >
@@ -120,6 +183,7 @@ function ImageUpload({ onUploadingChange }: ImageUploadProps) {
             <button
               type="button"
               onClick={handleRemove}
+              disabled={isUploading || isDeleting}
               aria-label="মুছে ফেলুন"
               className="w-8 h-8 rounded-full bg-black/55 text-white flex items-center justify-center backdrop-blur-sm hover:bg-black/75 transition-base cursor-pointer"
             >

@@ -1,16 +1,25 @@
 "use client";
 
 import React, { useRef } from "react";
-import { Camera } from "lucide-react";
+import { Camera, Loader2, X } from "lucide-react";
 import Image from "next/image";
-import { uploadImageToImgBB } from "@/lib/utils/imgbb";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { uploadImageAction } from "@/services/features/images/actions";
+
+const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const MAX_SIZE_BYTES = 4 * 1024 * 1024;
 
 interface ProfileAvatarProps {
     avatarUrl: string | null;
     fullName: string;
     isEditing: boolean;
     previewUrl: string | null;
-    onImageChange: (file: File, previewUrl: string) => void;
+    isRemoved: boolean;
+    isUploading: boolean;
+    onUploadingChange: (isUploading: boolean) => void;
+    onImageChange: (previewUrl: string, assetId: string) => Promise<void>;
+    onRemove: () => Promise<void>;
 }
 
 function getInitials(name: string): string {
@@ -29,27 +38,51 @@ export function ProfileAvatar({
     fullName,
     isEditing,
     previewUrl,
+    isRemoved,
+    isUploading,
+    onUploadingChange,
     onImageChange,
+    onRemove,
 }: ProfileAvatarProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [isRemoving, setIsRemoving] = useState(false);
 
-    const displayUrl = previewUrl || avatarUrl;
+    const displayUrl = previewUrl || (!isRemoved ? avatarUrl : null);
 
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        if (!ACCEPTED_TYPES.has(file.type)) {
+            toast.error("Only JPG, PNG, or WEBP images are allowed.");
+            e.target.value = "";
+            return;
+        }
+        if (file.size > MAX_SIZE_BYTES) {
+            toast.error("Image must be 4 MB or smaller.");
+            e.target.value = "";
+            return;
+        }
+
+        onUploadingChange(true);
         try {
-            const res = await uploadImageToImgBB(file);
-            if (res && res.url) {
-                onImageChange(file, res.url);
-            }
+            const formData = new FormData();
+            formData.append("image", file, file.name);
+            const uploaded = await uploadImageAction(formData, "profile");
+            await onImageChange(uploaded.secureUrl, uploaded.assetId);
         } catch (error) {
-            console.error("Image upload failed:", error);
+            toast.error(
+                error instanceof Error
+                    ? error.message
+                    : "Profile image upload failed.",
+            );
+        } finally {
+            onUploadingChange(false);
+            e.target.value = "";
         }
     }
 
-    const imgbbLoader = ({ src }: { src: string }) => {
+    const imageLoader = ({ src }: { src: string }) => {
         return src;
     };
 
@@ -58,9 +91,9 @@ export function ProfileAvatar({
             <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full ring-4 ring-surface shadow-lg overflow-hidden bg-secondary flex items-center justify-center relative">
                 {displayUrl ? (
                     <Image
-                        loader={imgbbLoader}
+                        loader={imageLoader}
                         fill
-                        src={displayUrl as string}
+                        src={displayUrl}
                         alt={fullName || "ব্যবহারকারী"}
                         className="w-full h-full object-cover"
                         sizes="112px"
@@ -77,17 +110,47 @@ export function ProfileAvatar({
                     <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploading || isRemoving}
                         className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-primary hover:bg-primary-hover text-text-inverse shadow-md flex items-center justify-center transition-base"
                         aria-label="Change profile photo"
                     >
-                        <Camera size={16} />
+                        {isUploading ? (
+                            <Loader2 size={16} className="animate-spin" />
+                        ) : (
+                            <Camera size={16} />
+                        )}
                     </button>
+                    {displayUrl ? (
+                        <button
+                            type="button"
+                            onClick={async () => {
+                                setIsRemoving(true);
+                                try {
+                                    await onRemove();
+                                } catch (error) {
+                                    toast.error(
+                                        error instanceof Error
+                                            ? error.message
+                                            : "ছবিটি মুছে ফেলা যায়নি। আবার চেষ্টা করুন।",
+                                    );
+                                } finally {
+                                    setIsRemoving(false);
+                                }
+                            }}
+                            disabled={isUploading || isRemoving}
+                            className="absolute top-0 right-0 w-8 h-8 rounded-full bg-danger hover:bg-danger/90 text-text-inverse shadow-md flex items-center justify-center transition-base disabled:opacity-60"
+                            aria-label="Remove profile photo"
+                        >
+                            <X size={15} />
+                        </button>
+                    ) : null}
                     <input
                         ref={fileInputRef}
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/webp"
                         className="hidden"
                         onChange={handleFileChange}
+                        disabled={isUploading || isRemoving}
                     />
                 </>
             ) : null}

@@ -22,19 +22,23 @@ export default function BookHero({ post }: BookHeroProps) {
           {/* Blurred Background to fill empty spaces naturally */}
           <div
             className="absolute inset-0 bg-cover bg-center blur-lg opacity-30 scale-110 pointer-events-none"
-            style={{ backgroundImage: `url(${imageUrl})` }}
+            style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
           />
 
           {/* Main Book Cover Image - No Cropping */}
           <div className="relative w-full h-full p-2 flex items-center justify-center">
-            <Image
-              src={imageUrl}
-              alt={post.title || "বইয়ের ছবি"}
-              fill
-              sizes="(max-width: 768px) 100vw, 240px"
-              priority
-              className="object-contain drop-shadow-sm hover:scale-105 transition-transform duration-300"
-            />
+            {imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt={post.title || "বইয়ের ছবি"}
+                fill
+                sizes="(max-width: 768px) 100vw, 240px"
+                priority
+                className="object-contain drop-shadow-sm hover:scale-105 transition-transform duration-300"
+              />
+            ) : (
+              <div className="text-sm text-slate-500">ছবি নেই</div>
+            )}
           </div>
 
           {/* Type Tag */}

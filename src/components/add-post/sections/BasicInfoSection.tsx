@@ -19,10 +19,12 @@ const errorText = "text-xs font-medium text-danger mt-0.5";
 
 interface ImageUploadProps {
   onUploadingChange: (isUploading: boolean) => void;
+  initialImageAssetId: string | null;
 }
 
 export default function BasicInfoSection({
   onUploadingChange,
+  initialImageAssetId,
 }: ImageUploadProps) {
   const {
     register,
@@ -68,7 +70,10 @@ export default function BasicInfoSection({
       </div>
 
       {/* photo upload */}
-      <ImageUpload onUploadingChange={onUploadingChange} />
+      <ImageUpload
+        onUploadingChange={onUploadingChange}
+        initialImageAssetId={initialImageAssetId}
+      />
 
       {/* type toggle */}
       <div className="mb-3.5">

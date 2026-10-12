@@ -3,6 +3,7 @@ export interface UserSession {
   email: string;
   name?: string | null;
   image?: string | null;
+  imageAssetId?: string | null;
   role: "user" | "admin" | null;
   /** Suspension flag (Better Auth admin plugin) — single source of truth. */
   banned?: boolean | null;

@@ -21,6 +21,7 @@ export function toUserProfile(user: UserSession): UserProfile {
     district: user.district ?? "",
     area: user.area ?? "",
     avatarUrl: user.image ?? null,
+    avatarAssetId: user.imageAssetId ?? null,
     role: user.role ?? "user",
     memberSince: user.createdAt ? new Date(user.createdAt).toISOString() : new Date(0).toISOString(),
     banned: user.banned ?? user.isBlocked ?? false,

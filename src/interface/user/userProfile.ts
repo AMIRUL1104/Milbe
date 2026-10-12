@@ -9,6 +9,7 @@ export interface UserProfile {
   district: string;
   area: string;
   avatarUrl: string | null;
+  avatarAssetId: string | null;
   role: "user" | "admin";
   memberSince: string; // ISO date string
   banned: boolean;
@@ -21,6 +22,12 @@ export interface UpdateProfilePayload {
   district?: string;
   area?: string;
   avatarUrl?: string | null;
+  avatarAssetId?: string | null;
+}
+
+export interface UpdateUserProfileResult {
+  profile: UserProfile;
+  cleanupPending: boolean;
 }
 
 export type UserProfileResponse = ApiResponse<UserProfile>;
