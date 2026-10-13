@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
@@ -17,6 +17,7 @@ import { updateUserProfile } from "@/services/features/userProfile";
 import { deletePendingImageAction } from "@/services/features/images/actions";
 import { signOut } from "@/lib/auth-client";
 import { Button } from "@/components/ui/Button";
+import { useUnsavedChangesGuard } from "@/components/navigation/UnsavedChangesGuard";
 
 
 interface ProfileClientProps {
@@ -28,8 +29,10 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [pendingAvatarAssetId, setPendingAvatarAssetId] = useState<string | null>(null);
+    const pendingAvatarAssetIdRef = useRef<string | null>(null);
     const [isAvatarRemoved, setIsAvatarRemoved] = useState(false);
     const [isAvatarUploading, setIsAvatarUploading] = useState(false);
+    const avatarUploadPendingRef = useRef(false);
     const router = useRouter();
 
     const form = useForm<ProfileFormValues>({
@@ -42,6 +45,70 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
         },
     });
 
+    const handleAvatarUploadingChange = useCallback((pending: boolean) => {
+        avatarUploadPendingRef.current = pending;
+        setIsAvatarUploading(pending);
+    }, []);
+
+    const updatePendingAvatarAssetId = useCallback((assetId: string | null) => {
+        setPendingAvatarAssetId(assetId);
+    }, []);
+
+    useEffect(() => {
+        pendingAvatarAssetIdRef.current = pendingAvatarAssetId;
+    }, [pendingAvatarAssetId]);
+
+    const waitForProfileWork = useCallback(async () => {
+        while (
+            avatarUploadPendingRef.current ||
+            form.formState.isSubmitting
+        ) {
+            await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+    }, [form]);
+
+    const cleanupPendingAvatar = useCallback(async () => {
+        await waitForProfileWork();
+        const assetId = pendingAvatarAssetIdRef.current;
+        if (assetId) {
+            await deletePendingImageAction(assetId);
+        }
+    }, [waitForProfileWork]);
+
+    const sendPendingAvatarCleanup = useCallback(() => {
+        if (
+            avatarUploadPendingRef.current ||
+            form.formState.isSubmitting ||
+            !pendingAvatarAssetIdRef.current ||
+            typeof navigator === "undefined" ||
+            !navigator.sendBeacon
+        ) {
+            return;
+        }
+
+        const queued = navigator.sendBeacon(
+            "/api/images/cleanup",
+            new Blob([JSON.stringify({ assetIds: [pendingAvatarAssetIdRef.current] })], {
+                type: "application/json",
+            }),
+        );
+        if (!queued) {
+            console.error("Could not queue pending profile image cleanup.");
+        }
+    }, [form]);
+
+    const requestNavigation = useUnsavedChangesGuard({
+        enabled:
+            isEditing &&
+            (form.formState.isDirty ||
+                Boolean(pendingAvatarAssetId) ||
+                isAvatarRemoved ||
+                isAvatarUploading ||
+                form.formState.isSubmitting),
+        onLeave: cleanupPendingAvatar,
+        onPageHide: sendPendingAvatarCleanup,
+    });
+
     function enterEditMode() {
         form.reset({
             fullName: user.fullName,
@@ -50,26 +117,24 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
             area: user.area,
         });
         setPreviewUrl(null);
-        setPendingAvatarAssetId(null);
+        updatePendingAvatarAssetId(null);
         setIsAvatarRemoved(false);
         setIsEditing(true);
     }
 
     async function cancelEdit() {
-        if (pendingAvatarAssetId) {
-            try {
-                await deletePendingImageAction(pendingAvatarAssetId);
-            } catch (error) {
-                toast.error(
-                    error instanceof Error
-                        ? `ছবিটি মুছে ফেলা যায়নি; cleanup retry হবে। ${error.message}`
-                        : "ছবিটি মুছে ফেলা যায়নি; cleanup retry হবে।",
-                );
-            }
+        try {
+            await cleanupPendingAvatar();
+        } catch (error) {
+            toast.error(
+                error instanceof Error
+                    ? `ছবিটি মুছে ফেলা যায়নি; cleanup retry হবে। ${error.message}`
+                    : "ছবিটি মুছে ফেলা যায়নি; cleanup retry হবে।",
+            );
         }
         setIsEditing(false);
         setPreviewUrl(null);
-        setPendingAvatarAssetId(null);
+        updatePendingAvatarAssetId(null);
         setIsAvatarRemoved(false);
         form.reset();
     }
@@ -91,14 +156,14 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
             }
         }
         setPreviewUrl(url);
-        setPendingAvatarAssetId(assetId);
+        updatePendingAvatarAssetId(assetId);
         setIsAvatarRemoved(false);
     }
 
     async function handleAvatarRemove() {
         if (pendingAvatarAssetId) {
             await deletePendingImageAction(pendingAvatarAssetId);
-            setPendingAvatarAssetId(null);
+            updatePendingAvatarAssetId(null);
             setPreviewUrl(null);
             setIsAvatarRemoved(false);
             return;
@@ -153,7 +218,7 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
             });
             setIsEditing(false);
             setPreviewUrl(null);
-            setPendingAvatarAssetId(null);
+            updatePendingAvatarAssetId(null);
             setIsAvatarRemoved(false);
             router.refresh();
         } catch {
@@ -169,20 +234,22 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
             previewUrl={previewUrl}
             isRemoved={isAvatarRemoved}
             isUploading={isAvatarUploading}
-            onUploadingChange={setIsAvatarUploading}
+            onUploadingChange={handleAvatarUploadingChange}
             onRemove={handleAvatarRemove}
             onImageChange={handleImageChange}
         />
     );
 
     async function handleSignOut() {
-        await signOut({
-            fetchOptions: {
-                onSuccess: () => {
-                    router.push("/auth/signin");
-                    router.refresh();
+        requestNavigation(async () => {
+            await signOut({
+                fetchOptions: {
+                    onSuccess: () => {
+                        router.push("/auth/signin");
+                        router.refresh();
+                    },
                 },
-            },
+            });
         });
     }
 

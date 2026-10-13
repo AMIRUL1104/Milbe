@@ -3,6 +3,7 @@ import { Inter, Geist_Mono, Hind_Siliguri, Noto_Serif_Bengali } from "next/font/
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import { marketConfig } from "@/config/market";
+import { UnsavedChangesGuardProvider } from "@/components/navigation/UnsavedChangesGuard";
 
 
 const inter = Inter({
@@ -131,7 +132,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col font-sans"
         style={{ fontFamily: "var(--font-hind-siliguri), var(--font-inter), sans-serif" }}
       >
-        {children}
+        <UnsavedChangesGuardProvider>{children}</UnsavedChangesGuardProvider>
         <ToastContainer />
         <script
           dangerouslySetInnerHTML={{

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,8 @@ import {
 import { hasCompleteContactProfile } from "@/lib/utils/contact-profile";
 import { STEP_SECTIONS } from "@/lib/constant/post";
 import SubmitButton from "./sections/SubmitButton";
+import { deletePendingImageAction } from "@/services/features/images/actions";
+import { useUnsavedChangesGuard } from "@/components/navigation/UnsavedChangesGuard";
 
 type AddPostFormInput = z.input<typeof addPostSchema>;
 
@@ -146,6 +148,7 @@ export default function AddPostForm({
   const [savedImageAssetId, setSavedImageAssetId] = useState<string | null>(
     isEditMode ? initialPost?.imageAssetId ?? null : null,
   );
+  const savedImageAssetIdRef = useRef(savedImageAssetId);
   const [activeStep, setActiveStep] = useState(0);
   const [draftTimestamp, setDraftTimestamp] = useState<string | null>(null);
 
@@ -169,10 +172,84 @@ export default function AddPostForm({
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
     watch,
     reset: resetForm,
   } = methods;
+  const uploadPendingRef = useRef(false);
+
+  const handleUploadPendingChange = useCallback((pending: boolean) => {
+    uploadPendingRef.current = pending;
+    setIsUploadPending(pending);
+  }, []);
+
+  const waitForUpload = useCallback(async () => {
+    while (
+      uploadPendingRef.current ||
+      methods.formState.isSubmitting
+    ) {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+  }, [methods]);
+
+  const cleanupPendingImage = useCallback(async () => {
+    await waitForUpload();
+    const assetId = methods.getValues("imageAssetId");
+    if (assetId && assetId !== savedImageAssetIdRef.current) {
+      await deletePendingImageAction(assetId);
+    }
+
+    if (!isEditMode && typeof window !== "undefined") {
+      const savedDraft = localStorage.getItem("addPostDraft");
+      if (savedDraft) {
+        try {
+          const draft = JSON.parse(savedDraft);
+          if (draft && typeof draft === "object") {
+            localStorage.setItem(
+              "addPostDraft",
+              JSON.stringify({ ...draft, image: "", imageAssetId: null }),
+            );
+          }
+        } catch (error) {
+          console.error("Draft image cleanup failed.", error);
+          localStorage.removeItem("addPostDraft");
+          localStorage.removeItem("addPostDraftTimestamp");
+        }
+      }
+    }
+  }, [isEditMode, methods, waitForUpload]);
+
+  const sendPendingImageCleanup = useCallback(() => {
+    if (
+      uploadPendingRef.current ||
+      methods.formState.isSubmitting ||
+      typeof navigator === "undefined" ||
+      !navigator.sendBeacon
+    ) {
+      return;
+    }
+    const assetId = methods.getValues("imageAssetId");
+    if (!assetId || assetId === savedImageAssetIdRef.current) return;
+
+    const queued = navigator.sendBeacon(
+      "/api/images/cleanup",
+      new Blob([JSON.stringify({ assetIds: [assetId] })], {
+        type: "application/json",
+      }),
+    );
+    if (!queued) {
+      console.error("Could not queue pending post image cleanup.");
+    }
+  }, [methods]);
+
+  useUnsavedChangesGuard({
+    enabled:
+      isDirty ||
+      isUploadPending ||
+      isSubmitting,
+    onLeave: cleanupPendingImage,
+    onPageHide: sendPendingImageCleanup,
+  });
 
   const watchedValues = watch();
   const isDonate = watch("type") === "donate";
@@ -243,7 +320,10 @@ export default function AddPostForm({
         const response = await updatePost(postId, payload);
 
         if (response?.success) {
-          setSavedImageAssetId(response.data?.imageAssetId ?? null);
+          const nextSavedImageAssetId =
+            response.data?.imageAssetId ?? null;
+          savedImageAssetIdRef.current = nextSavedImageAssetId;
+          setSavedImageAssetId(nextSavedImageAssetId);
           toast.success(
             response.meta?.cleanupPending
               ? "পোস্ট আপডেট হয়েছে; পুরোনো ছবির storage cleanup retry হবে।"
@@ -364,7 +444,7 @@ export default function AddPostForm({
 
           <FormProvider {...methods}>
             <BasicInfoSection
-              onUploadingChange={setIsUploadPending}
+              onUploadingChange={handleUploadPendingChange}
               initialImageAssetId={isEditMode ? savedImageAssetId : null}
             />
             {/* Step 2: location + contact in ONE section (ContactSection

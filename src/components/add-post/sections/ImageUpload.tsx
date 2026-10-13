@@ -95,8 +95,14 @@ function ImageUpload({
         }
       }
 
-      setValue("image", result.secureUrl, { shouldValidate: true });
-      setValue("imageAssetId", result.assetId, { shouldValidate: true });
+      setValue("image", result.secureUrl, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+      setValue("imageAssetId", result.assetId, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
       setPreviewUrl(result.secureUrl);
       setUploadProgress(100); // সফল আপলোডে 100%
     } catch (error) {
@@ -139,8 +145,8 @@ function ImageUpload({
 
     setPreviewUrl(null);
     setUploadProgress(0);
-    setValue("image", "", { shouldValidate: true });
-    setValue("imageAssetId", null, { shouldValidate: true });
+    setValue("image", "", { shouldValidate: true, shouldDirty: true });
+    setValue("imageAssetId", null, { shouldValidate: true, shouldDirty: true });
     clearErrors("image");
     if (inputRef.current) {
       inputRef.current.value = "";
