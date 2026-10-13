@@ -173,15 +173,16 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
     }
 
     async function onSubmit(values: ProfileFormValues) {
-        // Build the payload so empty/whitespace-only optional fields are
-        // OMITTED (not sent as "") — sending "" would clear an existing
-        // profile value. `undefined` in the Better Auth `updateUser` body
-        // leaves that field untouched.
+        // Build the payload so optional fields (phoneNumber / district / area)
+        // are ALWAYS sent as trimmed strings. An empty string ("") tells the
+        // backend to CLEAR the stored value; only an omitted key (undefined)
+        // leaves a field untouched. Whitespace is trimmed first so "   " is
+        // treated the same as an intentionally cleared (empty) field.
         const payload: UpdateProfilePayload = {
             fullName: values.fullName,
-            ...(values.phoneNumber ? { phoneNumber: values.phoneNumber } : {}),
-            ...(values.district ? { district: values.district } : {}),
-            ...(values.area ? { area: values.area } : {}),
+            phoneNumber: (values.phoneNumber ?? "").trim(),
+            district: (values.district ?? "").trim(),
+            area: (values.area ?? "").trim(),
             ...(pendingAvatarAssetId && previewUrl
                 ? {
                     avatarUrl: previewUrl,

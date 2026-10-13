@@ -17,7 +17,8 @@ export interface UserProfile {
 
 export interface UpdateProfilePayload {
   fullName?: string;
-  // Optional: an empty/undefined value means "leave this field as-is".
+  // Optional: an empty string ("") CLEARS the stored value on the backend.
+  // Omitting the key (undefined) leaves the existing value untouched.
   phoneNumber?: string;
   district?: string;
   area?: string;
