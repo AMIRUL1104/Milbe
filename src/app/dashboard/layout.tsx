@@ -18,7 +18,7 @@ export default async function DashboardLayout({
     <>
       <Header variant="default" />
       <div className="flex min-h-screen bg-[#F5F7F8] pt-16">
-        {/* <SidebarClient
+        <SidebarClient
           navItems={navItems}
           user={{
             name: session?.name ?? "Guest",
@@ -26,7 +26,7 @@ export default async function DashboardLayout({
             avatarUrl: session?.image ?? null,
             role,
           }}
-        /> */}
+        />
         <main className="flex-1 min-w-0 max-sm:pb-20 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
       <BottomNav />

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import SidebarLogo from "./SidebarLogo";
 import SidebarNavList from "./SidebarNavList";
@@ -16,11 +16,16 @@ interface SidebarClientProps {
 
 export default function SidebarClient({ navItems, user }: SidebarClientProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
 
   return (
     <>
+      {/*
+        Mobile sidebar removed: navigation on small screens is fully handled
+        by the Mobile Bottom Nav. This button, the backdrop overlay below,
+        and the mobile drawer/close behavior are intentionally kept commented
+        out so they do not render or mount any mobile markup.
+
       <button
         type="button"
         onClick={() => setIsMobileOpen(true)}
@@ -36,19 +41,26 @@ export default function SidebarClient({ navItems, user }: SidebarClientProps) {
           aria-hidden="true"
           className="lg:hidden fixed inset-0 bg-overlay-dark z-65 transition-opacity duration-300" />
       )}
+      */}
 
+      {/*
+        Desktop-only sidebar: `hidden lg:flex` keeps it out of the DOM
+        display on small screens; on lg+ it stays sticky and visible.
+      */}
       <aside
         className={`
-              fixed top-0 left-0 h-screen z-70 w-64
+              hidden lg:flex
               lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:z-30
-              flex flex-col bg-surface border-r border-border-light
+              w-64 flex-col bg-surface border-r border-border-light
               transition-all duration-300 ease-in-out
               ${isCollapsed ? "lg:w-20" : "lg:w-64"}
-              ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
             `}
       >
         <div className="flex items-center justify-between px-4 py-5">
           <SidebarLogo isCollapsed={isCollapsed} />
+          {/*
+            Mobile close button removed (see note above).
+
           <button
             type="button"
             onClick={() => setIsMobileOpen(false)}
@@ -57,6 +69,7 @@ export default function SidebarClient({ navItems, user }: SidebarClientProps) {
           >
             <X className="w-5 h-5" />
           </button>
+          */}
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-2">
@@ -64,7 +77,6 @@ export default function SidebarClient({ navItems, user }: SidebarClientProps) {
             navItems={navItems}
             isCollapsed={isCollapsed}
             currentPath={pathname}
-            onNavigate={() => setIsMobileOpen(false)}
           />
         </nav>
 
