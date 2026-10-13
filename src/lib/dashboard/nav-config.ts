@@ -20,5 +20,10 @@ export const adminNavItems: NavItem[] = [
     href: "/dashboard/admin/knowledge-base",
     icon: "Library",
   },
+  {
+    label: "রিকোয়েস্ট ম্যানেজমেন্ট",
+    href: "/dashboard/admin/requests",
+    icon: "ClipboardList",
+  },
   { label: "Profile", href: "/profile", icon: "User" },
 ];

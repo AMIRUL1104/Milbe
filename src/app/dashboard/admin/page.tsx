@@ -8,6 +8,7 @@ import {
   FileStack,
   UserCog,
   Inbox,
+  ClipboardList,
 } from "lucide-react";
 import type {
   ActivityItemData,
@@ -31,6 +32,11 @@ const adminQuickActions: QuickActionData[] = [
     label: "Knowledge Base পর্যালোচনা",
     href: "/dashboard/admin/knowledge-base",
     icon: Library,
+  },
+  {
+    label: "রিকোয়েস্ট ব্যবস্থাপনা",
+    href: "/dashboard/admin/requests",
+    icon: ClipboardList,
   },
   { label: "Profile", href: "/profile", icon: UserCog },
 ];
