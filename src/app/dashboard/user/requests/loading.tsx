@@ -227,6 +227,18 @@ function PostListPanelSkeleton() {
 export function ReceivedTabContentSkeleton() {
   return (
     <div className="flex flex-col gap-4">
+      {/* Summary counts */}
+      <div className="grid grid-cols-2 gap-3 rounded-card border border-border-light bg-surface p-3 shadow-sm animate-pulse sm:p-4">
+        <div className="rounded-xl bg-background px-3 py-3 sm:px-4">
+          <div className="h-3 w-32 rounded bg-gray-100" />
+          <div className="mt-2 h-7 w-10 rounded bg-gray-100" />
+        </div>
+        <div className="rounded-xl bg-accent-light px-3 py-3 sm:px-4">
+          <div className="h-3 w-36 rounded bg-gray-100" />
+          <div className="mt-2 h-7 w-10 rounded bg-gray-100" />
+        </div>
+      </div>
+
       {/* Mobile post selector */}
       <div className="lg:hidden">
         <PostSelectorMobileSkeleton />

@@ -36,6 +36,14 @@ export function ReceivedRequestsClient({
     [requests, activePostId]
   );
 
+  const requestCounts = useMemo(
+    () => ({
+      total: requests.length,
+      pending: requests.filter((request) => request.status === "pending").length,
+    }),
+    [requests]
+  );
+
   const visibleRequests = useMemo(() => {
     const filtered = filterReceivedRequests(
       requestsForActivePost,
@@ -54,6 +62,28 @@ export function ReceivedRequestsClient({
 
   return (
     <div className="flex flex-col gap-4">
+      <section
+        aria-label="রিকোয়েস্টের সারাংশ"
+        className="grid grid-cols-2 gap-3 rounded-card border border-border-light bg-surface p-3 shadow-sm sm:p-4"
+      >
+        <div className="rounded-xl bg-background px-3 py-3 sm:px-4">
+          <p className="text-xs font-medium text-text-muted sm:text-sm">
+            মোট প্রাপ্ত রিকোয়েস্ট
+          </p>
+          <p className="mt-1 text-2xl font-bold leading-none text-text-primary sm:text-3xl">
+            {requestCounts.total}
+          </p>
+        </div>
+        <div className="rounded-xl bg-accent-light px-3 py-3 sm:px-4">
+          <p className="text-xs font-medium text-text-muted sm:text-sm">
+            অপেক্ষমাণ রিকোয়েস্ট
+          </p>
+          <p className="mt-1 text-2xl font-bold leading-none text-accent-text sm:text-3xl">
+            {requestCounts.pending}
+          </p>
+        </div>
+      </section>
+
       {/* Mobile post selector */}
       <div className="lg:hidden">
         <PostSelectorMobile
