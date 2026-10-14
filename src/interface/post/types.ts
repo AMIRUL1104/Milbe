@@ -12,6 +12,11 @@ export interface PostBookEntry {
   availableStatus: AvailableStatus;
 }
 
+export interface PostImageItem {
+  url: string;
+  assetId: string;
+}
+
 export interface PostItem {
   _id: string;
   sellerId: string;
@@ -22,7 +27,11 @@ export interface PostItem {
   searchSlug?: string;
   category: string;
   type: PostType;
+  /** Primary multi-image store — currently locked to exactly 1 via validation. Optional for legacy API payloads. */
+  images?: PostImageItem[];
+  /** @deprecated mirror of images[0].url — use getCoverImage(post). */
   image: string | null;
+  /** @deprecated mirror of images[0].assetId. */
   imageAssetId?: string | null;
   totalPrice: number | null;
   overallCondition: BookCondition;
@@ -59,14 +68,34 @@ type PostPayloadFields = Pick<
 >;
 
 export interface NewPostPayload extends PostPayloadFields {
+  images: PostImageItem[];
+  /** @deprecated auto-derived from images[0] — sent for back-compat. */
   image: string;
+  /** @deprecated auto-derived from images[0] — sent for back-compat. */
   imageAssetId: string;
 }
 
 export interface UpdatePostPayload
-  extends Omit<NewPostPayload, "image" | "imageAssetId"> {
+  extends Omit<NewPostPayload, "image" | "imageAssetId" | "images"> {
+  images: PostImageItem[];
   image: string | null;
   imageAssetId: string | null;
+}
+
+/** Single place to read the cover: images[0] → legacy image fallback. */
+export function getCoverImage(post: {
+  images?: PostImageItem[] | null;
+  image?: string | null;
+}): string {
+  return post.images?.[0]?.url ?? post.image ?? "";
+}
+
+/** Single place to read the cover asset id. */
+export function getCoverAssetId(post: {
+  images?: PostImageItem[] | null;
+  imageAssetId?: string | null;
+}): string | null {
+  return post.images?.[0]?.assetId ?? post.imageAssetId ?? null;
 }
 
 export interface AddNewPostResult {

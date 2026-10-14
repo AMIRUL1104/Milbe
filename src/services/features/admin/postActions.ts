@@ -10,7 +10,6 @@ import { sendPostDeletedMail } from "@/lib/email";
 export type AdminPostActionResult = {
   ok: boolean;
   error?: string;
-  cleanupPending?: boolean;
 };
 
 const MAX_REASON_LENGTH = 500;
@@ -61,7 +60,7 @@ export async function deletePostAsAdmin(
       return { ok: false, error: "Post not found." };
     }
 
-    const deletion = await serverMutation<Record<string, never>, null>(
+    await serverMutation<Record<string, never>, null>(
       `/api/posts/${postId}`,
       {},
       "DELETE",
@@ -91,10 +90,7 @@ export async function deletePostAsAdmin(
     }
 
     revalidatePath("/dashboard/admin/posts");
-    return {
-      ok: true,
-      cleanupPending: Boolean(deletion?.meta?.cleanupPending),
-    };
+    return { ok: true };
   } catch (error) {
     const message = error instanceof Error ? error.message.toLowerCase() : "";
     return {

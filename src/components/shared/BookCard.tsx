@@ -22,7 +22,7 @@ export default function BookCard({ book }: BookCardProps) {
       {/* Reduced Image Container Height with object-contain */}
       <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full bg-surface-hover/60 overflow-hidden shrink-0 flex items-center justify-center p-1.5">
         <Image
-          src={book.image || "/placeholder-book.jpg"}
+          src={(book.images?.[0]?.url ?? book.image) || "/placeholder-book.jpg"}
           alt={primaryBook?.bookName || "বই পোস্ট"}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

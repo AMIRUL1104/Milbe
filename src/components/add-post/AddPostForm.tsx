@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, type Resolver } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
@@ -25,6 +25,7 @@ import {
   AddPostFormValues,
   addPostSchema,
   editPostSchema,
+  postFormSchema,
 } from "@/lib/validations/add-post-schema";
 import { hasCompleteContactProfile } from "@/lib/utils/contact-profile";
 import { STEP_SECTIONS } from "@/lib/constant/post";
@@ -32,7 +33,9 @@ import SubmitButton from "./sections/SubmitButton";
 import { deletePendingImageAction } from "@/services/features/images/actions";
 import { useUnsavedChangesGuard } from "@/components/navigation/UnsavedChangesGuard";
 
-type AddPostFormInput = z.input<typeof addPostSchema>;
+type AddPostFormInput = z.input<typeof postFormSchema> & {
+  images: { url: string; assetId: string }[];
+};
 
 interface AddPostProfile {
   fullName: string;
@@ -53,6 +56,7 @@ function buildDefaultValues(profile: AddPostProfile): AddPostFormInput {
     title: "",
     category: "",
     type: "sell",
+    images: [],
     image: "",
     imageAssetId: null,
     totalPrice: null,
@@ -69,12 +73,19 @@ function buildDefaultValues(profile: AddPostProfile): AddPostFormInput {
 }
 
 function buildPayload(values: AddPostFormValues): UpdatePostPayload {
+  // images[] is primary (locked to 1); legacy mirrors auto-derived for back-compat.
+  const images = (values.images ?? []).slice(0, 1).map((img) => ({
+    url: img.url,
+    assetId: img.assetId,
+  }));
+  const cover = images[0] ?? null;
   return {
     title: values.title,
     category: values.category,
     type: values.type,
-    image: values.image || null,
-    imageAssetId: values.imageAssetId || null,
+    images,
+    image: cover?.url ?? null,
+    imageAssetId: cover?.assetId ?? null,
     totalPrice: values.type === "donate" ? null : values.totalPrice,
     overallCondition: values.overallCondition,
     district: values.district,
@@ -111,12 +122,17 @@ interface AddPostFormProps {
 
 /** Maps a fetched PostItem into the shape the add-post form expects. */
 function postToForm(post: PostItem): AddPostFormValues {
+  const coverUrl = post.images?.[0]?.url ?? post.image ?? "";
+  const coverAssetId = post.images?.[0]?.assetId ?? post.imageAssetId ?? null;
+  const images =
+    coverUrl && coverAssetId ? [{ url: coverUrl, assetId: coverAssetId }] : [];
   return {
     title: post.title,
     category: post.category ?? "",
     type: post.type,
-    image: post.image ?? "",
-    imageAssetId: post.imageAssetId ?? null,
+    images,
+    image: coverUrl,
+    imageAssetId: coverAssetId,
     totalPrice: post.totalPrice,
     overallCondition: post.overallCondition,
     district: post.district,
@@ -146,7 +162,9 @@ export default function AddPostForm({
   const isEditMode = mode === "edit";
   const [isUploadPending, setIsUploadPending] = useState(false);
   const [savedImageAssetId, setSavedImageAssetId] = useState<string | null>(
-    isEditMode ? initialPost?.imageAssetId ?? null : null,
+    isEditMode
+      ? (initialPost?.images?.[0]?.assetId ?? initialPost?.imageAssetId ?? null)
+      : null,
   );
   const savedImageAssetIdRef = useRef(savedImageAssetId);
   const [activeStep, setActiveStep] = useState(0);
@@ -164,7 +182,11 @@ export default function AddPostForm({
   );
 
   const methods = useForm<AddPostFormInput, unknown, AddPostFormValues>({
-    resolver: zodResolver(isEditMode ? editPostSchema : addPostSchema),
+    // Create/edit schemas differ only in images optionality; unify the
+    // resolver type so the conditional schema compiles.
+    resolver: zodResolver(
+      isEditMode ? editPostSchema : addPostSchema,
+    ) as unknown as Resolver<AddPostFormInput, unknown, AddPostFormValues>,
     defaultValues,
     mode: "onBlur",
   });
@@ -194,7 +216,9 @@ export default function AddPostForm({
 
   const cleanupPendingImage = useCallback(async () => {
     await waitForUpload();
-    const assetId = methods.getValues("imageAssetId");
+    const assetId =
+      methods.getValues("images")?.[0]?.assetId ??
+      methods.getValues("imageAssetId");
     if (assetId && assetId !== savedImageAssetIdRef.current) {
       await deletePendingImageAction(assetId);
     }
@@ -207,7 +231,7 @@ export default function AddPostForm({
           if (draft && typeof draft === "object") {
             localStorage.setItem(
               "addPostDraft",
-              JSON.stringify({ ...draft, image: "", imageAssetId: null }),
+              JSON.stringify({ ...draft, images: [], image: "", imageAssetId: null }),
             );
           }
         } catch (error) {
@@ -228,7 +252,9 @@ export default function AddPostForm({
     ) {
       return;
     }
-    const assetId = methods.getValues("imageAssetId");
+    const assetId =
+      methods.getValues("images")?.[0]?.assetId ??
+      methods.getValues("imageAssetId");
     if (!assetId || assetId === savedImageAssetIdRef.current) return;
 
     const queued = navigator.sendBeacon(
@@ -461,7 +487,7 @@ export default function AddPostForm({
         </div>
 
         <Sidebar
-          imageUrl={methods.watch("image") || null}
+          imageUrl={methods.watch("images")?.[0]?.url || methods.watch("image") || null}
           badge={isDonate ? "দান" : "বিক্রি"}
           isDonate={isDonate}
           title={title}

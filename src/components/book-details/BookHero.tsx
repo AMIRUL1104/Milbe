@@ -9,7 +9,7 @@ interface BookHeroProps {
 }
 
 export default function BookHero({ post }: BookHeroProps) {
-  const imageUrl = post.image;
+  const imageUrl = post.images?.[0]?.url ?? post.image;
   const conditionLabel = CONDITION_LABELS_BN[post.overallCondition] ?? "ভালো";
 
 

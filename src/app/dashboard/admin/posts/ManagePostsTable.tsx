@@ -239,12 +239,7 @@ export default function ManagePostsTable({
       if (res.ok) {
         setPosts((prev) => prev.filter((p) => p._id !== targetPost._id));
         router.refresh();
-        showToast(
-          res.cleanupPending
-            ? "Post deleted; Cloudinary image cleanup is pending."
-            : "Post deleted successfully.",
-          "success",
-        );
+        showToast("Post deleted successfully.", "success");
         setTargetPost(null);
       } else {
         // Keep the modal open so the typed reason is not lost.
@@ -298,9 +293,9 @@ export default function ManagePostsTable({
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3 min-w-[200px]">
                           <div className="relative w-10 h-12 rounded-lg overflow-hidden bg-[#EDF1F2] shrink-0">
-                            {post.image ? (
+                            {(post.images?.[0]?.url ?? post.image) ? (
                               <Image
-                                src={post.image}
+                                src={post.images?.[0]?.url ?? post.image ?? ""}
                                 alt={post.title}
                                 fill
                                 className="object-cover"

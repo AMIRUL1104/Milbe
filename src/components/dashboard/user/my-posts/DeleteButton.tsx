@@ -32,11 +32,7 @@ export default function DeleteButton({
       const response = await deletePost(postId);
 
       if (response?.success) {
-        toast.success(
-          response.meta?.cleanupPending
-            ? "পোস্টটি ডিলিট হয়েছে; ছবির storage cleanup retry হবে।"
-            : "পোস্টটি সফলভাবে ডিলিট করে ফেলা হয়েছে।",
-        );
+        toast.success("পোস্টটি সফলভাবে ডিলিট করে ফেলা হয়েছে।");
         setIsOpen(false);
         onDeleted(postId);
       } else {
@@ -101,7 +97,7 @@ export default function DeleteButton({
 
               <div className="mt-2">
                 <p className="text-sm text-text-muted leading-relaxed">
-                  আপনি কি নিশ্চিত? পোস্টটি ডিলিট করে ফেললে এটি আর ফিরিয়ে আনা যাবে না।
+                  পোস্টটি তালিকা থেকে সরানো হবে; এর ছবিটি সংরক্ষিত থাকবে।
                 </p>
               </div>
 

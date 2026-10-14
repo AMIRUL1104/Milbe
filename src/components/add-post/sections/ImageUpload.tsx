@@ -37,8 +37,9 @@ function ImageUpload({
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const uploadedUrl = watch("image");
-  const uploadedAssetId = watch("imageAssetId");
+  const uploadedImages = watch("images") ?? [];
+  const uploadedUrl = uploadedImages[0]?.url ?? watch("image");
+  const uploadedAssetId = uploadedImages[0]?.assetId ?? watch("imageAssetId");
 
   useEffect(
     () => () => {
@@ -67,6 +68,7 @@ function ImageUpload({
     setIsUploading(true);
     setUploadProgress(30); // আপলোড শুরু হওয়া বোঝাতে 30% সিমুলেট করা হলো
     onUploadingChange(true);
+    clearErrors("images");
     clearErrors("image");
 
     try {
@@ -95,12 +97,17 @@ function ImageUpload({
         }
       }
 
-      setValue("image", result.secureUrl, {
+      setValue("images", [{ url: result.secureUrl, assetId: result.assetId }], {
         shouldValidate: true,
         shouldDirty: true,
       });
+      // Legacy mirrors — auto-synced for back-compat API payloads.
+      setValue("image", result.secureUrl, {
+        shouldValidate: false,
+        shouldDirty: true,
+      });
       setValue("imageAssetId", result.assetId, {
-        shouldValidate: true,
+        shouldValidate: false,
         shouldDirty: true,
       });
       setPreviewUrl(result.secureUrl);
@@ -111,7 +118,7 @@ function ImageUpload({
           ? error.message
           : "Image upload failed. Please try again.";
       toast.error(message);
-      setError("image", { type: "manual", message });
+      setError("images", { type: "manual", message });
       setPreviewUrl(previousUrl || null);
       setUploadProgress(0);
     } finally {
@@ -145,9 +152,10 @@ function ImageUpload({
 
     setPreviewUrl(null);
     setUploadProgress(0);
-    setValue("image", "", { shouldValidate: true, shouldDirty: true });
-    setValue("imageAssetId", null, { shouldValidate: true, shouldDirty: true });
-    clearErrors("image");
+    setValue("images", [], { shouldValidate: true, shouldDirty: true });
+    setValue("image", "", { shouldValidate: false, shouldDirty: true });
+    setValue("imageAssetId", null, { shouldValidate: false, shouldDirty: true });
+    clearErrors("images");
     if (inputRef.current) {
       inputRef.current.value = "";
     }
@@ -239,11 +247,24 @@ function ImageUpload({
         onChange={(e) => handleFileChange(e.target.files?.[0])}
       />
 
-      {errors.image && (
-        <p className="text-xs font-medium text-danger mt-1.5">
-          {errors.image.message}
-        </p>
-      )}
+      {(() => {
+        // RHF types array-field errors as nested objects; read safely.
+        const imagesError = errors.images as unknown as
+          | { message?: unknown }
+          | undefined;
+        const imageError = errors.image as unknown as
+          | { message?: unknown }
+          | undefined;
+        const message =
+          typeof imagesError?.message === "string"
+            ? imagesError.message
+            : typeof imageError?.message === "string"
+              ? imageError.message
+              : null;
+        return message ? (
+          <p className="text-xs font-medium text-danger mt-1.5">{message}</p>
+        ) : null;
+      })()}
 
       {/* Upload Progress Indicator */}
       {isUploading && uploadProgress > 0 && uploadProgress < 100 && (

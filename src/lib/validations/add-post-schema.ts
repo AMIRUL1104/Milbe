@@ -1,5 +1,20 @@
 import { z } from "zod";
 
+// Future-proof limits: model is images[], UX locked to exactly 1 for now.
+// Multi-image enable = change POST_IMAGE_MAX (e.g. 5) + multi-slot UI.
+export const POST_IMAGE_MIN = 1;
+export const POST_IMAGE_MAX = 1;
+
+export const postImageSchema = z.object({
+  url: z.string().min(1, "পোস্টের একটি ছবি দিন"),
+  assetId: z.string().min(1, "ছবি আপলোড সম্পন্ন করুন"),
+});
+
+const imagesSchema = z
+  .array(postImageSchema)
+  .min(POST_IMAGE_MIN, "পোস্টের একটি ছবি দিন")
+  .max(POST_IMAGE_MAX, `এখন সর্বোচ্চ ${POST_IMAGE_MAX}টি ছবি দেওয়া যাবে`);
+
 // Per-book data contract: only three optional text fields. Price and
 // condition live at the POST level (totalPrice / overallCondition);
 // `availableStatus` is a hidden carried field (server/request lifecycle).
@@ -12,13 +27,16 @@ export const bookEntrySchema = z.object({
   availableStatus: z.enum(["available", "unavailable"]).default("available"),
 });
 
-const postFormSchema = z.object({
+export const postFormSchema = z.object({
     title: z.string().min(1, "পোস্টের শিরোনাম দিন"),
     category: z.string().min(1, "ক্যাটাগরি বেছে নিন"),
     type: z.enum(["sell", "donate"], {
       message: "পোস্টের ধরন বেছে নিন",
     }),
-    image: z.string().min(1, "পোস্টের একটি ছবি দিন"),
+    // Primary multi-image store (locked to 1 now).
+    images: imagesSchema,
+    // @deprecated mirrors of images[0] — auto-synced, kept for back-compat.
+    image: z.string().optional().default(""),
     imageAssetId: z.string().nullable().optional(),
     // Post-level total price. NaN (cleared number input) → null.
     totalPrice: z
@@ -69,7 +87,15 @@ const validatePostValues = (
 
 export const addPostSchema = postFormSchema.superRefine((data, ctx) => {
   validatePostValues(data, ctx);
-  if (!data.imageAssetId) {
+  // images[] is the source of truth; mirrors auto-sync in the UI layer.
+  if (!data.images || data.images.length < POST_IMAGE_MIN) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "পোস্টের একটি ছবি দিন",
+      path: ["images"],
+    });
+  }
+  if (!data.images?.[0]?.assetId) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: "ছবি আপলোড সম্পন্ন করুন",
@@ -79,7 +105,11 @@ export const addPostSchema = postFormSchema.superRefine((data, ctx) => {
 });
 
 export const editPostSchema = postFormSchema
-  .extend({ image: z.string() })
+  .extend({
+    // Edit allows an empty array (image removable); create still requires 1.
+    // Keep `.min(0)` explicit so input/output types stay `images: {..}[]`.
+    images: z.array(postImageSchema).min(0).max(POST_IMAGE_MAX).default([]),
+  })
   .superRefine(validatePostValues);
 
 export type AddPostFormValues = z.infer<typeof addPostSchema>;
