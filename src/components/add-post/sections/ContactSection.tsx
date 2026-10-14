@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormContext, Controller } from "react-hook-form";
-import { Phone, MessageCircle } from "lucide-react";
+import { Phone } from "lucide-react";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 import Switch from "../Switch";
 

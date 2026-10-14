@@ -2,7 +2,6 @@
 
 import { PostItem } from "@/interface/post/types";
 import { BookOpen } from "lucide-react";
-import { CONDITION_LABELS_BN } from "@/lib/constant/post";
 
 interface BookInformationProps {
   post: PostItem;

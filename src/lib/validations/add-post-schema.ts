@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { isCategoryValue, normalizeCategory } from "@/lib/constant/categories";
+import { isDistrictValue, normalizeDistrict } from "@/lib/constant/districts";
 
 // Future-proof limits: model is images[], UX locked to exactly 1 for now.
 // Multi-image enable = change POST_IMAGE_MAX (e.g. 5) + multi-slot UI.
@@ -100,6 +102,24 @@ export const addPostSchema = postFormSchema.superRefine((data, ctx) => {
       code: z.ZodIssueCode.custom,
       message: "ছবি আপলোড সম্পন্ন করুন",
       path: ["imageAssetId"],
+    });
+  }
+  // Taxonomy (create-only): input must resolve to a canonical value —
+  // aliases/Bengali labels normalize; legacy "Science"-era values are rejected
+  // so new posts always store the new slugs. Edit stays lenient
+  // (editPostSchema) so old posts remain editable without data loss.
+  if (!isCategoryValue(normalizeCategory(data.category))) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "ক্যাটাগরি তালিকা থেকে বেছে নিন",
+      path: ["category"],
+    });
+  }
+  if (!isDistrictValue(normalizeDistrict(data.district))) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "জেলা তালিকা থেকে বেছে নিন",
+      path: ["district"],
     });
   }
 });

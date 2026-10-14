@@ -1,7 +1,8 @@
 "use client";
 
-import { MapPin, User, FileText } from "lucide-react";
+import { MapPin, User } from "lucide-react";
 import { PostItem } from "@/interface/post/types";
+import { getDistrictLabelBn } from "@/lib/constant/districts";
 
 interface SellerCardProps {
   post: PostItem;
@@ -11,7 +12,7 @@ export default function SellerCard({ post }: SellerCardProps) {
   // Extract seller information Safely
   const sellerName = post.sellerName || "সেলার";
   const area = post.area || "";
-  const district = post.district || "";
+  const district = getDistrictLabelBn(post.district) || "";
   const locationText =
     area || district ? `${area}${area && district ? ", " : ""}${district}` : "তথ্য দেওয়া নেই";
 

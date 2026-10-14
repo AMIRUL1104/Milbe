@@ -1,6 +1,8 @@
 "use client";
 
-import { CONDITION_LABELS_BN, type BookCondition } from "@/lib/constant/post";
+import Image from "next/image";
+import { CONDITION_LABELS_BN } from "@/lib/constant/post";
+import type { BookCondition } from "@/interface/post/types";
 
 interface PreviewCardProps {
   imageUrl: string | null;
@@ -30,7 +32,14 @@ export default function PreviewCard({
     <div className="bg-surface border border-border-light rounded-card overflow-hidden">
       <div className="h-[150px] bg-background flex items-center justify-center text-text-muted relative">
         {imageUrl ? (
-          <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+          <Image
+            src={imageUrl}
+            alt="Preview"
+            fill
+            unoptimized
+            sizes="(min-width: 1024px) 30vw, 100vw"
+            className="object-cover"
+          />
         ) : (
           <svg
             width="28"

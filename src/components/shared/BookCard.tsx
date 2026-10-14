@@ -4,6 +4,7 @@ import { MapPin, BookOpen, ArrowUpRight } from "lucide-react";
 
 import { PostItem } from "@/interface/post/types";
 import { toBengaliNumber } from "@/lib/utils/toBengaliNumber";
+import { getDistrictLabelBn } from "@/lib/constant/districts";
 
 interface BookCardProps {
   book: PostItem;
@@ -68,10 +69,10 @@ export default function BookCard({ book }: BookCardProps) {
           <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-text-muted mt-1">
             <div
               className="inline-flex items-center gap-1 bg-surface-hover/80 border border-border/50 px-2 py-0.5 rounded-md max-w-full"
-              title={`${book.area}, ${book.district}`}
+              title={`${book.area}, ${getDistrictLabelBn(book.district)}`}
             >
               <MapPin className="w-3 h-3 text-primary shrink-0" />
-              <span className="truncate">{`${book.area}, ${book.district}`}</span>
+              <span className="truncate">{`${book.area}, ${getDistrictLabelBn(book.district)}`}</span>
             </div>
           </div>
         </div>

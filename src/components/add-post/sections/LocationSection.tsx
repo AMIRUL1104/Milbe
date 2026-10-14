@@ -1,10 +1,11 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { MapPin, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
-import { DISTRICTS } from "../../../lib/constant/location";
+import { DISTRICT_OPTIONS } from "../../../lib/constant/location";
 import ContactSection from "./ContactSection";
+import SearchableDropdown from "@/components/shared/SearchableDropdown";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
@@ -20,6 +21,8 @@ export default function LocationSection({
 }: LocationSectionProps) {
   const {
     register,
+    watch,
+    setValue,
     formState: { errors },
   } = useFormContext<AddPostFormValues>();
 
@@ -27,6 +30,22 @@ export default function LocationSection({
     hasError
       ? "border-danger focus:border-danger focus-visible:outline-danger"
       : "border-border focus:border-border-focus focus-visible:outline-primary-focus";
+
+  const currentDistrict = watch("district") ?? "";
+  const districtOptions: { value: string; label: string; hint: string }[] =
+    DISTRICT_OPTIONS.map((d) => ({
+      value: d.value,
+      label: d.labelBn,
+      hint: d.value,
+    }));
+  // Legacy/unknown stored values stay visible & editable instead of blank.
+  if (currentDistrict && !districtOptions.some((o) => o.value === currentDistrict)) {
+    districtOptions.push({
+      value: currentDistrict,
+      label: currentDistrict,
+      hint: "পুরনো",
+    });
+  }
 
   return (
     <section id="step-location" className="bg-surface border border-border-light rounded-card p-5 scroll-mt-24">
@@ -40,23 +59,20 @@ export default function LocationSection({
           <label htmlFor="district" className="block text-sm font-medium text-text-primary mb-1.5">
             জেলা <span className="text-danger font-semibold">*</span>
           </label>
-          <div className="relative">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"><MapPin width="16" height="16" /></span>
-            <input
-              id="district"
-              type="text"
-              list="districtList"
-              placeholder="জেলা খুঁজুন"
-              autoComplete="off"
-              {...register("district")}
-              className={`${inputBase} ${borderClass(!!errors.district)}`}
-            />
-            <datalist id="districtList">
-              {DISTRICTS.map((district) => (
-                <option key={district} value={district} />
-              ))}
-            </datalist>
-          </div>
+          <SearchableDropdown
+            id="district"
+            options={districtOptions}
+            value={watch("district") ?? ""}
+            onChange={(val) =>
+              setValue("district", val, {
+                shouldValidate: true,
+                shouldDirty: true,
+              })
+            }
+            placeholder="জেলা খুঁজুন"
+            allowClear={false}
+            error={!!errors.district}
+          />
           {errors.district && (
             <p className={errorText}>{errors.district.message}</p>
           )}

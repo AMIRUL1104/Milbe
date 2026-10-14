@@ -2,9 +2,8 @@
 
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { Tag } from "lucide-react";
+import { CATEGORY_OPTIONS } from "@/lib/constant/categories";
 import {
-  BOOK_CATEGORIES,
   BOOK_CONDITIONS,
   CONDITION_LABELS_BN,
 } from "../../../lib/constant/post";
@@ -12,6 +11,7 @@ import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 import TypeToggle from "../TypeToggle";
 import ConditionPills from "../ConditionPills";
 import ImageUpload from "./ImageUpload";
+import SearchableDropdown from "@/components/shared/SearchableDropdown";
 
 const inputBase =
   "w-full bg-surface border rounded-input pl-10 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-placeholder outline-none transition-base";
@@ -49,6 +49,22 @@ export default function BasicInfoSection({
     label: CONDITION_LABELS_BN[c.value],
     value: c.value,
   }));
+
+  const currentCategory = watch("category") ?? "";
+  const categoryOptions: { value: string; label: string; hint: string }[] =
+    CATEGORY_OPTIONS.map((c) => ({
+      value: c.value,
+      label: c.labelBn,
+      hint: c.labelEn,
+    }));
+  // Legacy/unknown stored categories stay visible & editable instead of blank.
+  if (currentCategory && !categoryOptions.some((o) => o.value === currentCategory)) {
+    categoryOptions.push({
+      value: currentCategory,
+      label: currentCategory,
+      hint: "পুরনো ক্যাটাগরি",
+    });
+  }
 
   const borderClass = (hasError?: boolean) =>
     hasError
@@ -120,27 +136,20 @@ export default function BasicInfoSection({
           ক্যাটাগরি <span className="text-danger font-semibold">*</span>
         </label>
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none">
-            <Tag width="16" height="16" />
-          </span>
-          <select
+          <SearchableDropdown
             id="category"
-            {...register("category")}
-            defaultValue=""
-            className={`${inputBase} appearance-none cursor-pointer ${errors.category
-                ? "border-danger focus:border-danger focus-visible:outline-danger"
-                : "border-border focus:border-border-focus focus-visible:outline-primary-focus"
-              }`}
-          >
-            <option value="" disabled>
-              ক্যাটাগরি বেছে নিন
-            </option>
-            {BOOK_CATEGORIES.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+            options={categoryOptions}
+            value={watch("category") ?? ""}
+            onChange={(val) =>
+              setValue("category", val, {
+                shouldValidate: true,
+                shouldDirty: true,
+              })
+            }
+            placeholder="ক্যাটাগরি খুঁজুন"
+            allowClear={false}
+            error={!!errors.category}
+          />
         </div>
         {errors.category && (
           <p className={errorText}>{errors.category.message}</p>

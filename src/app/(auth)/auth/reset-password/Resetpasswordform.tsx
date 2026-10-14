@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
@@ -40,7 +40,7 @@ export default function ResetPasswordForm() {
     const {
         register,
         handleSubmit,
-        watch,
+        control,
         trigger,
         getValues,
         formState: { errors },
@@ -50,8 +50,8 @@ export default function ResetPasswordForm() {
         defaultValues: { password: "", confirmPassword: "" },
     });
 
-    const password = watch("password");
-    const confirmPassword = watch("confirmPassword");
+    const password = useWatch({ control, name: "password" });
+    const confirmPassword = useWatch({ control, name: "confirmPassword" });
     const passwordsMatch = Boolean(password) && password === confirmPassword;
 
     const onSubmit = async (userData: ResetFormValues) => {

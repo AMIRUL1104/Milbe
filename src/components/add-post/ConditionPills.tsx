@@ -1,6 +1,6 @@
 "use client";
 
-import { BookCondition } from "@/lib/constant/post";
+import type { BookCondition } from "@/interface/post/types";
 
 interface ConditionPillsProps {
   value: BookCondition;

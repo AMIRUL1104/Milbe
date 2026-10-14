@@ -1,10 +1,11 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
+import Image from "next/image";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 
 export default function ReviewSection() {
-  const { watch, handleSubmit } = useFormContext<AddPostFormValues>();
+  const { watch } = useFormContext<AddPostFormValues>();
   const title = watch("title");
   const type = watch("type");
   const category = watch("category");
@@ -61,7 +62,14 @@ export default function ReviewSection() {
             {image && (
               <div>
                 <div className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">ছবি</div>
-                <img src={image} alt="Preview" className="w-full max-h-40 object-cover rounded-card border border-border-light" />
+                <Image
+                  src={image}
+                  alt="Preview"
+                  width={640}
+                  height={160}
+                  unoptimized
+                  className="w-full max-h-40 object-cover rounded-card border border-border-light"
+                />
               </div>
             )}
             {description && (

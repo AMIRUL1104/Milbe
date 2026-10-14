@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MapPin, Search, X, Check } from "lucide-react";
-import { DISTRICTS } from "@/lib/constant/location";
+import { DISTRICT_OPTIONS, getDistrictLabelBn } from "@/lib/constant/location";
 import { updateHomeSearchParams } from "./homeSearchParams";
 
 interface LocationDropdownProps {
@@ -24,12 +24,16 @@ export default function LocationDropdown({
     const [isOpen, setIsOpen] = useState(false);
 
     // activeLocation চেঞ্জ হলে রেন্ডার হওয়ার সাথে সাথেইsearchTerm সিঙ্ক করার প্যাটার্ন (Effect ছাড়া)
+    // URL-এ English value থাকে; input-এ বাংলা label দেখানো হয় (fallback = raw)।
+    const activeLabel = activeLocation
+        ? getDistrictLabelBn(activeLocation) || activeLocation
+        : "";
     const [prevActiveLocation, setPrevActiveLocation] = useState(activeLocation);
-    const [searchTerm, setSearchTerm] = useState(activeLocation);
+    const [searchTerm, setSearchTerm] = useState(activeLabel);
 
     if (prevActiveLocation !== activeLocation) {
         setPrevActiveLocation(activeLocation);
-        setSearchTerm(activeLocation);
+        setSearchTerm(activeLabel);
     }
 
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -50,7 +54,7 @@ export default function LocationDropdown({
             ) {
                 setIsOpen(false);
                 if (!searchTerm) {
-                    setSearchTerm(activeLocation);
+                    setSearchTerm(activeLabel);
                 }
             }
         };
@@ -59,20 +63,25 @@ export default function LocationDropdown({
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [activeLocation, searchTerm]);
+    }, [activeLocation, activeLabel, searchTerm]);
 
     // সার্চ টার্ম অনুযায়ী ফিল্টার করা জেলার লিস্ট
     const filteredDistricts = useMemo(() => {
-        if (!searchTerm || searchTerm === activeLocation) return DISTRICTS;
-        return DISTRICTS.filter((district) =>
-            district.toLowerCase().includes(searchTerm.toLowerCase())
+        if (!searchTerm || (activeLabel && searchTerm === activeLabel)) {
+            return DISTRICT_OPTIONS;
+        }
+        const q = searchTerm.toLowerCase();
+        return DISTRICT_OPTIONS.filter(
+            (district) =>
+                district.value.toLowerCase().includes(q) ||
+                district.labelBn.includes(searchTerm),
         );
-    }, [searchTerm, activeLocation]);
+    }, [searchTerm, activeLabel]);
 
-    // জেলা সিলেক্ট করা
-    const handleSelect = (district: string) => {
-        setSearchTerm(district);
-        updateLocationParam(district);
+    // জেলা সিলেক্ট করা — URL-এ English value, input-এ বাংলা label
+    const handleSelect = (districtValue: string) => {
+        setSearchTerm(getDistrictLabelBn(districtValue) || districtValue);
+        updateLocationParam(districtValue);
         setIsOpen(false);
     };
 
@@ -143,18 +152,23 @@ export default function LocationDropdown({
                     {/* District List */}
                     {filteredDistricts.length > 0 ? (
                         filteredDistricts.map((district) => {
-                            const isSelected = activeLocation === district;
+                            const isSelected = activeLocation === district.value;
                             return (
                                 <button
-                                    key={district}
+                                    key={district.value}
                                     type="button"
-                                    onClick={() => handleSelect(district)}
+                                    onClick={() => handleSelect(district.value)}
                                     className={`w-full rounded-lg px-3 py-2 text-left text-xs sm:text-sm font-medium transition-colors flex items-center justify-between ${isSelected
                                             ? "bg-primary/10 text-primary font-bold"
                                             : "text-text-primary hover:bg-surface-hover"
                                         }`}
                                 >
-                                    <span>{district}</span>
+                                    <span>
+                                        {district.labelBn}
+                                        <span className="ml-1.5 text-[10px] text-text-muted">
+                                            ({district.value})
+                                        </span>
+                                    </span>
                                     {isSelected && <Check className="w-3.5 h-3.5 text-primary" />}
                                 </button>
                             );

@@ -3,7 +3,6 @@
 import { useFormContext } from "react-hook-form";
 import { AddPostFormValues } from "@/lib/validations/add-post-schema";
 
-const labelBase = "text-xs font-bold text-text-secondary uppercase tracking-wider";
 const errorText = "text-xs font-medium text-danger mt-0.5";
 
 export default function DescriptionSection() {

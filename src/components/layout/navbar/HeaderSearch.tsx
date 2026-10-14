@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, MapPin, X } from "lucide-react";
-import { DISTRICTS } from "@/lib/constant/location";
+import { DISTRICT_OPTIONS, getDistrictLabelBn } from "@/lib/constant/location";
 import { updateHomeSearchParams } from "@/components/home/homeSearchParams";
 
 type SearchMode = "default" | "search" | "desktop";
@@ -131,8 +131,10 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
     }
   };
 
-  const filteredDistricts = DISTRICTS.filter((district) =>
-    district.toLowerCase().includes(locationSearch.toLowerCase())
+  const filteredDistricts = DISTRICT_OPTIONS.filter(
+    (district) =>
+      district.value.toLowerCase().includes(locationSearch.toLowerCase()) ||
+      district.labelBn.includes(locationSearch),
   );
 
   const renderLocationDropdown = () => (
@@ -148,7 +150,9 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
         <div className="flex items-center gap-1.5 truncate">
           <MapPin className="w-3.5 h-3.5 text-text-muted shrink-0" />
           <span className="truncate text-xs sm:text-sm font-medium">
-            {selectedLocation || "Location"}
+            {selectedLocation
+              ? getDistrictLabelBn(selectedLocation) || selectedLocation
+              : "Location"}
           </span>
         </div>
         {selectedLocation && (
@@ -189,15 +193,15 @@ export function HeaderSearch({ mode = "default" }: HeaderSearchProps) {
             {filteredDistricts.length > 0 ? (
               filteredDistricts.map((district) => (
                 <button
-                  key={district}
+                  key={district.value}
                   type="button"
-                  onClick={() => handleLocationSelect(district)}
-                  className={`w-full px-3 py-2 text-left text-xs sm:text-sm transition-colors ${selectedLocation === district
+                  onClick={() => handleLocationSelect(district.value)}
+                  className={`w-full px-3 py-2 text-left text-xs sm:text-sm transition-colors ${selectedLocation === district.value
                     ? "bg-primary-light text-primary font-medium"
                     : "text-text-primary hover:bg-surface-hover"
                     }`}
                 >
-                  {district}
+                  {district.labelBn}
                 </button>
               ))
             ) : (

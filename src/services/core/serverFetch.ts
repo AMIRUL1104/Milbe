@@ -1,7 +1,7 @@
 "use server";
 "use server";
 import { getUserToken } from "./session";
-import { ApiResponse, ApiError, PaginatedMeta } from "@/interface/apiResponse";
+import { ApiResponse, ApiError } from "@/interface/apiResponse";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 

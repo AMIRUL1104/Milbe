@@ -5,28 +5,25 @@ import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X, GripHorizontal } from "lucide-react";
 import { FILTER_KEYS } from "@/lib/constant/filters";
+import { CATEGORY_OPTIONS, normalizeCategory } from "@/lib/constant/categories";
+import SearchableDropdown from "@/components/shared/SearchableDropdown";
 
 interface FilterBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const CATEGORIES = [
-  { label: "Science", value: "science" },
-  { label: "Commerce", value: "commerce" },
-  { label: "Arts", value: "arts" },
-  { label: "Admission", value: "admission" },
-  { label: "Buisness", value: "buisness" },
-  { label: "Engineering", value: "engineering" },
-  { label: "Medical", value: "medical" },
-  { label: "Others", value: "others" },
-] as const;
+// Category filter options (value = stable English DB value, label = Bangla UI).
+const CATEGORY_FILTER_OPTIONS = [
+  { value: "", label: "সব ক্যাটাগরি" },
+  ...CATEGORY_OPTIONS.map((c) => ({ value: c.value, label: c.labelBn })),
+];
 
 const CONDITIONS = [
-  { label: "All", value: "" },
-  { label: "Like New", value: "like_new" },
-  { label: "Good", value: "good" },
-  { label: "Fair", value: "fair" },
+  { label: "সব অবস্থা", value: "" },
+  { label: "নতুনের মতো", value: "like_new" },
+  { label: "ভালো", value: "good" },
+  { label: "গ্রহণযোগ্য", value: "fair" },
 ] as const;
 
 export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
@@ -35,6 +32,8 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
 
   const category = searchParams.get("category") || "";
+  // Normalize legacy/English URL values to the stable enum value.
+  const categoryValue = category ? normalizeCategory(category) : "";
   const condition = searchParams.get("condition") || "";
 
   useEffect(() => {
@@ -119,40 +118,37 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
         <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-text-primary mb-2">
-              📚 Category
+              📚 ক্যাটাগরি
             </label>
-            <select
-              value={category}
-              onChange={(e) => updateParams({ category: e.target.value || undefined })}
-              className="w-full bg-background border border-border text-text-primary text-sm rounded-input px-3 py-2.5 appearance-none focus:outline-primary-focus cursor-pointer"
-            >
-              <option value="">All Categories</option>
-              {CATEGORIES.map((cat) => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
-                </option>
-              ))}
-            </select>
+            <SearchableDropdown
+              id="sheet-category-filter"
+              options={CATEGORY_FILTER_OPTIONS}
+              value={categoryValue ?? ""}
+              onChange={(val) =>
+                updateParams({ category: val || undefined })
+              }
+              placeholder="ক্যাটাগরি খুঁজুন"
+              allowClear={true}
+            />
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-text-primary mb-2">
-              🛡 Condition
+              🛡 অবস্থা
             </label>
-            <select
+            <SearchableDropdown
+              id="sheet-condition-filter"
+              options={CONDITIONS.map((c) => ({ value: c.value, label: c.label }))}
               value={condition}
-              onChange={(e) => updateParams({ condition: e.target.value || undefined })}
-              className="w-full bg-background border border-border text-text-primary text-sm rounded-input px-3 py-2.5 appearance-none focus:outline-primary-focus cursor-pointer"
-            >
-              {CONDITIONS.map((cond) => (
-                <option key={cond.value} value={cond.value}>
-                  {cond.label}
-                </option>
-              ))}
-            </select>
+              onChange={(val) =>
+                updateParams({ condition: val || undefined })
+              }
+              placeholder="অবস্থা খুঁজুন"
+              allowClear={true}
+            />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-semibold text-text-primary mb-2">
               💰 Price Range
             </label>
@@ -172,7 +168,7 @@ export function FilterBottomSheet({ isOpen, onClose }: FilterBottomSheetProps) {
               />
             </div>
             <p className="text-xs text-text-muted mt-1.5">Coming soon</p>
-          </div>
+          </div> */}
         </div>
 
         <div className="shrink-0 border-t border-border px-5 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex items-center gap-3">

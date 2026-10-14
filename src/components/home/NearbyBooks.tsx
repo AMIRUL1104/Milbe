@@ -1,5 +1,6 @@
 import { PostItem } from "@/interface/post/types";
 import { toBengaliNumber } from "@/lib/utils/toBengaliNumber";
+import { getDistrictLabelBn } from "@/lib/constant/districts";
 import BookCard from "../shared/BookCard";
 import LocationDropdown from "./LocationDropdown";
 import LoadMoreBooks from "./LoadMoreBooks";
@@ -110,7 +111,9 @@ export default function NearbyBooks({
             <p className="text-xs sm:text-sm text-text-secondary font-medium">
               {district ? (
                 <>
-                  <span className="font-semibold text-primary">{district}</span>{" "}
+                  <span className="font-semibold text-primary">
+                    {getDistrictLabelBn(district) || district}
+                  </span>{" "}
                   এলাকায় সহজলভ্য বইগুলো দেখানো হচ্ছে
                 </>
               ) : (
@@ -134,7 +137,7 @@ export default function NearbyBooks({
 
             <h3 className="text-base sm:text-lg font-bold text-text-primary">
               {district
-                ? `${district} এলাকায় কোনো বই পাওয়া যায়নি`
+                ? `${getDistrictLabelBn(district) || district} এলাকায় কোনো বই পাওয়া যায়নি`
                 : "কোনো বই পাওয়া যায়নি"}
             </h3>
 

@@ -9,7 +9,6 @@ import {
     Share2,
     Cookie,
     Lock,
-    Scale,
     Users,
     RefreshCw,
     Mail,

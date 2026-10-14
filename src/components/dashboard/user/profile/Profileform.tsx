@@ -3,7 +3,7 @@
 import { UseFormReturn } from "react-hook-form";
 import { Mail } from "lucide-react";
 import { ProfileFormValues } from "@/lib/validations/profile-schema";
-import { DISTRICTS } from "@/lib/constant/location";
+import { DISTRICT_OPTIONS } from "@/lib/constant/location";
 
 interface ProfileFormProps {
     form: UseFormReturn<ProfileFormValues>;
@@ -23,8 +23,12 @@ const errorClass = "text-xs font-medium text-danger mt-1";
 export function ProfileForm({ form, email }: ProfileFormProps) {
     const {
         register,
+        watch,
         formState: { errors },
     } = form;
+
+    // Legacy/unknown stored values stay selectable instead of showing blank.
+    const currentDistrict = watch("district") ?? "";
 
     return (
         <div className="rounded-card border border-border-light shadow-sm bg-surface p-6">
@@ -96,11 +100,15 @@ export function ProfileForm({ form, email }: ProfileFormProps) {
                         {...register("district")}
                     >
                         <option value="">জেলা বেছে নিন</option>
-                        {DISTRICTS.map((d) => (
-                            <option key={d} value={d}>
-                                {d}
+                        {DISTRICT_OPTIONS.map((d) => (
+                            <option key={d.value} value={d.value}>
+                                {d.labelBn}
                             </option>
                         ))}
+                        {currentDistrict &&
+                            !DISTRICT_OPTIONS.some((d) => d.value === currentDistrict) && (
+                                <option value={currentDistrict}>{currentDistrict}</option>
+                            )}
                     </select>
                     {errors.district && (
                         <p className={errorClass}>{errors.district.message}</p>

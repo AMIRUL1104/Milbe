@@ -1,7 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useForm, FormProvider, type Resolver } from "react-hook-form";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  useSyncExternalStore,
+} from "react";
+import { useForm, FormProvider, useWatch, type Resolver } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
@@ -28,7 +35,13 @@ import {
   postFormSchema,
 } from "@/lib/validations/add-post-schema";
 import { hasCompleteContactProfile } from "@/lib/utils/contact-profile";
-import { STEP_SECTIONS } from "@/lib/constant/post";
+import {
+  STEP_SECTIONS,
+  DEFAULT_DISTRICT,
+  normalizeCategory,
+  normalizeDistrict,
+  getDistrictLabelBn,
+} from "@/lib/constant/post";
 import SubmitButton from "./sections/SubmitButton";
 import { deletePendingImageAction } from "@/services/features/images/actions";
 import { useUnsavedChangesGuard } from "@/components/navigation/UnsavedChangesGuard";
@@ -51,6 +64,27 @@ const EMPTY_PROFILE: AddPostProfile = {
   area: "",
 };
 
+const DRAFT_TIMESTAMP_EVENT = "milbe:add-post-draft-timestamp";
+
+function subscribeToDraftTimestamp(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  window.addEventListener(DRAFT_TIMESTAMP_EVENT, onChange);
+  return () => {
+    window.removeEventListener("storage", onChange);
+    window.removeEventListener(DRAFT_TIMESTAMP_EVENT, onChange);
+  };
+}
+
+function getDraftTimestamp() {
+  return localStorage.getItem("addPostDraftTimestamp");
+}
+
+function clearDraftTimestamp() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem("addPostDraftTimestamp");
+  window.dispatchEvent(new Event(DRAFT_TIMESTAMP_EVENT));
+}
+
 function buildDefaultValues(profile: AddPostProfile): AddPostFormInput {
   return {
     title: "",
@@ -61,7 +95,9 @@ function buildDefaultValues(profile: AddPostProfile): AddPostFormInput {
     imageAssetId: null,
     totalPrice: null,
     overallCondition: "good",
-    district: profile.district,
+    district: profile.district
+      ? normalizeDistrict(profile.district) ?? profile.district
+      : DEFAULT_DISTRICT,
     area: profile.area,
     phone: profile.phoneNumber,
     messenger: "",
@@ -128,14 +164,16 @@ function postToForm(post: PostItem): AddPostFormValues {
     coverUrl && coverAssetId ? [{ url: coverUrl, assetId: coverAssetId }] : [];
   return {
     title: post.title,
-    category: post.category ?? "",
+    // Legacy taxonomy values stay as-is (edit schema accepts them); canonical
+    // ones normalize (case/alias) so saved data converges on save.
+    category: normalizeCategory(post.category) ?? post.category ?? "",
     type: post.type,
     images,
     image: coverUrl,
     imageAssetId: coverAssetId,
     totalPrice: post.totalPrice,
     overallCondition: post.overallCondition,
-    district: post.district,
+    district: normalizeDistrict(post.district) ?? post.district,
     area: post.area,
     phone: post.phone ?? "",
     messenger: post.messenger ?? "",
@@ -168,7 +206,12 @@ export default function AddPostForm({
   );
   const savedImageAssetIdRef = useRef(savedImageAssetId);
   const [activeStep, setActiveStep] = useState(0);
-  const [draftTimestamp, setDraftTimestamp] = useState<string | null>(null);
+  const storedDraftTimestamp = useSyncExternalStore(
+    subscribeToDraftTimestamp,
+    getDraftTimestamp,
+    () => null,
+  );
+  const draftTimestamp = isEditMode ? null : storedDraftTimestamp;
 
   // Save-to-profile is offered only when the profile is missing at least one
   // of district / area / phone (and never in edit mode).
@@ -195,7 +238,6 @@ export default function AddPostForm({
     handleSubmit,
     reset,
     formState: { isSubmitting, isDirty },
-    watch,
     reset: resetForm,
   } = methods;
   const uploadPendingRef = useRef(false);
@@ -237,7 +279,7 @@ export default function AddPostForm({
         } catch (error) {
           console.error("Draft image cleanup failed.", error);
           localStorage.removeItem("addPostDraft");
-          localStorage.removeItem("addPostDraftTimestamp");
+          clearDraftTimestamp();
         }
       }
     }
@@ -277,16 +319,18 @@ export default function AddPostForm({
     onPageHide: sendPendingImageCleanup,
   });
 
-  const watchedValues = watch();
-  const isDonate = watch("type") === "donate";
-  const title = watch("title");
-  const district = watch("district");
-  const area = watch("area");
-  const books = watch("books");
-  const totalPrice = watch("totalPrice");
-  const overallCondition = watch("overallCondition") ?? "good";
+  const watchedValues = useWatch({ control: methods.control });
+  const isDonate = watchedValues.type === "donate";
+  const title = watchedValues.title;
+  const district = watchedValues.district;
+  const area = watchedValues.area;
+  const books = watchedValues.books;
+  const totalPrice = watchedValues.totalPrice;
+  const overallCondition = watchedValues.overallCondition ?? "good";
 
-  const meta = [area, district].filter(Boolean).join(", ") || "";
+  const meta =
+    [area, getDistrictLabelBn(district) || district].filter(Boolean).join(", ") ||
+    "";
 
   // 1. Initial Load: edit mode → populate the form from the fetched post;
   //    create mode → restore the saved draft (existing behavior).
@@ -299,9 +343,6 @@ export default function AddPostForm({
     if (typeof window === "undefined") return;
 
     const saved = localStorage.getItem("addPostDraft");
-    const savedTime = localStorage.getItem("addPostDraftTimestamp");
-
-    if (savedTime) setDraftTimestamp(savedTime);
 
     if (saved) {
       try {
@@ -310,7 +351,7 @@ export default function AddPostForm({
       } catch (err) {
         console.error("Draft parsing failed:", err);
         localStorage.removeItem("addPostDraft");
-        localStorage.removeItem("addPostDraftTimestamp");
+        clearDraftTimestamp();
       }
     }
   }, [reset, resetForm, isEditMode, initialPost]);
@@ -324,7 +365,7 @@ export default function AddPostForm({
         const timestamp = new Date().toISOString();
         localStorage.setItem("addPostDraft", JSON.stringify(watchedValues));
         localStorage.setItem("addPostDraftTimestamp", timestamp);
-        setDraftTimestamp(timestamp);
+        window.dispatchEvent(new Event(DRAFT_TIMESTAMP_EVENT));
       } catch (err) {
         console.error("Draft saving failed:", err);
       }
@@ -358,9 +399,8 @@ export default function AddPostForm({
 
           if (typeof window !== "undefined") {
             localStorage.removeItem("addPostDraft");
-            localStorage.removeItem("addPostDraftTimestamp");
+            clearDraftTimestamp();
           }
-          setDraftTimestamp(null);
           reset(values);
         } else {
           toast.error(response?.message ?? "পোস্ট আপডেট করা যায়নি।");
@@ -390,9 +430,8 @@ export default function AddPostForm({
 
       if (typeof window !== "undefined") {
         localStorage.removeItem("addPostDraft");
-        localStorage.removeItem("addPostDraftTimestamp");
+        clearDraftTimestamp();
       }
-      setDraftTimestamp(null);
       reset(buildDefaultValues(initialProfile));
 
       // Save-to-profile is create-mode only, and the checkbox only renders
@@ -461,7 +500,9 @@ export default function AddPostForm({
       />
 
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={(event) => {
+          void handleSubmit(onSubmit)(event);
+        }}
         className="  max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 px-4 py-5 lg:px-6 lg:py-8 lg:gap-7"
         noValidate
       >
@@ -487,10 +528,10 @@ export default function AddPostForm({
         </div>
 
         <Sidebar
-          imageUrl={methods.watch("images")?.[0]?.url || methods.watch("image") || null}
+          imageUrl={watchedValues.images?.[0]?.url || watchedValues.image || null}
           badge={isDonate ? "দান" : "বিক্রি"}
           isDonate={isDonate}
-          title={title}
+          title={title ?? ""}
           meta={meta}
           bookCount={books?.length ?? 0}
           totalPrice={isDonate ? null : totalPrice ?? null}

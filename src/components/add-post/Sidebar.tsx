@@ -2,8 +2,7 @@
 
 import PreviewCard from "./PreviewCard";
 import TipsCard from "./TipsCard";
-import { Button } from "@/components/ui/Button";
-import type { BookCondition } from "@/lib/constant/post";
+import type { BookCondition } from "@/interface/post/types";
 
 interface SidebarProps {
   imageUrl: string | null;
@@ -28,8 +27,6 @@ export default function Sidebar({
   bookCount,
   totalPrice,
   overallCondition,
-  isSubmitting,
-  isUploading,
   renderSubmitButton,
 }: SidebarProps) {
   return (

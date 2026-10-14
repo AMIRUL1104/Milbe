@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Check, Loader2, Mail, User } from "lucide-react";
@@ -37,7 +37,7 @@ export default function RegisterForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     trigger,
     getValues,
     formState: { errors },
@@ -52,8 +52,8 @@ export default function RegisterForm() {
     },
   });
 
-  const password = watch("password");
-  const confirmPassword = watch("confirmPassword");
+  const password = useWatch({ control, name: "password" });
+  const confirmPassword = useWatch({ control, name: "confirmPassword" });
   const passwordsMatch = Boolean(password) && password === confirmPassword;
 
   const onSubmit = async (userData: RegisterFormValues) => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { Mail, Phone, MapPin, Calendar, Shield, Home } from "lucide-react";
 import { UserProfile } from "@/interface/user/userProfile";
+import { getDistrictLabelBn } from "@/lib/constant/districts";
 
 interface ProfileInfoProps {
     user: UserProfile;
@@ -69,7 +70,7 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
                 <InfoField
                     icon={<MapPin size={15} />}
                     label="জেলা"
-                    value={user.district}
+                    value={getDistrictLabelBn(user.district) || user.district}
                 />
                 <InfoField
                     icon={<Home size={15} />}

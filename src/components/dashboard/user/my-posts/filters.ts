@@ -1,5 +1,6 @@
 import type { PostItem } from "@/interface/post/types";
 import type { MyPostsFilter, MyPostsSort } from "@/interface/post/responses";
+import { getCategoryLabelBn } from "@/lib/constant/categories";
 
 export function filterPosts(
   posts: PostItem[],
@@ -13,6 +14,7 @@ export function filterPosts(
       !query ||
       post.title.toLowerCase().includes(query) ||
       post.category.toLowerCase().includes(query) ||
+      getCategoryLabelBn(post.category).toLowerCase().includes(query) ||
       post.books.some(
         (book) =>
           book.bookName?.toLowerCase().includes(query) ||

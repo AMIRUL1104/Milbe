@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { FILTER_KEYS } from "@/lib/constant/filters";
+import { getCategoryLabelBn } from "@/lib/constant/categories";
 
 interface ActiveFilterChipsProps {
     search?: string;
@@ -28,10 +29,12 @@ export default function ActiveFilterChips({
 }: ActiveFilterChipsProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [isPending, startTransition] = useTransition();
+    const [, startTransition] = useTransition();
     const filters = [
         search?.trim() ? { key: "search", label: search.trim() } : null,
-        category?.trim() ? { key: "category", label: category.trim() } : null,
+        category?.trim()
+            ? { key: "category", label: getCategoryLabelBn(category.trim()) }
+            : null,
         condition?.trim()
             ? { key: "condition", label: FILTER_LABELS[condition] || condition }
             : null,

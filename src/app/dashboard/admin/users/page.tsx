@@ -3,7 +3,7 @@ import type { SortOption } from "@/interface/dashboard/request";
 import { ManageUsersClient } from "@/components/dashboard/admin/manage-users/ManageUsersClient";
 import { UsersStatsCards } from "@/components/dashboard/admin/manage-users/UsersStatsCards";
 import { UsersErrorFallback } from "@/components/dashboard/admin/manage-users/UsersErrorFallback";
-import { getAllUsers, GetUsersParams } from "@/services/features/admin";
+import { getAllUsers } from "@/services/features/admin";
 import { requireRole } from "@/services/core/session";
 
 interface ManageUsersPageProps {

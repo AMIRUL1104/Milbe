@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { PostItem } from "@/interface/post/types";
-import { CONDITION_LABELS_BN } from "@/lib/constant/post";
+import { CONDITION_LABELS_BN, getCategoryLabelBn } from "@/lib/constant/post";
 
 interface BookHeroProps {
   post: PostItem;
@@ -65,7 +65,7 @@ export default function BookHero({ post }: BookHeroProps) {
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-semibold">
                 <span>ক্যাটাগরি:</span>
                 <span className="text-slate-900 font-bold uppercase">
-                  {post.category || "সাধারণ"}
+                  {getCategoryLabelBn(post.category) || "সাধারণ"}
                 </span>
               </div>
 

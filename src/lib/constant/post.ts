@@ -1,24 +1,32 @@
-import type {
-  PostType,
-  BookCondition,
-  AddNewPostResult,
-} from "@/interface/post/types";
+﻿import { CATEGORY_VALUES } from "./categories";
 
-export { PostType, BookCondition, AddNewPostResult };
+/** @deprecated Re-export of enum members is not available here. Use values via `CATEGORY_VALUES`. */
+export { CATEGORY_VALUES };
 
-export const BOOK_CATEGORIES = [
-  "Science",
-  "Commerce",
-  "Arts",
-  "University",
-  "Admission",
-  "Business",
-  "Engineering",
-  "Medical",
-  "Others",
-] as const;
+export type { CategoryValue } from "./categories";
+export {
+  getCategoryLabelBn,
+  getCategoryLabelEn,
+  normalizeCategory,
+  isCategoryValue,
+} from "./categories";
+export {
+  DISTRICT_OPTIONS,
+  DISTRICT_VALUES,
+  DEFAULT_DISTRICT,
+  getDistrictLabelBn,
+  normalizeDistrict,
+  isDistrictValue,
+} from "./districts";
+export type { DistrictValue } from "./districts";
 
-export const BOOK_CONDITIONS: { label: string; value: BookCondition }[] = [
+/**
+ * Category slugs (stable English DB values). Single source = `./categories`.
+ * UI renders the Bangla label via `getCategoryLabelBn`; DB stores these slugs.
+ */
+export const BOOK_CATEGORIES = CATEGORY_VALUES;
+
+export const BOOK_CONDITIONS: { label: string; value: "new" | "like_new" | "good" | "fair" }[] = [
   { label: "New", value: "new" },
   { label: "Like New", value: "like_new" },
   { label: "Good", value: "good" },
@@ -26,7 +34,7 @@ export const BOOK_CONDITIONS: { label: string; value: BookCondition }[] = [
 ];
 
 /** Bengali display labels for the condition enum (form, preview, cards). */
-export const CONDITION_LABELS_BN: Record<BookCondition, string> = {
+export const CONDITION_LABELS_BN: Record<"new" | "like_new" | "good" | "fair", string> = {
   new: "একদম নতুন",
   like_new: "নতুন মত",
   good: "ভালো",

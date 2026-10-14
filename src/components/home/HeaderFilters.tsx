@@ -3,8 +3,23 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { BookOpen, Filter, Shield } from "lucide-react";
+import { Filter } from "lucide-react";
 import { FilterBottomSheet } from "@/components/home/FilterBottomSheet";
+import { CATEGORY_OPTIONS, normalizeCategory } from "@/lib/constant/categories";
+import SearchableDropdown from "@/components/shared/SearchableDropdown";
+
+// Category filter options (value = stable English DB value, label = Bangla UI).
+const CATEGORY_FILTER_OPTIONS = [
+  { value: "", label: "সব ক্যাটাগরি" },
+  ...CATEGORY_OPTIONS.map((c) => ({ value: c.value, label: c.labelBn })),
+];
+
+const CONDITION_FILTER_OPTIONS = [
+  { value: "", label: "অবস্থা" },
+  { value: "like_new", label: "নতুনের মতো" },
+  { value: "good", label: "ভালো" },
+  { value: "fair", label: "গ্রহণযোগ্য" },
+];
 
 interface HeaderFiltersProps {
   activeType: string;
@@ -23,7 +38,9 @@ export default function HeaderFilters({
   const searchParams = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const categoryValue = category || "";
+  // Filters arrive as URL params — old data may use legacy/English values,
+  // so normalize to the stable enum value before matching selected option.
+  const categoryValue = category ? normalizeCategory(category) : "";
   const conditionValue = condition || "";
 
   const updateQueryParams = (key: string, value: string) => {
@@ -80,38 +97,25 @@ export default function HeaderFilters({
     <div id="filter-controls" className="w-full  backdrop-blur border-b border-border px-3 bg-surface">
       <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8 bg-surface">
         <div className="hidden lg:flex items-center gap-3  rounded-btn px-2 py-1.5  ">
-          <div className="relative flex items-center">
-            <BookOpen className="absolute left-3 w-4 h-4 text-text-muted pointer-events-none" />
-            <select
-              value={categoryValue}
-              onChange={(e) => updateQueryParams("category", e.target.value)}
-              className="bg-background border border-border text-text-secondary text-sm rounded-input pl-9 pr-8 py-2.5 appearance-none focus:outline-primary-focus cursor-pointer"
-            >
-              <option value="">ক্যাটাগরি</option>
-              <option value="science">বিজ্ঞান</option>
-              <option value="commerce">বাণিজ্য</option>
-              <option value="arts">কলা</option>
-              <option value="admission">ভর্তি</option>
-              <option value="buisness">বিজনেস</option>
-              <option value="engineering">ইঞ্জিনিয়ারিং</option>
-              <option value="medical">মেডিকেল</option>
-              <option value="others">অন্যান্য</option>
-            </select>
-          </div>
+          <SearchableDropdown
+            id="home-category-filter"
+            options={CATEGORY_FILTER_OPTIONS}
+            value={categoryValue ?? ""}
+            onChange={(val) => updateQueryParams("category", val)}
+            placeholder="ক্যাটাগরি"
+            allowClear={true}
+            className="w-48"
+          />
 
-          <div className="relative flex items-center">
-            <Shield className="absolute left-3 w-4 h-4 text-text-muted pointer-events-none" />
-            <select
-              value={conditionValue}
-              onChange={(e) => updateQueryParams("condition", e.target.value)}
-              className="bg-background border border-border text-text-secondary text-sm rounded-input pl-9 pr-8 py-2.5 appearance-none focus:outline-primary-focus cursor-pointer"
-            >
-              <option value="">অবস্থা</option>
-              <option value="like_new">নতুনের মতো</option>
-              <option value="good">ভালো</option>
-              <option value="fair">গ্রহণযোগ্য</option>
-            </select>
-          </div>
+          <SearchableDropdown
+            id="home-condition-filter"
+            options={CONDITION_FILTER_OPTIONS}
+            value={conditionValue}
+            onChange={(val) => updateQueryParams("condition", val)}
+            placeholder="অবস্থা"
+            allowClear={true}
+            className="w-40"
+          />
 
           <div className="ml-auto">{Tabs}</div>
 

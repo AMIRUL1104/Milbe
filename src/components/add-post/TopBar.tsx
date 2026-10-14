@@ -1,7 +1,6 @@
 "use client";
 
 import { memo, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Lightbulb } from "lucide-react";
 import { STEP_SECTIONS, STEP_LABELS } from "@/lib/constant/post";
 import TipsModal from "./TipsModal";
@@ -37,7 +36,6 @@ function TopBarComponent({
   draftTimestamp,
   isEditing = false,
 }: TopBarProps) {
-  const router = useRouter();
   const [isTipsOpen, setIsTipsOpen] = useState(false);
   // Lazily compute the draft-saved label at mount, then keep it in sync with
   // the prop via the render-time adjustment pattern (no setState-in-effect).
