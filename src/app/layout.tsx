@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono, Hind_Siliguri, Noto_Serif_Bengali } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import { marketConfig } from "@/config/market";
 import { UnsavedChangesGuardProvider } from "@/components/navigation/UnsavedChangesGuard";
-
 
 const inter = Inter({
   variable: "--font-inter",
@@ -71,6 +71,10 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  // Google Search Console-এর মেটা ট্যাগ ভেরিফিকেশন
+  verification: {
+    google: "nq3XUp5RWNlq4rNP3cCoLHG2-fYHLOuXUQifjOjS5jc",
+  },
 };
 
 /**
@@ -114,9 +118,12 @@ const jsonLd = {
     },
   ],
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
   return (
     <html
       lang="bn"
@@ -150,6 +157,8 @@ export default function RootLayout({
           }}
         />
       </body>
+      {/* Google Analytics Integrations */}
+      {gaId && <GoogleAnalytics gaId={gaId} />}
     </html>
   );
 }

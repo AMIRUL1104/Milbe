@@ -12,6 +12,7 @@
     "@better-auth/mongo-adapter": "^1.6.23",
     "@heroui/react": "^3.2.2",
     "@hookform/resolvers": "^5.4.0",
+    "@next/third-parties": "^16.4.1",
     "better-auth": "^1.6.23",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.24.0",

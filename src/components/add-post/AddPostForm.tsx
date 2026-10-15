@@ -24,6 +24,7 @@ import {
   NewPostPayload,
   PostItem,
   UpdatePostPayload,
+  getCoverImage,
 } from "@/interface/post/types";
 import { addNewPost, updatePost } from "@/services/features/posts";
 import { updateUserProfile } from "@/services/features/userProfile";
@@ -43,6 +44,7 @@ import {
   getDistrictLabelBn,
 } from "@/lib/constant/post";
 import SubmitButton from "./sections/SubmitButton";
+import PostSuccessModal from "./PostSuccessModal";
 import { deletePendingImageAction } from "@/services/features/images/actions";
 import { useUnsavedChangesGuard } from "@/components/navigation/UnsavedChangesGuard";
 
@@ -206,6 +208,12 @@ export default function AddPostForm({
   );
   const savedImageAssetIdRef = useRef(savedImageAssetId);
   const [activeStep, setActiveStep] = useState(0);
+  const [successModal, setSuccessModal] = useState<{
+    mode: "create" | "edit";
+    imageUrl: string | null;
+    sharePath: string | null;
+    notice?: string;
+  } | null>(null);
   const storedDraftTimestamp = useSyncExternalStore(
     subscribeToDraftTimestamp,
     getDraftTimestamp,
@@ -391,11 +399,22 @@ export default function AddPostForm({
             response.data?.imageAssetId ?? null;
           savedImageAssetIdRef.current = nextSavedImageAssetId;
           setSavedImageAssetId(nextSavedImageAssetId);
-          toast.success(
-            response.meta?.cleanupPending
-              ? "পোস্ট আপডেট হয়েছে; পুরোনো ছবির storage cleanup retry হবে।"
-              : "পোস্ট সফলভাবে আপডেট হয়েছে!",
-          );
+
+          const imageUrl = response.data
+            ? getCoverImage(response.data)
+            : values.images?.[0]?.url ?? null;
+          const sharePath = response.data?.slug
+            ? `/books/${response.data.slug}`
+            : `/books/${postId}`;
+
+          setSuccessModal({
+            mode: "edit",
+            imageUrl,
+            sharePath,
+            notice: response.meta?.cleanupPending
+              ? "পুরোনো ছবির storage cleanup retry হবে।"
+              : undefined,
+          });
 
           if (typeof window !== "undefined") {
             localStorage.removeItem("addPostDraft");
@@ -425,8 +444,17 @@ export default function AddPostForm({
         return;
       }
 
-      // Post created — inform immediately, before the profile call.
-      toast.success("পোস্ট সফলভাবে প্রকাশিত হয়েছে!");
+      // Post created — show success modal instead of toast
+      const imageUrl = values.images?.[0]?.url ?? null;
+      const sharePath = response.data?.insertedId
+        ? `/books/${response.data.insertedId}`
+        : null;
+
+      setSuccessModal({
+        mode: "create",
+        imageUrl,
+        sharePath,
+      });
 
       if (typeof window !== "undefined") {
         localStorage.removeItem("addPostDraft");
@@ -547,6 +575,16 @@ export default function AddPostForm({
           )}
         />
       </form>
+      {successModal && (
+        <PostSuccessModal
+          isOpen={true}
+          onClose={() => setSuccessModal(null)}
+          mode={successModal.mode}
+          imageUrl={successModal.imageUrl}
+          sharePath={successModal.sharePath}
+          notice={successModal.notice}
+        />
+      )}
     </>
   );
 }

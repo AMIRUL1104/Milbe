@@ -9,6 +9,7 @@ import BookHero from "@/components/book-details/BookHero";
 import type { PostItem } from "@/interface/post/types";
 import { getPostById, getPostBySlug } from "@/services/features/posts";
 import BackButton from "@/components/ui/BackButton";
+import ShareButton from "@/components/shared/ShareButton";
 
 interface BookDetailsPageProps {
   params: Promise<{
@@ -29,19 +30,19 @@ export async function generateMetadata({
     const post = response?.data;
     if (!post) {
       return {
-        title: "বই পাওয়া যায়নি | Milbe",
+        title: "বই পাওয়া যায়নি | Milbe",
       };
     }
     return {
       title: `${post.title} | Milbe`,
-      description: post.description || `${post.title} - বইটির বিস্তারিত দেখুন Milbe-তে।`,
+      description: post.description || `${post.title} বইটির বিস্তারিত দেখুন Milbe-তে`,
       ...(post.slug
         ? { alternates: { canonical: `https://milbe.vercel.app/books/${post.slug}` } }
         : {}),
     };
   } catch {
     return {
-      title: "বইয়ের বিবরণ | Milbe",
+      title: "বইয়ের বিবরণ | Milbe",
     };
   }
 }
@@ -76,10 +77,10 @@ export default async function BookDetailsPage({ params }: BookDetailsPageProps) 
             📖
           </div>
           <h2 className="text-xl font-bold text-slate-800 mb-2">
-            বইয়ের তথ্য পাওয়া যায়নি!
+            বইয়ের তথ্য পাওয়া যায়নি!
           </h2>
           <p className="text-sm text-slate-500 mb-6">
-            পোস্টটি হয়তো ডিলিট করে ফেলা হয়েছে অথবা ইউআরএল (URL) টি সঠিক নয়।
+            পোস্টটি হয়তো ডিলিট করে ফেলা হয়েছে অথবা ইউআরএল (URL) টি সঠিক নয়।
           </p>
           <Link
             href="/"
@@ -96,16 +97,10 @@ export default async function BookDetailsPage({ params }: BookDetailsPageProps) 
   return (
     <div className="min-h-screen bg-[#F8FAFC] py-6 sm:py-10 text-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        {/* Back Button Section */}
-        <div>
-          {/* <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#35858E] bg-white hover:bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 transition-all duration-200 shadow-xs group"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1" />
-            <span>হোমে ফিরে যান</span>
-          </Link> */}
+        {/* Navigation & Actions Section */}
+        <div className="flex items-center justify-between gap-4">
           <BackButton />
+          <ShareButton />
         </div>
 
         {/* Main Content Layout Grid */}
