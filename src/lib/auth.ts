@@ -21,7 +21,25 @@ if (!uri) {
 // ভেরিফিকেশন লিংক এই URL থেকে বানানো হয়। production-এ অবশ্যই https://milbe.vercel.app হতে হবে।
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-const client = new MongoClient(uri);
+const client = new MongoClient(uri, {
+  // ── Connection pool ──────────────────────────────────────────────────────
+  // Atlas M0 allows max 500 connections (shared across all deployments).
+  // 10 is a safe cap for a single Render/Vercel deployment.
+  maxPoolSize: 10,
+  minPoolSize: 1,        // Keep 1 warm connection — reduces first-request latency
+  maxIdleTimeMS: 30_000, // Release idle connections after 30 s (M0 drops them anyway)
+  // ── Timeout hardening ────────────────────────────────────────────────────
+  // Default serverSelectionTimeoutMS is 30 s — unacceptably long for SSR.
+  // 5 s causes a fast-fail that surfaces as a clean 503 rather than a hang.
+  serverSelectionTimeoutMS: 5_000,
+  socketTimeoutMS: 45_000,
+  connectTimeoutMS: 10_000,
+  // ── Retry on transient errors ────────────────────────────────────────────
+  // Atlas M0 / Render free tier: TCP connections are dropped after idle periods.
+  // The driver retries transparently — SSR requests see no error.
+  retryWrites: true,
+  retryReads: true,
+});
 const db = client.db("BookBridgeDB");
 
 /**

@@ -132,8 +132,8 @@ export default function BooksGrid({
 
       {/* Responsive Book Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-6 pt-2">
-        {books.map((book) => (
-          <BookCard key={book._id} book={book} />
+        {books.map((book, index) => (
+          <BookCard key={book._id} book={book} priority={index < 4} />
         ))}
       </div>
     </div>

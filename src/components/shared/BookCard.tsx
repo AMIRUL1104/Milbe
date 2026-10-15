@@ -8,9 +8,10 @@ import { getDistrictLabelBn } from "@/lib/constant/districts";
 
 interface BookCardProps {
   book: PostItem;
+  priority?: boolean;
 }
 
-export default function BookCard({ book }: BookCardProps) {
+export default function BookCard({ book, priority = false }: BookCardProps) {
   const primaryBook = book.books?.[0];
   const totalBooks = book.books?.length || 0;
 
@@ -26,6 +27,7 @@ export default function BookCard({ book }: BookCardProps) {
           src={(book.images?.[0]?.url ?? book.image) || "/placeholder-book.jpg"}
           alt={primaryBook?.bookName || "বই পোস্ট"}
           fill
+          priority={priority}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="object-contain p-1 group-hover:scale-102 transition-transform duration-300 ease-out"
         />

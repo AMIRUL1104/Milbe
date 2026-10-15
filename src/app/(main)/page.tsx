@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { getPosts } from "@/services/features/posts";
 import { getUserSession } from "@/services/core/session";
@@ -7,10 +8,24 @@ import NearbyBooks from "@/components/home/NearbyBooks";
 import BooksGrid from "@/components/home/BooksGrid";
 import HeaderFilters from "@/components/home/HeaderFilters";
 import BooksPagination from "@/components/shared/BooksPagination";
-import HowItWorks from "@/components/home/HowItWorks";
-import WhyChooseUs from "@/components/home/WhyChooseUs";
-import CTA from "@/components/home/CTA";
 import Hero from "@/components/home/Hero";
+
+// Dynamic imports for below-the-fold static sections to reduce initial bundle size & TTI
+const HowItWorks = dynamic(() => import("@/components/home/HowItWorks"), {
+  loading: () => (
+    <div className="h-64 animate-pulse bg-surface/40 rounded-2xl mx-auto max-w-7xl my-8" />
+  ),
+});
+const WhyChooseUs = dynamic(() => import("@/components/home/WhyChooseUs"), {
+  loading: () => (
+    <div className="h-64 animate-pulse bg-surface/40 rounded-2xl mx-auto max-w-7xl my-8" />
+  ),
+});
+const CTA = dynamic(() => import("@/components/home/CTA"), {
+  loading: () => (
+    <div className="h-48 animate-pulse bg-surface/40 rounded-2xl mx-auto max-w-7xl my-8" />
+  ),
+});
 
 export const metadata = buildPageMetadata("home");
 
@@ -40,9 +55,31 @@ export default async function HomePage({
     type === "donate"
   );
 
-  // --- Nearby Books: user-centric logic ---
-  const session = await getUserSession();
   const requestedDistrict = location?.trim();
+
+  // If a district is explicitly in searchParams, we can fire nearby books immediately in parallel.
+  const immediateNearbyPromise =
+    !hasActiveContentFilters && requestedDistrict
+      ? getPosts({ district: requestedDistrict, page: 1, limit: 10 })
+      : null;
+
+  // Decouple session & all-books fetches — fire concurrently to eliminate SSR waterfall.
+  const [sessionResult, allBooksResult, initialNearbyResult] = await Promise.allSettled([
+    getUserSession(),
+    getPosts({
+      search,
+      category,
+      type: (type || "") as "sell" | "donate" | "",
+      condition,
+      district: hasActiveContentFilters ? requestedDistrict : undefined,
+      sort: "newest",
+      page: currentPage,
+      limit: 20,
+    }),
+    immediateNearbyPromise ? immediateNearbyPromise : Promise.resolve(null),
+  ]);
+
+  const session = sessionResult.status === "fulfilled" ? sessionResult.value : null;
   const profileDistrict = requestedDistrict
     ? undefined
     : session?.district?.trim() || undefined;
@@ -60,46 +97,7 @@ export default async function HomePage({
   let allBooksTotal = 0;
   let allBooksError = false;
 
-  // Both requests are independent — run them in parallel to halve SSR wait time.
-  const [nearbyResult, allBooksResult] = await Promise.allSettled([
-    // ১) Nearby books (শুধুমাত্র যখন কনটেন্ট ফিল্টার নেই এবং ডিস্ট্রিক্ট সিলেক্টেড আছে)
-    (async () => {
-      if (!hasActiveContentFilters && selectedDistrict) {
-        return getPosts({
-          district: selectedDistrict,
-          page: 1,
-          limit: 10,
-        });
-      }
-      return null;
-    })(),
-    // ২) All books / unified filtered results
-    getPosts({
-      search,
-      category,
-      type: (type || "") as "sell" | "donate" | "",
-      condition,
-      district: hasActiveContentFilters ? requestedDistrict : undefined,
-      sort: "newest",
-      page: currentPage,
-      limit: 20,
-    }),
-  ]);
-
-  if (nearbyResult.status === "fulfilled" && nearbyResult.value) {
-    const nearbyResponse = nearbyResult.value;
-    nearbyBooks = nearbyResponse.data || [];
-    nearbyTotalPages = nearbyResponse.meta?.totalPages || 1;
-    nearbyTotal = nearbyResponse.meta?.total ?? nearbyBooks.length;
-    nearbyDistrict = selectedDistrict;
-    nearbyState = nearbyBooks.length > 0 ? "loaded" : "empty";
-  } else if (nearbyResult.status === "rejected") {
-    nearbyDistrict = selectedDistrict;
-    nearbyState = "error";
-  } else if (!hasActiveContentFilters && session && !selectedDistrict) {
-    nearbyState = "needs-profile";
-  }
-
+  // 1. Process All Books result
   if (allBooksResult.status === "fulfilled") {
     const paginatedResponse = allBooksResult.value;
     books = paginatedResponse.data || [];
@@ -107,6 +105,41 @@ export default async function HomePage({
     allBooksTotal = paginatedResponse.meta?.total ?? books.length;
   } else {
     allBooksError = true;
+  }
+
+  // 2. Process Nearby Books result
+  if (!hasActiveContentFilters) {
+    if (requestedDistrict) {
+      if (initialNearbyResult.status === "fulfilled" && initialNearbyResult.value) {
+        const nearbyResponse = initialNearbyResult.value;
+        nearbyBooks = nearbyResponse.data || [];
+        nearbyTotalPages = nearbyResponse.meta?.totalPages || 1;
+        nearbyTotal = nearbyResponse.meta?.total ?? nearbyBooks.length;
+        nearbyDistrict = selectedDistrict;
+        nearbyState = nearbyBooks.length > 0 ? "loaded" : "empty";
+      } else if (initialNearbyResult.status === "rejected") {
+        nearbyDistrict = selectedDistrict;
+        nearbyState = "error";
+      }
+    } else if (profileDistrict) {
+      try {
+        const nearbyResponse = await getPosts({
+          district: profileDistrict,
+          page: 1,
+          limit: 10,
+        });
+        nearbyBooks = nearbyResponse.data || [];
+        nearbyTotalPages = nearbyResponse.meta?.totalPages || 1;
+        nearbyTotal = nearbyResponse.meta?.total ?? nearbyBooks.length;
+        nearbyDistrict = profileDistrict;
+        nearbyState = nearbyBooks.length > 0 ? "loaded" : "empty";
+      } catch {
+        nearbyDistrict = profileDistrict;
+        nearbyState = "error";
+      }
+    } else if (session && !selectedDistrict) {
+      nearbyState = "needs-profile";
+    }
   }
 
   return (
@@ -152,7 +185,7 @@ export default async function HomePage({
           </div>
         </div>
 
-        {/* ৫, ৬, ৭. অতিরিক্ত ইনফরমেশন সেকশনসমূহ (শুধুমাত্র কনটেন্ট ফিল্টার না থাকলে দেখাবে) */}
+        {/* ৫, ৬, ৭. অতিরিক্ত ইনফরমেশন সেকশনসমূহ — dynamic import সহ */}
         {!hasActiveContentFilters && (
           <>
             <HowItWorks />

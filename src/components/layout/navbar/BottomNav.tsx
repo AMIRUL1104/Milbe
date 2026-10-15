@@ -17,6 +17,8 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 
+import type { HeaderInitialUser } from "./Header";
+
 interface NavItem {
   href: string;
   label: string;
@@ -24,9 +26,17 @@ interface NavItem {
   isFab?: boolean;
 }
 
-export function BottomNav() {
+interface BottomNavProps {
+  initialUser?: HeaderInitialUser;
+}
+
+export function BottomNav({ initialUser }: BottomNavProps = {}) {
   const pathname = usePathname();
-  const { isLoggedIn, isReady, user } = useAuthState();
+  const { isLoggedIn: clientIsLoggedIn, isReady, user: clientUser } = useAuthState();
+
+  const user = isReady ? clientUser : (initialUser ?? null);
+  const isLoggedIn = isReady ? clientIsLoggedIn : Boolean(initialUser);
+  const effectiveIsReady = isReady || initialUser !== undefined;
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -82,7 +92,7 @@ export function BottomNav() {
     ];
   };
 
-  const navItems = isReady ? getNavItems() : [];
+  const navItems = effectiveIsReady ? getNavItems() : [];
   const fabItem = navItems.find((item) => item.isFab);
 
   return (

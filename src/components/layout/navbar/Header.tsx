@@ -11,8 +11,17 @@ import { MenuDrawer } from "./MenuDrawer";
 
 export type HeaderVariant = "home" | "default";
 
+export type HeaderInitialUser = {
+  id: string;
+  email: string;
+  name?: string | null;
+  image?: string | null;
+  role?: "user" | "admin" | null;
+} | null;
+
 interface HeaderProps {
   variant?: HeaderVariant;
+  initialUser?: HeaderInitialUser;
 }
 
 const NAV_LINKS = [
@@ -29,8 +38,8 @@ function HeaderSearchFallback() {
   return <div className="h-10 w-full bg-surface/50 rounded-btn animate-pulse" />;
 }
 
-export default function Header({ variant = "default" }: HeaderProps) {
-  const { user, isLoggedIn, isReady } = useAuthState();
+export default function Header({ variant = "default", initialUser }: HeaderProps) {
+  const { user: clientUser, isLoggedIn: clientIsLoggedIn, isReady } = useAuthState();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -38,6 +47,11 @@ export default function Header({ variant = "default" }: HeaderProps) {
 
   const showSearch = variant === "home";
   const isMobileSearchOpen = showSearch && isSearchOpen;
+
+  // Seamless hydration: use server initialUser until client state is confirmed
+  const user = isReady ? clientUser : (initialUser ?? null);
+  const isLoggedIn = isReady ? clientIsLoggedIn : Boolean(initialUser);
+  const effectiveIsReady = isReady || initialUser !== undefined;
 
   return (
     <>
@@ -121,7 +135,7 @@ export default function Header({ variant = "default" }: HeaderProps) {
               >
                 Sell/Donate
               </Link>
-              <HeaderAuth user={user} isLoggedIn={isLoggedIn} isReady={isReady} />
+              <HeaderAuth user={user} isLoggedIn={isLoggedIn} isReady={effectiveIsReady} />
             </div>
 
             {!isMobileSearchOpen && (

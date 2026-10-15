@@ -11,6 +11,8 @@ import { getPostById, getPostBySlug } from "@/services/features/posts";
 import BackButton from "@/components/ui/BackButton";
 import ShareButton from "@/components/shared/ShareButton";
 
+export const revalidate = 300; // 5-minute ISR cache for book detail pages
+
 interface BookDetailsPageProps {
   params: Promise<{
     slug: string;
